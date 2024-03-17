@@ -8,8 +8,19 @@
     Title="flare_app">
 
     <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+        Title="Login"
+        ContentTemplate="{DataTemplate local:LoginPage}"
+        Route="LoginPage" />
+
+    <ShellContent
+        Title="Registration"
+        ContentTemplate="{DataTemplate local:RegistrationPage}"
+        Route="RegistrationPage" />
+
+    <ShellContent
+        Title="User list"
+        ContentTemplate="{DataTemplate local:UserListPage}"
+        Route="UserListPage" />
+
 
 </Shell>

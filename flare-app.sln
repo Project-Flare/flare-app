@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34701.34
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "flare-app", "flare-app\flare-app.csproj", "{850C856A-E0FB-44B9-9E45-0236E0E23AB3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "flare-app", "flare-app\flare-app.csproj", "{850C856A-E0FB-44B9-9E45-0236E0E23AB3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "flare-cs", "Backend\flare-cs.csproj", "{0EA343EB-0DCA-48EA-9901-90BE217258A6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,6 +19,10 @@ Global
 		{850C856A-E0FB-44B9-9E45-0236E0E23AB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{850C856A-E0FB-44B9-9E45-0236E0E23AB3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{850C856A-E0FB-44B9-9E45-0236E0E23AB3}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{0EA343EB-0DCA-48EA-9901-90BE217258A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EA343EB-0DCA-48EA-9901-90BE217258A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0EA343EB-0DCA-48EA-9901-90BE217258A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0EA343EB-0DCA-48EA-9901-90BE217258A6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

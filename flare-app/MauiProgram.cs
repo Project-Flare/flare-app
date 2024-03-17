@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Backend;
 
 namespace flare_app
 {
@@ -18,6 +20,9 @@ namespace flare_app
 #if DEBUG
     		builder.Logging.AddDebug();
 #endif
+
+            builder.Services.AddSingleton<Client>();
+            builder.Services.AddSingleton<UserRegistration>();
 
             return builder.Build();
         }
