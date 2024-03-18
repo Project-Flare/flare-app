@@ -7,7 +7,10 @@
     Shell.FlyoutBehavior="Disabled"
     Title="flare_app">
 
-    <ShellContent
+
+    
+
+    <!--<ShellContent
         Title="Login"
         ContentTemplate="{DataTemplate local:LoginPage}"
         Route="LoginPage" />
@@ -15,7 +18,7 @@
     <ShellContent
         Title="Registration"
         ContentTemplate="{DataTemplate local:RegistrationPage}"
-        Route="RegistrationPage" />
+        Route="RegistrationPage" />-->
 
     <ShellContent
         Title="User list"
