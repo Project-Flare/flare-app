@@ -62,7 +62,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Backend\flare-cs.csproj" />
+	  <ProjectReference Include="..\flare-csharp\flare-csharp\flare-csharp.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

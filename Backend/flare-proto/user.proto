@@ -1,7 +1,0 @@
-syntax = "proto3";
-
-package flare;
-
-message User {
-    string username = 1;
-}

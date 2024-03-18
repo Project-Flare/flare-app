@@ -1,0 +1,3 @@
+[submodule "flare-csharp"]
+	path = flare-csharp
+	url = https://github.com/Project-Flare/flare-csharp
