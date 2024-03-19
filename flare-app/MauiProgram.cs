@@ -1,6 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Flare;
+using CommunityToolkit.Maui;
+using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Core;
 
 namespace flare_app
 {
@@ -11,6 +14,7 @@ namespace flare_app
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .UseMauiCommunityToolkit()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -22,9 +26,18 @@ namespace flare_app
 #endif
 
             builder.Services.AddSingleton<Client>();
-            builder.Services.AddSingleton<UserRegistration>();
 
             return builder.Build();
+        }
+        public static async void ErrorToast(string message)
+        {
+            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+
+            ToastDuration duration = ToastDuration.Long;
+            double fontSize = 14;
+
+            var toast = Toast.Make(message, duration, fontSize);
+            await toast.Show(cancellationTokenSource.Token);
         }
     }
 }
