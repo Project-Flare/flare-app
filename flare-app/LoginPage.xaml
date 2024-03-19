@@ -1,44 +1,107 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:flare_app"
              x:Class="flare_app.LoginPage">
 
-    <ScrollView>
-        <VerticalStackLayout
-            Padding="30,0"
-            Spacing="25">
+    <Grid BackgroundColor="{AppThemeBinding Light={StaticResource MainLight}, Dark={StaticResource MainDark}}">
+        <AbsoluteLayout>
+            <Ellipse WidthRequest="280" HeightRequest="280"
+             Fill="{AppThemeBinding Light={StaticResource Light3}, Dark={StaticResource Dark3}}"
+             AbsoluteLayout.LayoutBounds="0.27, 0.24, 0, 0"
+             AbsoluteLayout.LayoutFlags="PositionProportional"/>
+            <Ellipse WidthRequest="640" HeightRequest="640"
+             Fill="{AppThemeBinding Light={StaticResource Light2}, Dark={StaticResource Dark2}}"
+             AbsoluteLayout.LayoutBounds="0.91, 0.89, 0, 0"
+             AbsoluteLayout.LayoutFlags="PositionProportional"/>
+            <Ellipse WidthRequest="490" HeightRequest="490"
+             Fill="{AppThemeBinding Light={StaticResource Light1}, Dark={StaticResource Dark1}}"
+             AbsoluteLayout.LayoutBounds=" .825, .95, 0, 0"
+             AbsoluteLayout.LayoutFlags="PositionProportional"/>
+        </AbsoluteLayout>
+        <Grid RowDefinitions="150, 500">
+            <Grid Grid.Row="0">
 
-            <Label
-                Text="Flare"
-                Style="{StaticResource Headline}"
-                SemanticProperties.HeadingLevel="Level1" />
-
-            <Label
-                Text="Please enter your login credentials"
-                Style="{StaticResource SubHeadline}"
-                SemanticProperties.HeadingLevel="Level2" />
-
-            <Entry
-                x:Name="username"
-                Placeholder="Username" />
-
-            <Entry
-                x:Name="password"
-                Placeholder="Password"
-                IsPassword="True" />
-
-            <Button
-                x:Name="LoginButton"
-                Text="Login"
-                Clicked="LoginButton_Clicked" />
-
-            <Button
-                x:Name="ToRegistrationButton"
-                Text="Or register instead..."
-                Clicked="ToRegistrationButton_Clicked"
-                FontSize="15" />
-
-        </VerticalStackLayout>
-    </ScrollView>
+                <Label Text="Log in"
+                   FontSize="32"
+                   TextColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray200}}"
+                   FontFamily="InterExtraBold"
+                   Margin="20,0,0,0"
+                       VerticalOptions="End"/>
+            </Grid>
+            <Grid Grid.Row="1">
+                <Grid HeightRequest="320"
+                    WidthRequest="375"
+                    MaximumWidthRequest="1000"
+                    VerticalOptions="Start"
+                      Opacity=".7">
+                    <RoundRectangle
+                        Fill="#FFFFFF"
+                        CornerRadius="30,30,30,30"/>
+                    <Grid Margin="15,20,15,0" RowDefinitions="*,*,*,*">
+                        <RoundRectangle Fill="White"/>
+                        <Grid Margin="0,0,0,0" Grid.Row="0" HeightRequest="55">
+                            <Frame Padding="0"
+                                   BackgroundColor="#8A8888"
+                                   BorderColor="Transparent"
+                                   CornerRadius="12">
+                                <Entry x:Name="username"
+                                   Placeholder="username"
+                                   FontFamily="InterExtraBold"
+                                   FontSize="18"
+                                   VerticalOptions="Center"
+                                   Margin="5,0,5,0"/>
+                            </Frame>
+                        </Grid>
+                        <Grid Margin="0,20,0,0" Grid.Row="1" HeightRequest="55">
+                            <Frame Padding="0"
+                                   BackgroundColor="#8A8888"
+                                   BorderColor="Transparent"
+                                   CornerRadius="12">
+                                <Entry x:Name="password"
+                                   Placeholder="password"
+                                   FontFamily="InterExtraBold"
+                                   FontSize="18"
+                                   VerticalOptions="Center"
+                                   Margin="5,0,5,0"
+                                   IsPassword="True"/>
+                            </Frame>
+                        </Grid>
+                        <Grid Grid.Row="2">
+                            <Button x:Name="LoginButton"
+                                Text="Log in"
+                                Clicked="LoginButton_Clicked"
+                                FontFamily="InterExtraBold"
+                                FontSize="18"
+                                BackgroundColor="#373636"
+                                HeightRequest="35"
+                                Margin="0,60,0,0"
+                                Padding="0"/>
+                        </Grid>
+                        <Grid Grid.Row="3">
+                            <Label HorizontalTextAlignment="Center"
+                               Margin="0,12,0,0">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Don't have an account? "
+                                          FontFamily="InterExtraBold"
+                                          TextColor="#000000"/>
+                                        <Span x:Name="ToRegistrationButton"
+                                          Text="Sign up"
+                                          FontFamily="InterExtraBold"
+                                          TextColor="#6B80CB">
+                                            <Span.GestureRecognizers>
+                                                <TapGestureRecognizer Tapped="ToRegistrationButton_Clicked"/>
+                                            </Span.GestureRecognizers>
+                                        </Span>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
 
 </ContentPage>

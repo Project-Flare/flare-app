@@ -11,7 +11,7 @@ namespace flare_app
 
         private void ToRegistrationButton_Clicked(object sender, EventArgs e)
         {
-            Shell.Current.GoToAsync("//RegistrationPage");
+            Shell.Current.GoToAsync("//RegistrationPage", true);
         }
 
         private async void LoginButton_Clicked(object sender, EventArgs e)

@@ -1,42 +1,125 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+<ContentPage Opacity="0"
+             x:Name="RegisterPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="flare_app.RegistrationPage">
 
-    <ScrollView>
-        <VerticalStackLayout
-            Padding="30,0"
-            Spacing="25">
+    <Grid BackgroundColor="{AppThemeBinding Light={StaticResource Light4}, Dark={StaticResource Dark4}}">
+        <AbsoluteLayout>
+            <Ellipse WidthRequest="900" HeightRequest="900"
+             Fill="{AppThemeBinding Light={StaticResource MainLight}, Dark={StaticResource MainDark}}"
+             AbsoluteLayout.LayoutBounds="1.35, .5, 0, 0"
+             AbsoluteLayout.LayoutFlags="PositionProportional"/>
+            <Ellipse WidthRequest="280" HeightRequest="280"
+             Fill="{AppThemeBinding Light={StaticResource Light3}, Dark={StaticResource Dark3}}"
+             AbsoluteLayout.LayoutBounds="1.27, 0.24, 0, 0"
+             AbsoluteLayout.LayoutFlags="PositionProportional"/>
+        </AbsoluteLayout>
+        <Grid RowDefinitions="150, *">
+            <Grid.GestureRecognizers>
+            </Grid.GestureRecognizers>
+            <Grid Grid.Row="0">
+                <Grid WidthRequest="365" 
+                    VerticalOptions="Start"
+                      Margin="0,20,0,0">
+                    <Label x:Name="returnToLogin"
+                           Text="return"
+                           FontFamily="InterExtraBold"
+                           FontSize="14"
+                           TextColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray200}}">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="returnToLogin_Clicked"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Grid>
+                <Grid WidthRequest="365"
+                      VerticalOptions="End"
+                      Margin="0,0,0,5">
+                    <Label Text="Register"
+                   FontSize="32"
+                   TextColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray200}}"
+                   FontFamily="InterExtraBold"/>
+                </Grid>
+            </Grid>
+            <Grid Grid.Row="1">
+                <Grid HeightRequest="365"
+                    WidthRequest="365"
+                    MaximumWidthRequest="800"
+                    VerticalOptions="Start"
+                    Margin="20,0,20,0"
+                      Opacity=".7">
+                    <RoundRectangle
+                        Fill="#FFFFFF"
+                        CornerRadius="30,30,30,30"/>
+                    <Grid Margin="15,20,15,0" RowDefinitions="*,*,*,*,*">
+                        <RoundRectangle Fill="White"/>
+                        <Grid Margin="0,0,0,0" Grid.Row="0" HeightRequest="55">
+                            <Frame Padding="0"
+                                   BackgroundColor="#8A8888"
+                                   BorderColor="Transparent"
+                                   CornerRadius="12">
+                                <Entry x:Name="username"
+                                   Placeholder="username"
+                                   FontFamily="InterExtraBold"
+                                   FontSize="18"
+                                   VerticalOptions="CenterAndExpand"
+                                   Margin="5,0,5,0"/>
+                            </Frame>
+                        </Grid>
+                        <Grid Margin="0,0,0,0" Grid.Row="1" HeightRequest="55">
+                            <Frame Padding="0"
+                                   BackgroundColor="#8A8888"
+                                   BorderColor="Transparent"
+                                   CornerRadius="12">
+                                <Entry x:Name="password"
+                                   Placeholder="password"
+                                   IsPassword="True"
+                                   FontFamily="InterExtraBold"
+                                   FontSize="18"
+                                   VerticalOptions="CenterAndExpand"
+                                   Margin="5,0,5,0"/>
+                            </Frame>
+                        </Grid>
+                        <Grid Margin="0,0,0,0" Grid.Row="2" HeightRequest="55">
+                            <Frame Padding="0"
+                                   BackgroundColor="#8A8888"
+                                   BorderColor="Transparent"
+                                   CornerRadius="12">
+                                <Entry x:Name="password2"
+                                   FontFamily="InterExtraBold"
+                                   IsPassword="True"
+                                   Placeholder="repeat password"
+                                   FontSize="18"
+                                   VerticalOptions="CenterAndExpand"
+                                   Margin="5,0,5,0"/>
+                            </Frame>
+                        </Grid>
+                        <Grid Grid.Row="3" Margin="0,7,0,0">
+                            <Label x:Name="RegisterErrorInfo" 
+                                Text="password entropy reserved/missmatch"
+                                   FontFamily="InterExtraBold"
+                               TextColor="#000000"/>
+                        </Grid>
+                        <Grid Grid.Row="4" HeightRequest="35" Margin="0,0,0,40">
+                            <Button x:Name="RegisterButton" 
+                                Text="Register"
+                                Clicked="RegisterButton_Clicked"
+                                FontFamily="InterExtraBold"
+                                FontSize="18"
+                                BackgroundColor="#373636"
+                                Margin="0,0,0,0"
+                                Padding="0"/>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
 
-            <Label
-                Text="Flare"
-                Style="{StaticResource Headline}"
-                SemanticProperties.HeadingLevel="Level1" />
+    <!--<Shell.BackButtonBehavior>
+        <BackButtonBehavior Command="{Binding}"/>
+    </Shell.BackButtonBehavior>-->
 
-            <Label
-                Text="Please enter your desired login credentials"
-                Style="{StaticResource SubHeadline}"
-                SemanticProperties.HeadingLevel="Level2" />
-
-            <Entry
-                x:Name="username"
-                Placeholder="Username" />
-
-            <Entry
-                x:Name="password"
-                Placeholder="Password"
-                IsPassword="True" />
-
-            <Button
-                x:Name="RegisterButton"
-                Text="Register"
-                Clicked="RegisterButton_Clicked" />
-            
-        </VerticalStackLayout>
-    </ScrollView>
-
-    <Shell.BackButtonBehavior>
-        <BackButtonBehavior Command="{Binding BackCommand}" />
-    </Shell.BackButtonBehavior>
 
 </ContentPage>

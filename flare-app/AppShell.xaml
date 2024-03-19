@@ -5,10 +5,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:flare_app"
     Shell.FlyoutBehavior="Disabled"
+    Shell.NavBarIsVisible="False"
     Title="flare_app">
 
-
-    
 
     <!--<ShellContent
         Title="Login"
@@ -24,6 +23,11 @@
         Title="User list"
         ContentTemplate="{DataTemplate local:UserListPage}"
         Route="UserListPage" />
+
+    <ShellContent
+        Title="Discovery"
+        ContentTemplate="{DataTemplate local:DiscoveryPage}"
+        Route="DiscoveryPage" />
 
 
 </Shell>

@@ -1,15 +1,15 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:flare_app"
-             x:Class="flare_app.UserListPage">
+             x:Class="flare_app.DiscoveryPage"
+             Title="DiscoveryPage">
     <Grid>
         <Grid RowDefinitions="140, *">
             <Grid RowDefinitions="60, *"
               BackgroundColor="#2B5B58">
-                <Grid ColumnDefinitions=".3* ,.7*">
-                    <Grid Grid.Column="0">
-                        <Label Text="Users"
+                <Grid>
+                    <Grid>
+                        <Label Text="Discover others"
                    TextColor="#FFFFFF"
                    FontFamily="InterExtraBold"
                    FontSize="32"
@@ -17,28 +17,6 @@
                     </Grid>
                     <Grid Grid.Column="1"
                           ColumnDefinitions=".7*, .2*">
-                        <Grid Grid.Column="0" VerticalOptions="Center" HorizontalOptions="End">
-                            <ImageButton Source="settings.png"
-                                         Margin="15"
-                                         Padding="0"
-                                         HeightRequest="30"
-                                         WidthRequest="30">
-                            </ImageButton>
-                        </Grid>
-                        <Grid Grid.Column="1">
-                            <Label Text="+"
-                                   FontFamily="InterBold"
-                                   TextColor="White"
-                                   FontSize="46"
-                                   VerticalOptions="Center"
-                                   HorizontalOptions="Center"
-                                   Padding="0,0,0,0"
-                                   Margin="0,-10,0,0">
-                                <Label.GestureRecognizers>
-                                    <TapGestureRecognizer Tapped="DiscoveryButton_Tapped"/>
-                                </Label.GestureRecognizers>
-                            </Label>
-                        </Grid>
                     </Grid>
                 </Grid>
                 <Grid Grid.Row="1"
@@ -55,12 +33,12 @@
                     </Frame>
                 </Grid>
             </Grid>
-            <CollectionView x:Name="UserListCollection"
+            <CollectionView x:Name="DiscoveryListCollection"
                             Grid.Row="1"
                             BackgroundColor="#4B8C69">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Grid x:Name="userGridElement"
+                        <Grid 
                               HeightRequest="55"
                               BackgroundColor="Transparent">
                             <Grid x:Name="{Binding .}"
@@ -79,5 +57,4 @@
             </CollectionView>
         </Grid>
     </Grid>
-
 </ContentPage>
