@@ -45,14 +45,20 @@
                   Margin="20,0,20,15"
                   Opacity="1"
                   VerticalOptions="End">
-                    <Frame Padding="0" BackgroundColor="#8A8888" CornerRadius="12" HeightRequest="43" BorderColor="Transparent">
+                    <Border Padding="0"
+                            BackgroundColor="#8A8888"
+                            HeightRequest="43"
+                            Stroke="Transparent">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="12" />
+                        </Border.StrokeShape>
                         <Entry Placeholder="search"
                                    FontFamily="InterExtraBold"
                                    FontSize="18"
                                    VerticalOptions="Center"
                                    ClearButtonVisibility="WhileEditing"
                                    Margin="5,0,5,0"/>
-                    </Frame>
+                    </Border>
                 </Grid>
             </Grid>
             <CollectionView x:Name="UserListCollection"
@@ -79,5 +85,4 @@
             </CollectionView>
         </Grid>
     </Grid>
-
 </ContentPage>

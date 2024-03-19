@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage Opacity="0"
-             x:Name="RegisterPage"
+<ContentPage x:Name="RegisterPage"
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:flare_app"
              x:Class="flare_app.RegistrationPage">
 
     <Grid BackgroundColor="{AppThemeBinding Light={StaticResource Light4}, Dark={StaticResource Dark4}}">
@@ -55,23 +55,28 @@
                     <Grid Margin="15,20,15,0" RowDefinitions="*,*,*,*,*">
                         <RoundRectangle Fill="White"/>
                         <Grid Margin="0,0,0,0" Grid.Row="0" HeightRequest="55">
-                            <Frame Padding="0"
+                            <Border Padding="0"
                                    BackgroundColor="#8A8888"
-                                   BorderColor="Transparent"
-                                   CornerRadius="12">
+                                   Stroke="Transparent">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="12" />
+                                </Border.StrokeShape>
                                 <Entry x:Name="username"
                                    Placeholder="username"
                                    FontFamily="InterExtraBold"
                                    FontSize="18"
                                    VerticalOptions="CenterAndExpand"
                                    Margin="5,0,5,0"/>
-                            </Frame>
+                            </Border>
                         </Grid>
                         <Grid Margin="0,0,0,0" Grid.Row="1" HeightRequest="55">
-                            <Frame Padding="0"
-                                   BackgroundColor="#8A8888"
-                                   BorderColor="Transparent"
-                                   CornerRadius="12">
+                            <Border
+                                    Padding="0"
+                                    BackgroundColor="#8A8888"
+                                    Stroke="Transparent">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="12" />
+                                </Border.StrokeShape>
                                 <Entry x:Name="password"
                                    Placeholder="password"
                                    IsPassword="True"
@@ -79,7 +84,7 @@
                                    FontSize="18"
                                    VerticalOptions="CenterAndExpand"
                                    Margin="5,0,5,0"/>
-                            </Frame>
+                            </Border>
                         </Grid>
                         <Grid Margin="0,0,0,0" Grid.Row="2" HeightRequest="55">
                             <Frame Padding="0"
@@ -116,10 +121,4 @@
             </Grid>
         </Grid>
     </Grid>
-
-    <!--<Shell.BackButtonBehavior>
-        <BackButtonBehavior Command="{Binding}"/>
-    </Shell.BackButtonBehavior>-->
-
-
 </ContentPage>

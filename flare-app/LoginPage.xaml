@@ -41,23 +41,27 @@
                     <Grid Margin="15,20,15,0" RowDefinitions="*,*,*,*">
                         <RoundRectangle Fill="White"/>
                         <Grid Margin="0,0,0,0" Grid.Row="0" HeightRequest="55">
-                            <Frame Padding="0"
-                                   BackgroundColor="#8A8888"
-                                   BorderColor="Transparent"
-                                   CornerRadius="12">
+                            <Border Padding="0"
+                                    BackgroundColor="#8A8888"
+                                    Stroke="Transparent">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="12" />
+                                </Border.StrokeShape>
                                 <Entry x:Name="username"
                                    Placeholder="username"
                                    FontFamily="InterExtraBold"
                                    FontSize="18"
                                    VerticalOptions="Center"
                                    Margin="5,0,5,0"/>
-                            </Frame>
+                            </Border>
                         </Grid>
                         <Grid Margin="0,20,0,0" Grid.Row="1" HeightRequest="55">
-                            <Frame Padding="0"
+                            <Border Padding="0"
                                    BackgroundColor="#8A8888"
-                                   BorderColor="Transparent"
-                                   CornerRadius="12">
+                                   Stroke="Transparent">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="12" />
+                                </Border.StrokeShape>
                                 <Entry x:Name="password"
                                    Placeholder="password"
                                    FontFamily="InterExtraBold"
@@ -65,7 +69,7 @@
                                    VerticalOptions="Center"
                                    Margin="5,0,5,0"
                                    IsPassword="True"/>
-                            </Frame>
+                            </Border>
                         </Grid>
                         <Grid Grid.Row="2">
                             <Button x:Name="LoginButton"

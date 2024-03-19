@@ -9,17 +9,17 @@
     Title="flare_app">
 
 
-    <!--<ShellContent
+       <ShellContent
         Title="Login"
         ContentTemplate="{DataTemplate local:LoginPage}"
         Route="LoginPage" />
 
-    <ShellContent
+        <ShellContent
         Title="Registration"
         ContentTemplate="{DataTemplate local:RegistrationPage}"
-        Route="RegistrationPage" />-->
+        Route="RegistrationPage" />
 
-    <ShellContent
+        <ShellContent
         Title="User list"
         ContentTemplate="{DataTemplate local:UserListPage}"
         Route="UserListPage" />

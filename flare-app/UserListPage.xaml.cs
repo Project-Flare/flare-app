@@ -16,8 +16,6 @@ namespace flare_app
             data.Add("#8A8888");
             data.Add("#D9D9D9");
 
-            int i = 0;
-
             UserListCollection.ItemsSource = data;
         }
 

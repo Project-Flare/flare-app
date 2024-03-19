@@ -1,4 +1,5 @@
-﻿using Flare;
+﻿using CommunityToolkit.Mvvm.Input;
+using Flare;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace flare_app

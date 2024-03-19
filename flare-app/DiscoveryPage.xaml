@@ -23,14 +23,21 @@
                   Margin="20,0,20,15"
                   Opacity="1"
                   VerticalOptions="End">
-                    <Frame Padding="0" BackgroundColor="#8A8888" CornerRadius="12" HeightRequest="43" BorderColor="Transparent">
+                    <Border Padding="0"
+                            BackgroundColor="#8A8888"
+                            Stroke="Transparent"
+                            HeightRequest="43">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="12" />
+                        </Border.StrokeShape>
+                        
                         <Entry Placeholder="search"
                                    FontFamily="InterExtraBold"
                                    FontSize="18"
                                    VerticalOptions="Center"
                                    ClearButtonVisibility="WhileEditing"
                                    Margin="5,0,5,0"/>
-                    </Frame>
+                    </Border>
                 </Grid>
             </Grid>
             <CollectionView x:Name="DiscoveryListCollection"
@@ -41,8 +48,8 @@
                         <Grid 
                               HeightRequest="55"
                               BackgroundColor="Transparent">
-                            <Grid x:Name="{Binding .}"
-                                  BackgroundColor="{Binding .}"
+                            <Grid
+                                  BackgroundColor="Gray"
                                   Opacity=".7"
                                   HeightRequest="55"/>
                             <Label Text="{Binding .}"
