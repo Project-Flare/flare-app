@@ -11,7 +11,7 @@ namespace flare_app
 
         private void ToRegistrationButton_Clicked(object sender, EventArgs e)
         {
-            Shell.Current.GoToAsync("//RegistrationPage", true);
+            Shell.Current.GoToAsync(nameof(RegistrationPage), true);
         }
 
         private async void LoginButton_Clicked(object sender, EventArgs e)
@@ -30,7 +30,7 @@ namespace flare_app
             var login_res = await client.LoginToServer();
             if (login_res == Client.LoginResponse.UserLoginSucceeded)
             {
-                await Shell.Current.GoToAsync("//UserListPage");
+                await Shell.Current.GoToAsync(nameof(UserListPage));
             }
         }
     }
