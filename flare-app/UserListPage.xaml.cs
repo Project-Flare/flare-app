@@ -21,7 +21,7 @@ namespace flare_app
 
         private void DiscoveryButton_Tapped(object sender, TappedEventArgs e)
         {
-            Shell.Current.GoToAsync("//DiscoveryPage");
+            Shell.Current.GoToAsync(nameof(DiscoveryPage));
         }
     }
 }
