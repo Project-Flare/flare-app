@@ -39,7 +39,6 @@
                         Fill="#FFFFFF"
                         CornerRadius="30,30,30,30"/>
                     <Grid Margin="15,20,15,0" RowDefinitions="*,*,*,*">
-                        <RoundRectangle Fill="White"/>
                         <Grid Margin="0,0,0,0" Grid.Row="0" HeightRequest="55">
                             <Border Padding="0"
                                     BackgroundColor="#8A8888"

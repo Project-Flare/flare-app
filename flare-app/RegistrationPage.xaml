@@ -23,15 +23,6 @@
                 <Grid WidthRequest="365" 
                     VerticalOptions="Start"
                       Margin="0,20,0,0">
-                    <Label x:Name="returnToLogin"
-                           Text="return"
-                           FontFamily="InterExtraBold"
-                           FontSize="14"
-                           TextColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray200}}">
-                        <Label.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="returnToLogin_Clicked"/>
-                        </Label.GestureRecognizers>
-                    </Label>
                 </Grid>
                 <Grid WidthRequest="365"
                       VerticalOptions="End"
@@ -53,7 +44,6 @@
                         Fill="#FFFFFF"
                         CornerRadius="30,30,30,30"/>
                     <Grid Margin="15,20,15,0" RowDefinitions="*,*,*,*,*">
-                        <RoundRectangle Fill="White"/>
                         <Grid Margin="0,0,0,0" Grid.Row="0" HeightRequest="55">
                             <Border Padding="0"
                                    BackgroundColor="#8A8888"

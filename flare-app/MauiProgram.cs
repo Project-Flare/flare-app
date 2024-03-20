@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Flare;
+using flare_app.ViewModel;
 
 namespace flare_app
 {
@@ -23,6 +24,11 @@ namespace flare_app
 
             builder.Services.AddSingleton<Client>();
             builder.Services.AddSingleton<UserRegistration>();
+
+            builder.Services.AddSingleton<DiscoveryPage>();
+            builder.Services.AddSingleton<MainViewModel>();
+
+            builder.Services.AddSingleton<UserListPage>();
 
             return builder.Build();
         }
