@@ -2,6 +2,8 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="flare_app.DiscoveryPage"
+             xmlns:viewmodel="clr-namespace:flare_app.ViewModel"
+             x:DataType="viewmodel:MainViewModel"
              Title="DiscoveryPage">
     <Grid>
         <Grid RowDefinitions="140, *">
@@ -30,7 +32,7 @@
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="12" />
                         </Border.StrokeShape>
-                        
+
                         <Entry Placeholder="search"
                                    FontFamily="InterExtraBold"
                                    FontSize="18"
@@ -42,9 +44,11 @@
             </Grid>
             <CollectionView x:Name="DiscoveryListCollection"
                             Grid.Row="1"
-                            BackgroundColor="#4B8C69">
+                            BackgroundColor="#4B8C69"
+                            ItemsSource="{Binding Items}">
                 <CollectionView.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate x:DataType="{x:Type x:String}">
+                        
                         <Grid 
                               HeightRequest="55"
                               BackgroundColor="Transparent">
@@ -58,6 +62,16 @@
                                    VerticalOptions="Center"
                                    HorizontalOptions="Start"
                                    Margin="20,0,0,0"/>
+                            <Button
+                                Text="Add"
+                                Margin="20,10,10,10"
+                                HorizontalOptions="End"
+                                VerticalOptions="Center"
+                                BackgroundColor="LightGreen"
+                                TextColor="Black"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MainViewModel}}, Path=AddUserCommand}"
+                                CommandParameter="{Binding .}"/>
+                                
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

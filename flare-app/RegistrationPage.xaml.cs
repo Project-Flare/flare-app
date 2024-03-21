@@ -15,11 +15,6 @@ namespace flare_app
             InitializeComponent();
         }
 
-        private void returnToLogin_Clicked(object sender, EventArgs e)
-        {
-            Shell.Current.GoToAsync(nameof(LoginPage));
-        }
-
         private async void RegisterButton_Clicked(object sender, EventArgs e)
         {
             var client = Handler?.MauiContext?.Services.GetService<Client>()!;
@@ -106,4 +101,5 @@ namespace flare_app
             }
         }
     }
+
 }

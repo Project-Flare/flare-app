@@ -4,6 +4,7 @@ using Flare;
 using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
+using flare_app.ViewModel;
 
 namespace flare_app
 {
@@ -26,6 +27,11 @@ namespace flare_app
 #endif
 
             builder.Services.AddSingleton<Client>();
+
+            builder.Services.AddSingleton<DiscoveryPage>();
+            builder.Services.AddSingleton<MainViewModel>();
+
+            builder.Services.AddSingleton<UserListPage>();
 
             return builder.Build();
         }

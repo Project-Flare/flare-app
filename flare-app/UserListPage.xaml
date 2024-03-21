@@ -2,7 +2,10 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:flare_app"
-             x:Class="flare_app.UserListPage">
+             x:Class="flare_app.UserListPage"
+             xmlns:viewmodel="clr-namespace:flare_app.ViewModel"
+             x:DataType="viewmodel:MainViewModel">
+    
     <Grid>
         <Grid RowDefinitions="140, *">
             <Grid RowDefinitions="60, *"
@@ -18,12 +21,6 @@
                     <Grid Grid.Column="1"
                           ColumnDefinitions=".7*, .2*">
                         <Grid Grid.Column="0" VerticalOptions="Center" HorizontalOptions="End">
-                            <ImageButton Source="settings.png"
-                                         Margin="15"
-                                         Padding="0"
-                                         HeightRequest="30"
-                                         WidthRequest="30">
-                            </ImageButton>
                         </Grid>
                         <Grid Grid.Column="1">
                             <Label Text="+"
@@ -61,16 +58,16 @@
                     </Border>
                 </Grid>
             </Grid>
-            <CollectionView x:Name="UserListCollection"
+            <CollectionView ItemsSource="{Binding NewUsers}"
                             Grid.Row="1"
                             BackgroundColor="#4B8C69">
                 <CollectionView.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate x:DataType="{x:Type x:String}">
                         <Grid x:Name="userGridElement"
                               HeightRequest="55"
                               BackgroundColor="Transparent">
-                            <Grid x:Name="{Binding .}"
-                                  BackgroundColor="{Binding .}"
+                            <Grid x:Name="User"
+                                  BackgroundColor="Gray"
                                   Opacity=".7"
                                   HeightRequest="55"/>
                             <Label Text="{Binding .}"
@@ -79,6 +76,15 @@
                                    VerticalOptions="Center"
                                    HorizontalOptions="Start"
                                    Margin="20,0,0,0"/>
+                            <Button
+                                Text="Remove"
+                                Margin="20,10,10,10"
+                                HorizontalOptions="End"
+                                VerticalOptions="Center"
+                                BackgroundColor="DarkRed"
+                                TextColor="Black"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MainViewModel}}, Path=RemoveUserCommand}"
+                                CommandParameter="{Binding .}"/>
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
