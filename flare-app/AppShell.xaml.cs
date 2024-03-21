@@ -6,10 +6,10 @@
         {
             InitializeComponent();
 
-            Routing.RegisterRoute(nameof(UserListPage), typeof(UserListPage));
-            Routing.RegisterRoute(nameof(RegistrationPage), typeof(RegistrationPage));
-            Routing.RegisterRoute(nameof(LoginPage), typeof(LoginPage));
-            Routing.RegisterRoute(nameof(DiscoveryPage), typeof(DiscoveryPage));
+            Routing.RegisterRoute(nameof(Views.MainPage), typeof(Views.MainPage));
+            Routing.RegisterRoute(nameof(Views.RegistrationPage), typeof(Views.RegistrationPage));
+            Routing.RegisterRoute(nameof(Views.LoginPage), typeof(Views.LoginPage));
+            Routing.RegisterRoute(nameof(Views.DiscoveryPage), typeof(Views.DiscoveryPage));
         }
     }
 }

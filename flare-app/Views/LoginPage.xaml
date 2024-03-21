@@ -1,9 +1,8 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:flare_app"
-             x:Class="flare_app.LoginPage">
-
+             x:Class="flare_app.Views.LoginPage"
+             Title="LoginPage">
     <Grid BackgroundColor="{AppThemeBinding Light={StaticResource MainLight}, Dark={StaticResource MainDark}}">
         <AbsoluteLayout>
             <Ellipse WidthRequest="280" HeightRequest="280"
@@ -106,5 +105,4 @@
             </Grid>
         </Grid>
     </Grid>
-
 </ContentPage>

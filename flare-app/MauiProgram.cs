@@ -28,10 +28,10 @@ namespace flare_app
 
             builder.Services.AddSingleton<Client>();
 
-            builder.Services.AddSingleton<DiscoveryPage>();
+            builder.Services.AddSingleton<Views.DiscoveryPage>();
             builder.Services.AddSingleton<MainViewModel>();
 
-            builder.Services.AddSingleton<UserListPage>();
+            builder.Services.AddSingleton<Views.MainPage>();
 
             return builder.Build();
         }
