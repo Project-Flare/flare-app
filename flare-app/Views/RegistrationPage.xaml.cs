@@ -1,5 +1,5 @@
 using Flare;
-using static Flare.Client;
+using flare_csharp;
 
 namespace flare_app.Views;
 
@@ -12,56 +12,33 @@ public partial class RegistrationPage : ContentPage
 
     private async void RegisterButton_Clicked(object sender, EventArgs e)
     {
-        var client = Handler?.MauiContext?.Services.GetService<Client>()!;
-
-        if (password.Text != password2.Text)
+        if (Client.State != Client.ClientState.Connected)
         {
-            RegisterErrorInfo.Text = "Password mismatch";
-            RegisterErrorInfo.TextColor = Color.FromArgb("DE1212");
+            try
+            {
+                await Client.ConnectToServer();
+            }
+            catch (Exception)
+            {
+                await DisplayAlert("Connection", "Failed to connect", "OK");
+                return;
+            }
+        }
+
+        Client.Username = "";
+        Client.Password = "{h!\"!Wr-[R5z9AQXV|&v:s^<p>C.";
+
+        try
+        {
+            await Client.RegisterToServer();
+        }
+        catch (Exception)
+        {
+            await DisplayAlert("Registration", "Failed to regeister", "OK");
             return;
         }
 
-        var registration = new UserRegistration();
-        registration.Username = username.Text;
-        registration.Password = password.Text;
-
-        // Awkward checks for username and password validity
-        // Smell relating to the client library
-        if (registration.Username == "")
-        {
-            MauiProgram.ErrorToast("Invalid username, could not submit");
-            return;
-        }
-        else if (registration.Password == "")
-        {
-            MauiProgram.ErrorToast("Invalid password, could not submit");
-            return;
-        }
-
-        if (!client.IsConnected)
-        {
-            await client.ConnectToServer();
-        }
-        var reg_resp = await client.RegisterToServer(registration);
-        switch (reg_resp)
-        {
-            case RegistrationResponse.NewUserRegistrationSucceeded:
-                {
-                    await Shell.Current.GoToAsync("//DiscoveryPage");
-                    break;
-                };
-            case RegistrationResponse.ServerDenyReasonUsernameTaken:
-                {
-                    MauiProgram.ErrorToast("Username is taken, try another");
-                    break;
-                };
-            default:
-                {
-                    MauiProgram.ErrorToast($"Unknown error: {reg_resp}");
-                    break;
-
-                }
-        }
+        await Shell.Current.GoToAsync("//MainPage", true);
     }
 
     private void password_TextChanged(object sender, TextChangedEventArgs e)

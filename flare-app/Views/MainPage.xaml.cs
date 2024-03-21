@@ -12,6 +12,6 @@ public partial class MainPage : ContentPage
 
     private void DiscoveryButton_Tapped(object sender, TappedEventArgs e)
     {
-        Shell.Current.GoToAsync(nameof(DiscoveryPage));
+        Shell.Current.GoToAsync(nameof(DiscoveryPage), true);
     }
 }

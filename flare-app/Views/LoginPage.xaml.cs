@@ -1,3 +1,5 @@
+using flare_csharp;
+
 namespace flare_app.Views;
 
 public partial class LoginPage : ContentPage
@@ -14,46 +16,34 @@ public partial class LoginPage : ContentPage
 
     private async void LoginButton_Clicked(object sender, EventArgs e)
     {
-        /*var client = Handler?.MauiContext?.Services.GetService<Client>()!;
 
-        var creds = client.UserCredentials;
-        creds.Username = username.Text;
-        creds.Password = password.Text;
-
-        if (!client.IsConnected)
+        if (Client.State != Client.ClientState.Connected)
         {
-            await client.ConnectToServer();
+            try
+            {
+                await Client.ConnectToServer();
+            }
+            catch(Exception)
+            {
+                await DisplayAlert("Connection", "Failed to connect", "OK");
+                return;
+            }
         }
-        var login_res = await client.LoginToServer();
-        switch (login_res)
-        {
-            case Client.LoginResponse.UserLoginSucceeded:
-                {
-                    await Shell.Current.GoToAsync(nameof(UserListPage));
-                    break;
-                };
-            case Client.LoginResponse.UserCredentialsNotSet:
-                {
-                    MauiProgram.ErrorToast("Entered username or password is invalid in format");
-                    break;
-                };
-            case Client.LoginResponse.ServerDenyReasonInvalidUsername:
-                {
-                    MauiProgram.ErrorToast("Username not found");
-                    break;
-                };
-            case Client.LoginResponse.ServerDenyReasonInvalidPassword:
-                {
-                    MauiProgram.ErrorToast("Incorrect password");
-                    break;
-                }
-            default:
-                {
-                    MauiProgram.ErrorToast("Unknown error");
-                    break;
-                }
-        }*/
 
-        await Shell.Current.GoToAsync("//UserListPage", true);
+        Client.Username = "";
+        Client.Password = "{h!\"!Wr-[R5z9AQXV|&v:s^<p>C.";
+
+        try
+        {
+            await Client.LoginToServer();
+        }
+        catch(Exception)
+        {
+            await DisplayAlert("Login", "Login failed", "OK");
+            return;
+        }
+
+
+        await Shell.Current.GoToAsync("//MainPage", true);
     }
 }

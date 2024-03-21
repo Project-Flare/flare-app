@@ -67,7 +67,7 @@
                                 </Border.StrokeShape>
                                 <Entry x:Name="password"
                                    Placeholder="password"
-                                   IsPassword="True"
+                                   IsPassword="False"
                                    FontFamily="InterExtraBold"
                                    FontSize="18"
                                    VerticalOptions="CenterAndExpand"

@@ -16,18 +16,12 @@
             <Setter Property="Shell.TabBarBackgroundColor"
             Value="#4C745E" />
             <Setter Property="Shell.TabBarTitleColor"
-            Value="Black" />
+            Value="White" />
             <Setter Property="Shell.TabBarUnselectedColor"
-            Value="AntiqueWhite" />
+            Value="Black" />
+            <Setter Property="Shell.TabBarDisabledColor" Value="Azure"/>
         </Style>
     </Shell.Resources>
-
-
-
-
-
-
-
 
     <ShellContent
         Title="Login"
@@ -42,23 +36,31 @@
 
     <TabBar>
         <Tab
-            Title="ListUser"
+            Title="Contacts"
             Icon="User.png">
             <ShellContent
-            Title="User list"
+            Title="MainPage"
             ContentTemplate="{DataTemplate views:MainPage}"
-            Route="UserListPage" 
+            Route="MainPage" 
             Style="{StaticResource TabBarDesign}"/>
         </Tab>
         <Tab
-            Title="UserList"
+            Title="Discover"
             Icon="UserAdd.png">
             <ShellContent
             Title="Discovery"
             ContentTemplate="{DataTemplate views:DiscoveryPage}"
             Route="DiscoveryPage" 
             Style="{StaticResource TabBarDesign}"/>
-            
+
+        </Tab>
+        <Tab Title="Settings"
+             Icon="settings.png">
+            <ShellContent
+            Title="Settings"
+            ContentTemplate="{DataTemplate views:SettingsPage}"
+            Route="SettingsPage" 
+            Style="{StaticResource TabBarDesign}"/>
         </Tab>
     </TabBar>
 

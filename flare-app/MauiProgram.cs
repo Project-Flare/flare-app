@@ -4,6 +4,7 @@ using Flare;
 using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
+using flare_csharp;
 using flare_app.ViewModels;
 
 namespace flare_app
@@ -25,8 +26,6 @@ namespace flare_app
 #if DEBUG
     		builder.Logging.AddDebug();
 #endif
-
-            builder.Services.AddSingleton<Client>();
 
             builder.Services.AddSingleton<Views.DiscoveryPage>();
             builder.Services.AddSingleton<MainViewModel>();
