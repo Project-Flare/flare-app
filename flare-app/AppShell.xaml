@@ -9,8 +9,27 @@
     Shell.NavBarIsVisible="False"
     Title="flare_app">
 
+    <Shell.Resources>
+        <Style x:Key="TabBarDesign" 
+     TargetType="Element" 
+     BasedOn="{StaticResource BaseStyle}">
+            <Setter Property="Shell.TabBarBackgroundColor"
+            Value="#4C745E" />
+            <Setter Property="Shell.TabBarTitleColor"
+            Value="Black" />
+            <Setter Property="Shell.TabBarUnselectedColor"
+            Value="AntiqueWhite" />
+        </Style>
+    </Shell.Resources>
 
-       <ShellContent
+
+
+
+
+
+
+
+    <ShellContent
         Title="Login"
         ContentTemplate="{DataTemplate views:LoginPage}"
         Route="LoginPage" />
@@ -20,15 +39,28 @@
         ContentTemplate="{DataTemplate views:RegistrationPage}"
         Route="RegistrationPage" />
 
-        <ShellContent
-        Title="User list"
-        ContentTemplate="{DataTemplate views:MainPage}"
-        Route="UserListPage" />
 
-    <ShellContent
-        Title="Discovery"
-        ContentTemplate="{DataTemplate views:DiscoveryPage}"
-        Route="DiscoveryPage" />
+    <TabBar>
+        <Tab
+            Title="ListUser"
+            Icon="User.png">
+            <ShellContent
+            Title="User list"
+            ContentTemplate="{DataTemplate views:MainPage}"
+            Route="UserListPage" 
+            Style="{StaticResource TabBarDesign}"/>
+        </Tab>
+        <Tab
+            Title="UserList"
+            Icon="UserAdd.png">
+            <ShellContent
+            Title="Discovery"
+            ContentTemplate="{DataTemplate views:DiscoveryPage}"
+            Route="DiscoveryPage" 
+            Style="{StaticResource TabBarDesign}"/>
+            
+        </Tab>
+    </TabBar>
 
 
 </Shell>
