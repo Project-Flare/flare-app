@@ -16,7 +16,7 @@ namespace flare_app
 
         private async void LoginButton_Clicked(object sender, EventArgs e)
         {
-            var client = Handler?.MauiContext?.Services.GetService<Client>()!;
+            /*var client = Handler?.MauiContext?.Services.GetService<Client>()!;
 
             if (!client.IsConnected)
             {
@@ -31,7 +31,9 @@ namespace flare_app
             if (login_res == Client.LoginResponse.UserLoginSucceeded)
             {
                 await Shell.Current.GoToAsync(nameof(UserListPage));
-            }
+            }*/
+
+            await Shell.Current.GoToAsync(nameof(UserListPage));
         }
     }
 }
