@@ -2,7 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using flare_app.Models;
-
+using flare_csharp;
 namespace flare_app.ViewModels;
 
 public partial class MainViewModel : ObservableObject
@@ -11,25 +11,7 @@ public partial class MainViewModel : ObservableObject
     // List should be taken from client class
     public MainViewModel()
     {
-        Items = new ObservableCollection<User>
-        {
-            new User
-            {
-                UserName = "Vienas",
-            },
-            new User
-            {
-                UserName = "Du",
-            },
-            new User
-            {
-                UserName = "Trys",
-            },
-            new User
-            {
-                UserName = "Keturi",
-            }
-        };
+        Items = new ObservableCollection<User>();
 
         NewUsers = new ObservableCollection<User>
         {
@@ -43,8 +25,18 @@ public partial class MainViewModel : ObservableObject
             }
         };
 
-        ResetBackGroundColor(NewUsers);
-        ResetBackGroundColor(Items);
+        //ResetBackGroundColor(NewUsers);
+        //ResetBackGroundColor(Items);
+
+        foreach (var usr in Client.UserDiscoveryList)
+        {
+            User itm = new User
+            {
+                UserName = usr.Username
+            };
+
+            Items.Add(itm);
+        }
     }
 
     [ObservableProperty]

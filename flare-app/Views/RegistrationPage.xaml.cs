@@ -25,8 +25,8 @@ public partial class RegistrationPage : ContentPage
             }
         }
 
-        Client.Username = "";
-        Client.Password = "{h!\"!Wr-[R5z9AQXV|&v:s^<p>C.";
+        Client.Username = username.Text;
+        Client.Password = password.Text;
 
         try
         {
@@ -34,9 +34,15 @@ public partial class RegistrationPage : ContentPage
         }
         catch (Exception)
         {
-            await DisplayAlert("Registration", "Failed to regeister", "OK");
+            await DisplayAlert("Registration", "Failed to register", "OK");
             return;
         }
+
+        try
+        {
+            await Client.FillUserDiscovery();
+        }
+        catch { }
 
         await Shell.Current.GoToAsync("//MainPage", true);
     }

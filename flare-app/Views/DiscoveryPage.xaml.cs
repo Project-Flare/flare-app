@@ -1,4 +1,5 @@
 using flare_app.ViewModels;
+using flare_csharp;
 
 namespace flare_app.Views;
 
@@ -8,5 +9,11 @@ public partial class DiscoveryPage : ContentPage
 	{
 		InitializeComponent();
         BindingContext = vm;
+
     }
+
+	private async void TF()
+	{
+		await Client.FillUserDiscovery();
+	}
 }
