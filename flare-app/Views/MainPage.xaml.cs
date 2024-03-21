@@ -1,4 +1,4 @@
-using flare_app.ViewModel;
+using flare_app.ViewModels;
 
 namespace flare_app.Views;
 

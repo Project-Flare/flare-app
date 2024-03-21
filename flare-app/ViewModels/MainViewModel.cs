@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using flare_app.Models;
 
-namespace flare_app.ViewModel;
+namespace flare_app.ViewModels;
 
 public partial class MainViewModel : ObservableObject
 {

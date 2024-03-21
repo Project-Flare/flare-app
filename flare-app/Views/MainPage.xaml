@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:models="clr-namespace:flare_app.Models"
-             xmlns:viewmodel="clr-namespace:flare_app.ViewModel"
+             xmlns:viewmodels="clr-namespace:flare_app.ViewModels"
              x:Class="flare_app.Views.MainPage"
              Title="MainPage">
     <ContentPage.Resources>
@@ -94,7 +94,7 @@
                                 VerticalOptions="Center"
                                 BackgroundColor="DarkRed"
                                 TextColor="Black"
-                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MainViewModel}}, Path=RemoveUserCommand}"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MainViewModel}}, Path=RemoveUserCommand}"
                                 CommandParameter="{Binding UserName}"/>
                         </Grid>
                     </DataTemplate>

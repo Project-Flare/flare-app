@@ -4,7 +4,7 @@ using Flare;
 using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
-using flare_app.ViewModel;
+using flare_app.ViewModels;
 
 namespace flare_app
 {
