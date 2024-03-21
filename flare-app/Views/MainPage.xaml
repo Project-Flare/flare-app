@@ -5,6 +5,9 @@
              xmlns:viewmodels="clr-namespace:flare_app.ViewModels"
              x:Class="flare_app.Views.MainPage"
              Title="MainPage">
+    <ContentPage.BindingContext>
+        <viewmodels:MainViewModel />
+    </ContentPage.BindingContext>
     <ContentPage.Resources>
         <Style TargetType="Grid">
             <Style.Triggers>
@@ -61,16 +64,18 @@
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="12" />
                         </Border.StrokeShape>
-                        <Entry Placeholder="search"
+                        <SearchBar Placeholder="search"
                                    FontFamily="InterExtraBold"
                                    FontSize="18"
                                    VerticalOptions="Center"
-                                   ClearButtonVisibility="WhileEditing"
+                                   SearchCommand="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MainViewModel}}, Path=PerformSearchCommand}"
+                                   SearchCommandParameter="{Binding .}"
                                    Margin="5,0,5,0"/>
                     </Border>
                 </Grid>
             </Grid>
-            <CollectionView ItemsSource="{Binding NewUsers}"
+            <CollectionView x:Name="UserCollection"
+                            ItemsSource="{Binding NewUsers}"
                             Grid.Row="1"
                             BackgroundColor="#4B8C69">
                 <CollectionView.ItemTemplate>

@@ -1,12 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
-using System.Threading.Tasks;
 using flare_app.Models;
 
 namespace flare_app.ViewModels;
@@ -52,7 +46,6 @@ public partial class MainViewModel : ObservableObject
         ResetBackGroundColor(NewUsers);
         ResetBackGroundColor(Items);
     }
-       
 
     [ObservableProperty]
     ObservableCollection<User> items;
@@ -63,7 +56,7 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     void AddUser(string s)
     {
-        User removeThis = Items.FirstOrDefault(u => u.UserName == s);
+        User? removeThis = Items.FirstOrDefault(u => u.UserName == s);
 
         if (removeThis != null)
         {
@@ -76,7 +69,7 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     void RemoveUser(string s)
     {
-        User removeThis = NewUsers.FirstOrDefault(u => u.UserName == s);
+        User? removeThis = NewUsers.FirstOrDefault(u => u.UserName == s);
 
         if (removeThis != null)
         {
@@ -85,6 +78,13 @@ public partial class MainViewModel : ObservableObject
             ResetBackGroundColor(NewUsers);
             ResetBackGroundColor(Items);
         }
+    }
+
+    [RelayCommand]
+    void PerformSearchCommand(string query)
+    {
+        Items.Add(new User { UserName="something" });
+        items.Add(new User { UserName = "something" });
     }
 
     void ResetBackGroundColor(ObservableCollection<User> list)
@@ -102,4 +102,5 @@ public partial class MainViewModel : ObservableObject
             }
         }
     }
+
 }

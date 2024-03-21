@@ -35,6 +35,7 @@ namespace flare_app
 
             return builder.Build();
         }
+
         public static async void ErrorToast(string message)
         {
             CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
@@ -45,5 +46,6 @@ namespace flare_app
             var toast = Toast.Make(message, duration, fontSize);
             await toast.Show(cancellationTokenSource.Token);
         }
+
     }
 }
