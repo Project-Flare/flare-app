@@ -4,8 +4,23 @@
              xmlns:local="clr-namespace:flare_app"
              x:Class="flare_app.UserListPage"
              xmlns:viewmodel="clr-namespace:flare_app.ViewModel"
-             x:DataType="viewmodel:MainViewModel">
-    
+             xmlns:models="clr-namespace:flare_app.Models">
+    <ContentPage.BindingContext>
+        <viewmodel:MainViewModel/>
+    </ContentPage.BindingContext>
+    <ContentPage.Resources>
+        <Style TargetType="Grid">
+            <Style.Triggers>
+                <Trigger TargetType="Grid" Property="Style" Value="DarkTile">
+                    <Setter Property="BackgroundColor" Value="Black" />
+                </Trigger>
+                <Trigger TargetType="Grid" Property="Style" Value="LightTile">
+                    <Setter Property="BackgroundColor" Value="White" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </ContentPage.Resources>
+
     <Grid>
         <Grid RowDefinitions="140, *">
             <Grid RowDefinitions="60, *"
@@ -62,15 +77,14 @@
                             Grid.Row="1"
                             BackgroundColor="#4B8C69">
                 <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="{x:Type x:String}">
+                    <DataTemplate x:DataType="{x:Type models:User}">
                         <Grid x:Name="userGridElement"
                               HeightRequest="55"
                               BackgroundColor="Transparent">
-                            <Grid x:Name="User"
-                                  BackgroundColor="Gray"
+                            <Grid Style="{Binding BackGroundColor}"
                                   Opacity=".7"
                                   HeightRequest="55"/>
-                            <Label Text="{Binding .}"
+                            <Label Text="{Binding UserName}"
                                    TextColor="White"
                                    Opacity="1"
                                    VerticalOptions="Center"
@@ -84,7 +98,7 @@
                                 BackgroundColor="DarkRed"
                                 TextColor="Black"
                                 Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MainViewModel}}, Path=RemoveUserCommand}"
-                                CommandParameter="{Binding .}"/>
+                                CommandParameter="{Binding UserName}"/>
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
