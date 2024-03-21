@@ -73,6 +73,7 @@
                                    FontFamily="InterExtraBold"
                                    FontSize="18"
                                    VerticalOptions="CenterAndExpand"
+                                   TextChanged="password_TextChanged"
                                    Margin="5,0,5,0"/>
                             </Border>
                         </Grid>
@@ -89,14 +90,16 @@
                                    Placeholder="repeat password"
                                    FontSize="18"
                                    VerticalOptions="CenterAndExpand"
+                                   TextChanged="password_TextChanged"
                                    Margin="5,0,5,0"/>
                             </Border>
                         </Grid>
                         <Grid Grid.Row="3" Margin="0,7,0,0">
                             <Label x:Name="RegisterErrorInfo" 
-                                Text="password entropy reserved/missmatch"
-                                   FontFamily="InterExtraBold"
-                               TextColor="#000000"/>
+                                Text=""
+                                FontSize="Medium"
+                                FontFamily="InterExtraBold"
+                                TextColor="#000000"/>
                         </Grid>
                         <Grid Grid.Row="4" HeightRequest="35" Margin="0,0,0,40">
                             <Button x:Name="RegisterButton" 
