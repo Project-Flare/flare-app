@@ -19,9 +19,15 @@ public partial class LoginPage : ContentPage
 
     private async void LoginButton_Clicked(object sender, EventArgs e)
     {
+        if (username.Text == "" || password.Text == "")
+        {
+            ButtonAngry();
+            return;
+        }
+
         // Initiate login.
 
-        /*loadingMesg.Text = "";
+        loadingMesg.Text = "";
         initLoadingScreen(true); // Aditional 600ms to log in process.
 
         // Connecting to server
@@ -34,7 +40,6 @@ public partial class LoginPage : ContentPage
             }
             catch (Exception)
             {
-                //await DisplayAlert("Connection", "Failed to connect", "OK");
                 initLoadingScreen(false);
                 MauiProgram.ErrorToast("Connection with server failed.");
                 return;
@@ -67,11 +72,12 @@ public partial class LoginPage : ContentPage
         }
         catch (Exception)
         {
+            MauiProgram.ErrorToast("Failed to synchronise other users.");
             //return;
         }
 
         // Success
-        initLoadingScreen(false);*/
+        initLoadingScreen(false);
         await Shell.Current.GoToAsync("//MainPage", true);
     }
 
@@ -91,5 +97,16 @@ public partial class LoginPage : ContentPage
             loadingScreen.IsVisible = false;
             loadingIndicator.IsVisible = false;
         }
+    }
+
+    private async void ButtonAngry()
+    {
+        await loginGrid.TranslateTo(25, 0, 150);
+        await loginGrid.TranslateTo(-50, 0, 150);
+
+        await loginGrid.TranslateTo(15, 0, 100);
+        await loginGrid.TranslateTo(-15, 0, 100);
+
+        await loginGrid.TranslateTo(0, 0, 100);
     }
 }

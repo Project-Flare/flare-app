@@ -30,7 +30,8 @@
                        VerticalOptions="End"/>
             </Grid>
             <Grid Grid.Row="1">
-                <Grid HeightRequest="320"
+                <Grid x:Name="loginGrid" 
+                    HeightRequest="320"
                     WidthRequest="375"
                     MaximumWidthRequest="1000"
                     VerticalOptions="Start"
@@ -47,6 +48,7 @@
                                     <RoundRectangle CornerRadius="12" />
                                 </Border.StrokeShape>
                                 <Entry x:Name="username"
+                                   Text=""
                                    Placeholder="username"
                                    FontFamily="InterExtraBold"
                                    FontSize="18"
@@ -62,6 +64,7 @@
                                     <RoundRectangle CornerRadius="12" />
                                 </Border.StrokeShape>
                                 <Entry x:Name="password"
+                                   Text=""
                                    Placeholder="password"
                                    FontFamily="InterExtraBold"
                                    FontSize="18"

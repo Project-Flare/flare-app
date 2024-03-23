@@ -12,9 +12,16 @@ public partial class RegistrationPage : ContentPage
 
     private async void RegisterButton_Clicked(object sender, EventArgs e)
     {
+        if(username.Text == "" || password.Text == "" || password2.Text == "")
+        {
+            ButtonAngry();
+            return;
+        }
+
+
         // Initiate registration.
         loadingMesg.Text = "";
-        initLoadingScreen(true);
+        initLoadingScreen(true); // Aditional 600ms to log in process.
 
         if (Client.State != Client.ClientState.Connected)
         {
@@ -120,5 +127,16 @@ public partial class RegistrationPage : ContentPage
             loadingScreen.IsVisible = false;
             loadingIndicator.IsVisible = false;
         }
+    }
+
+    private async void ButtonAngry()
+    {
+        await registerGrid.TranslateTo(25, 0, 150);
+        await registerGrid.TranslateTo(-50, 0, 150);
+
+        await registerGrid.TranslateTo(15, 0, 100);
+        await registerGrid.TranslateTo(-15, 0, 100);
+
+        await registerGrid.TranslateTo(0, 0, 100);
     }
 }
