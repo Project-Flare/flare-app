@@ -1,5 +1,7 @@
 using flare_csharp;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Formats.Asn1;
 
 namespace flare_app.Views;
 
@@ -17,39 +19,77 @@ public partial class LoginPage : ContentPage
 
     private async void LoginButton_Clicked(object sender, EventArgs e)
     {
+        // Initiate login.
 
-       if (Client.State != Client.ClientState.Connected)
+        /*loadingMesg.Text = "";
+        initLoadingScreen(true); // Aditional 600ms to log in process.
+
+        // Connecting to server
+        if (Client.State != Client.ClientState.Connected)
         {
+            loadingMesg.Text = "Connecting to server...";
             try
             {
                 await Client.ConnectToServer();
             }
             catch (Exception)
             {
-                await DisplayAlert("Connection", "Failed to connect", "OK");
+                //await DisplayAlert("Connection", "Failed to connect", "OK");
+                initLoadingScreen(false);
+                MauiProgram.ErrorToast("Connection with server failed.");
                 return;
             }
         }
 
-        Client.Username = "manfredas_lamsargis_UwU";
-        Client.Password = "{h!\"!Wr-[R5z9AQXV|&v:s^<p>C.";
+        Client.Username = username.Text;
+        Client.Password = password.Text;
 
+        //Client.Username = "manfredas_lamsargis_UwU";
+        //Client.Password = "{h!\"!Wr-[R5z9AQXV|&v:s^<p>C.";
+
+        // Logging in
+        loadingMesg.Text = "Logging in...";
         try
         {
             await Client.LoginToServer();
         }
         catch (Exception)
         {
-            await DisplayAlert("Login", "Login failed", "OK");
+            initLoadingScreen(false);
+            MauiProgram.ErrorToast("Failed to log in.");
             return;
         }
 
+        loadingMesg.Text = "Synchronising other users...";
         try
         {
             await Client.FillUserDiscovery();
         }
-        catch { }
+        catch (Exception)
+        {
+            //return;
+        }
 
+        // Success
+        initLoadingScreen(false);*/
         await Shell.Current.GoToAsync("//MainPage", true);
+    }
+
+    private async void initLoadingScreen(bool turnOn)
+    {
+        if (turnOn)
+        {
+            LoginButton.IsEnabled = false;
+            loadingScreen.IsVisible = true;
+            loadingIndicator.IsVisible = true;
+            await loadingScreen.FadeTo(0.65, 600, Easing.Linear);
+        }
+        else
+        {
+            await loadingScreen.FadeTo(0, 600, Easing.Linear);
+            LoginButton.IsEnabled = true;
+            loadingScreen.IsVisible = false;
+            loadingIndicator.IsVisible = false;
+        }
     }
 }

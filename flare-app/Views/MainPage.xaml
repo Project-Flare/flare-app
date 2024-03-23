@@ -45,18 +45,18 @@
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="12" />
                         </Border.StrokeShape>
-                        <SearchBar Placeholder="search"
-                                   FontFamily="InterExtraBold"
+                        <Entry Placeholder="search"
+                                   FontFamily="Inter"
                                    FontSize="18"
                                    VerticalOptions="Center"
-                                   SearchCommand="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MainViewModel}}, Path=PerformSearchCommand}"
-                                   SearchCommandParameter="{Binding .}"
+                                   TextChanged="search_TextChanged"
+                                   ClearButtonVisibility="WhileEditing"
                                    Margin="5,0,5,0"/>
                     </Border>
                 </Grid>
             </Grid>
             <CollectionView x:Name="UserCollection"
-                            ItemsSource="{Binding NewUsers}"
+                            ItemsSource="{Binding MyUsers}"
                             Grid.Row="1"
                             BackgroundColor="#4B8C69">
                 <CollectionView.ItemTemplate>
@@ -64,22 +64,25 @@
                         <Grid x:Name="userGridElement"
                               HeightRequest="55"
                               BackgroundColor="Transparent">
-                            <Grid Style="{Binding BackGroundColor}"
+                                <Grid Style="{Binding BackGroundColor}"
                                   Opacity=".7"
                                   HeightRequest="55"/>
-                            <Label Text="{Binding UserName}"
+                                <Label Text="{Binding UserName}"
                                    TextColor="White"
-                                   Opacity="1"
+                                   FontFamily="Inter"
+                                   FontSize="18"
                                    VerticalOptions="Center"
                                    HorizontalOptions="Start"
-                                   Margin="20,0,0,0"/>
-                            <Button
+                                   Margin="20,0,20,0"/>
+                                <Button
                                 Text="Remove"
                                 Margin="20,10,10,10"
+                                Opacity="0.7"
                                 HorizontalOptions="End"
                                 VerticalOptions="Center"
                                 BackgroundColor="DarkRed"
-                                TextColor="Black"
+                                TextColor="White"
+                                FontFamily="inter"
                                 Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MainViewModel}}, Path=RemoveUserCommand}"
                                 CommandParameter="{Binding UserName}"/>
                         </Grid>

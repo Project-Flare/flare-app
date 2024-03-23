@@ -66,6 +66,7 @@
                                     <RoundRectangle CornerRadius="12" />
                                 </Border.StrokeShape>
                                 <Entry x:Name="password"
+                                   Text=""
                                    Placeholder="password"
                                    IsPassword="False"
                                    FontFamily="InterExtraBold"
@@ -83,6 +84,7 @@
                                     <RoundRectangle CornerRadius="12" />
                                 </Border.StrokeShape>
                                 <Entry x:Name="password2"
+                                   Text=""
                                    FontFamily="InterExtraBold"
                                    IsPassword="True"
                                    Placeholder="repeat password"
@@ -111,6 +113,34 @@
                         </Grid>
                     </Grid>
                 </Grid>
+            </Grid>
+        </Grid>
+        <Grid x:Name="loadingScreen"
+              Opacity="0"
+              RowDefinitions="*"
+              BackgroundColor="Black"
+              IsVisible="False">
+            <Grid Grid.Row="0" Margin="0,0,0,200">
+                <ActivityIndicator x:Name="loadingIndicator"
+                                   IsRunning="True"
+                                   Color="White"
+                                   HeightRequest="80"
+                                   VerticalOptions="Center"
+                                   HorizontalOptions="Center" />
+                <Label x:Name="loadingMesg"
+                   Text=""
+                   LineBreakMode="WordWrap"
+                   TextColor="White"
+                   Margin="20,100,20,0"
+                   FontFamily="InterBold"
+                   HorizontalTextAlignment="Center"
+                   VerticalOptions="Center"/>
+                <Label x:Name="loadingTime"
+                       TextColor="White"
+                       Margin="20,140,20,0"
+                       FontFamily="InterBold"
+                       HorizontalTextAlignment="Center"
+                       VerticalOptions="Center"/>
             </Grid>
         </Grid>
     </Grid>

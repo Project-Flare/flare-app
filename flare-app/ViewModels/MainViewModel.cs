@@ -8,12 +8,14 @@ namespace flare_app.ViewModels;
 public partial class MainViewModel : ObservableObject
 {
 
+    private List<User> initMyUsers;
+    private List<User> initDiscoveryList;
+
     // List should be taken from client class
     public MainViewModel()
     {
-        Items = new ObservableCollection<User>();
-
-        NewUsers = new ObservableCollection<User>
+        initDiscoveryList = new List<User>();
+        initMyUsers = new List<User> // sample list
         {
             new User
             {
@@ -22,12 +24,42 @@ public partial class MainViewModel : ObservableObject
             new User
             {
                 UserName = "Jonas",
+            },
+            new User
+            {
+                UserName = "Baryga",
+            },
+            new User
+            {
+                UserName = "Gola",
+            },
+            new User
+            {
+                UserName = "UwU",
+            },
+            new User
+            {
+                UserName = "Opel_Zafira_2TDI",
             }
         };
 
-        //ResetBackGroundColor(NewUsers);
-        //ResetBackGroundColor(Items);
+        ReloadInitDiscoveryList();
 
+        DiscoveryList = new ObservableCollection<User>();
+        MyUsers = new ObservableCollection<User>();
+
+        //ReloadDiscoveryList();
+        ReloadMyUsers();
+    }
+
+    [ObservableProperty]
+    ObservableCollection<User> myUsers; // Observable.
+    [ObservableProperty]
+    ObservableCollection<User> discoveryList; // Observable.
+
+    void ReloadInitDiscoveryList()
+    {
+        initDiscoveryList.Clear();
         foreach (var usr in Client.UserDiscoveryList)
         {
             User itm = new User
@@ -35,48 +67,114 @@ public partial class MainViewModel : ObservableObject
                 UserName = usr.Username
             };
 
-            Items.Add(itm);
+            initDiscoveryList.Add(itm);
         }
+
+        ReloadDiscoveryList();
     }
 
-    [ObservableProperty]
-    ObservableCollection<User> items;
+    void ReloadDiscoveryList()
+    {
+        foreach (var usr in initDiscoveryList)
+        {
+            DiscoveryList.Add(usr);
+        }
 
-    [ObservableProperty]
-    ObservableCollection<User> newUsers;
+        //ResetBackGroundColor(DiscoveryList);
+    }
+
+    void ReloadMyUsers()
+    {
+        foreach (var usr in initMyUsers)
+        {
+            MyUsers.Add(usr);
+        }
+
+        //ResetBackGroundColor(MyUsers);
+    }
 
     [RelayCommand]
-    void AddUser(string s)
+    void AddUser(string s) // Adds form discovery list to my user list
     {
-        User? removeThis = Items.FirstOrDefault(u => u.UserName == s);
+        User? removeThis = DiscoveryList.FirstOrDefault(u => u.UserName == s);
 
         if (removeThis != null)
         {
-            Items.Remove(removeThis);
-            NewUsers.Add(removeThis);
-            ResetBackGroundColor(NewUsers);
-            ResetBackGroundColor(Items);
+            //DiscoveryList.Remove(removeThis); // to be decided
+            MyUsers.Add(removeThis);
+            //ResetBackGroundColor(NewUsers);
+            //ResetBackGroundColor(DiscoveryList);
         }
     }
+
     [RelayCommand]
     void RemoveUser(string s)
     {
-        User? removeThis = NewUsers.FirstOrDefault(u => u.UserName == s);
+        User? removeThis = MyUsers.FirstOrDefault(u => u.UserName == s);
 
         if (removeThis != null)
         {
-            NewUsers.Remove(removeThis);
-            Items.Add(removeThis);
-            ResetBackGroundColor(NewUsers);
-            ResetBackGroundColor(Items);
+            MyUsers.Remove(removeThis);
+            //DiscoveryList.Add(removeThis); // to be decided
+            //ResetBackGroundColor(MyUsers);
+            //ResetBackGroundColor(DiscoveryList);
         }
     }
 
     [RelayCommand]
-    void PerformSearchCommand(string query)
+    void PerformDiscoverySearch(string query)
     {
-        Items.Add(new User { UserName="something" });
-        items.Add(new User { UserName = "something" });
+        if (query == string.Empty)
+        {
+            DiscoveryList.Clear();
+            foreach (var user in initDiscoveryList)
+            {
+                DiscoveryList.Add(user);
+            }
+
+            //ResetBackGroundColor(DiscoveryList);
+        }
+        else
+        {
+            DiscoveryList.Clear();
+            foreach (var user in initDiscoveryList)
+            {
+                if (user.UserName.ToLower().Contains(query.ToLower()))
+                {
+                    DiscoveryList.Add(user);
+                }
+            }
+
+            //ResetBackGroundColor(DiscoveryList);
+        }
+    }
+
+    [RelayCommand]
+    void PerformMyUserSearch(string query)
+    {
+        if (query == string.Empty)
+        {
+            MyUsers.Clear();
+            foreach (var user in initMyUsers)
+            {
+                MyUsers.Add(user);
+            }
+
+            //ResetBackGroundColor(MyUsers);
+        }
+        else
+        {
+            MyUsers.Clear();
+            foreach (var user in initMyUsers)
+            {
+                if(user.UserName.ToLower().Contains(query.ToLower()))
+                {
+                    MyUsers.Add(user);
+                }
+            }
+
+            //ResetBackGroundColor(MyUsers);
+        }
     }
 
     void ResetBackGroundColor(ObservableCollection<User> list)

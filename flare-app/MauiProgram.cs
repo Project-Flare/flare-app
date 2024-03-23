@@ -6,6 +6,7 @@ using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using flare_csharp;
 using flare_app.ViewModels;
+using flare_app.Views;
 
 namespace flare_app
 {
@@ -21,6 +22,9 @@ namespace flare_app
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                    fonts.AddFont("Inter-Regular.ttf", "Inter");
+                    fonts.AddFont("Inter-Bold.ttf", "InterBold");
+                    fonts.AddFont("Inter-ExtraBold.ttf", "InterExtraBold");
                 });
 
 #if DEBUG
@@ -33,6 +37,7 @@ namespace flare_app
             builder.Services.AddSingleton<Views.MainPage>();
 
             return builder.Build();
+
         }
 
         public static async void ErrorToast(string message)

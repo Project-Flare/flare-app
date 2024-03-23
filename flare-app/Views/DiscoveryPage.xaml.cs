@@ -5,15 +5,18 @@ namespace flare_app.Views;
 
 public partial class DiscoveryPage : ContentPage
 {
-	public DiscoveryPage (MainViewModel vm)
+    private MainViewModel mainViewModel;
+
+    public DiscoveryPage (MainViewModel vm)
 	{
 		InitializeComponent();
         BindingContext = vm;
+        mainViewModel = vm;
 
     }
 
-	private async void TF()
-	{
-		await Client.FillUserDiscovery();
-	}
+    private void search_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        mainViewModel.PerformDiscoverySearchCommand.Execute(e.NewTextValue);
+    }
 }
