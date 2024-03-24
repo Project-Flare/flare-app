@@ -21,6 +21,9 @@ public partial class RegistrationPage : ContentPage
             return;
         }
 
+        if (password.Text != password2.Text)
+            return;
+
         // Initiate registration.
         loadingMesg.Text = "";
         initLoadingScreen(true); // Aditional 600ms to log in process.
@@ -42,34 +45,37 @@ public partial class RegistrationPage : ContentPage
 
         Client.Username = username.Text;
         Client.Password = password.Text;
-        //Client.Password = "{h!\"!Wr-[R5z9AQXV|&v:s^<p>C.";
 
         loadingMesg.Text = "Registering user...";
         try
         {
             await Client.RegisterToServer();
         }
-        catch (Exception)
+        catch (Exception ex)
         {
             initLoadingScreen(false);
-            MauiProgram.ErrorToast("Failed to register.");
+            MauiProgram.ErrorToast("Failed to register: " + ex.Message);
             return;
         }
+
+        Client.Password = "";
+        password.Text = "";
+        password2.Text = "";
 
         loadingMesg.Text = "Synchronising other users...";
         try
         {
             await Client.FillUserDiscovery();
         }
-        catch
+        catch (Exception ex)
         {
-            MauiProgram.ErrorToast("Failed to synchronise other users.");
+            MauiProgram.ErrorToast("Failed to synchronize: " + ex.Message);
             //return;
         }
 
         try
         {
-            await LocalUserDBService.InsertLocalUser(new LocalUser { LocalUserName = username.Text, Password = Client.Password, AuthToken = Client.AuthToken });
+            await LocalUserDBService.InsertLocalUser(new LocalUser { LocalUserName = username.Text, AuthToken = Client.AuthToken });
         }
         catch { }
 
@@ -79,44 +85,44 @@ public partial class RegistrationPage : ContentPage
 
     private void password_TextChanged(object sender, TextChangedEventArgs e)
     {
-        string pwd;
-        if (password2.Text.Length > 3 || password.Text.Contains(password2.Text))
-        {
-            pwd = password.Text;
-            var complexity = UserRegistration.EvaluatePassword(pwd);
-            switch (complexity)
-            {
-                case PasswordStrength.None:
-                    {
-                        RegisterErrorInfo.TextColor = Color.FromArgb("000000");
-                        RegisterErrorInfo.Text = "";
-                        break;
-                    };
-                case PasswordStrength.Unacceptable:
-                case PasswordStrength.Weak:
-                    {
-                        RegisterErrorInfo.Text = "Password is too weak";
-                        RegisterErrorInfo.TextColor = Color.FromArgb("DE1212");
-                        break;
-                    };
-                case (PasswordStrength.Good):
-                    {
-                        RegisterErrorInfo.Text = "Password is okay";
-                        RegisterErrorInfo.TextColor = Color.FromArgb("AF6600");
-                        break;
-                    };
-                case PasswordStrength.Excellent:
-                    {
-                        RegisterErrorInfo.Text = "Password is excellent";
-                        RegisterErrorInfo.TextColor = Color.FromArgb("078100");
-                        break;
-                    }
-            }
-        }
-        else
+        var pwd_1 = password.Text;
+        var pwd_2 = password2.Text;
+
+        if (pwd_1 != pwd_2 && pwd_2 != "")
         {
             RegisterErrorInfo.TextColor = Color.FromArgb("000000");
             RegisterErrorInfo.Text = "Password mismatch";
+            return;
+        }
+
+        var complexity = UserRegistration.EvaluatePassword(pwd_1);
+        switch (complexity)
+        {
+            case PasswordStrength.None:
+                {
+                    RegisterErrorInfo.TextColor = Color.FromArgb("000000");
+                    RegisterErrorInfo.Text = "";
+                    break;
+                };
+            case PasswordStrength.Unacceptable:
+            case PasswordStrength.Weak:
+                {
+                    RegisterErrorInfo.Text = "Password is too weak";
+                    RegisterErrorInfo.TextColor = Color.FromArgb("DE1212");
+                    break;
+                };
+            case (PasswordStrength.Good):
+                {
+                    RegisterErrorInfo.Text = "Password is okay";
+                    RegisterErrorInfo.TextColor = Color.FromArgb("AF6600");
+                    break;
+                };
+            case PasswordStrength.Excellent:
+                {
+                    RegisterErrorInfo.Text = "Password is excellent";
+                    RegisterErrorInfo.TextColor = Color.FromArgb("078100");
+                    break;
+                }
         }
     }
 

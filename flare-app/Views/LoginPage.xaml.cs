@@ -52,21 +52,21 @@ public partial class LoginPage : ContentPage
         Client.Username = username.Text;
         Client.Password = password.Text;
 
-        //Client.Username = "manfredas_lamsargis_UwU";
-        //Client.Password = "{h!\"!Wr-[R5z9AQXV|&v:s^<p>C.";
-
         // Logging in
         loadingMesg.Text = "Logging in...";
         try
         {
             await Client.LoginToServer();
         }
-        catch (Exception)
+        catch (Exception ex)
         {
             initLoadingScreen(false);
-            MauiProgram.ErrorToast("Failed to log in.");
+            MauiProgram.ErrorToast("Failed to log in: " + ex.Message);
             return;
         }
+
+        Client.Password = "";
+        password.Text = "";
 
         loadingMesg.Text = "Synchronising other users...";
         try
@@ -81,7 +81,7 @@ public partial class LoginPage : ContentPage
 
         try
         {
-            await LocalUserDBService.InsertLocalUser(new LocalUser { LocalUserName = username.Text, Password = Client.Password, AuthToken = Client.AuthToken });
+            await LocalUserDBService.InsertLocalUser(new LocalUser { LocalUserName = username.Text, AuthToken = Client.AuthToken });
         }
         catch { }
         

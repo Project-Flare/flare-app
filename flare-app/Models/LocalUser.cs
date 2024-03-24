@@ -9,7 +9,6 @@ public class LocalUser
 {
     [PrimaryKey, Unique]
     public string LocalUserName { get; set; }
-    public string Password { get; set; }
     public string AuthToken { get; set; }
 }
 
