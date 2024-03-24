@@ -1,22 +1,24 @@
 using flare_app.ViewModels;
 using flare_app.Models;
 using Microsoft.Maui.Controls;
+using flare_app.Services;
 
 namespace flare_app.Views;
 
 public partial class MainPage : ContentPage
 {
-    private MainViewModel mainViewModel;
+    private readonly MainViewModel _mainViewModel;
+    private bool firstRefresh = false;
 
     public MainPage(MainViewModel vm)
     {
         InitializeComponent();
         BindingContext = vm;
-        mainViewModel = vm;
+        _mainViewModel = vm;
     }
 
     private void search_TextChanged(object sender, TextChangedEventArgs e)
     {
-        mainViewModel.PerformMyUserSearchCommand.Execute(e.NewTextValue);
+        _mainViewModel.PerformMyUserSearchCommand.Execute(e.NewTextValue);
     }
 }

@@ -1,4 +1,7 @@
 using Flare;
+using flare_app.Models;
+using flare_app.Services;
+using flare_app.ViewModels;
 using flare_csharp;
 
 namespace flare_app.Views;
@@ -14,10 +17,9 @@ public partial class RegistrationPage : ContentPage
     {
         if(username.Text == "" || password.Text == "" || password2.Text == "")
         {
-            ButtonAngry();
+            ButtonShake();
             return;
         }
-
 
         // Initiate registration.
         loadingMesg.Text = "";
@@ -39,7 +41,8 @@ public partial class RegistrationPage : ContentPage
         }
 
         Client.Username = username.Text;
-        Client.Password = "{h!\"!Wr-[R5z9AQXV|&v:s^<p>C.";
+        Client.Password = password.Text;
+        //Client.Password = "{h!\"!Wr-[R5z9AQXV|&v:s^<p>C.";
 
         loadingMesg.Text = "Registering user...";
         try
@@ -64,6 +67,12 @@ public partial class RegistrationPage : ContentPage
             //return;
         }
 
+        try
+        {
+            await LocalUserDBService.InsertLocalUser(new LocalUser { LocalUserName = username.Text, Password = Client.Password, AuthToken = Client.AuthToken });
+        }
+        catch { }
+
         initLoadingScreen(false);
         await Shell.Current.GoToAsync("//MainPage", true);
     }
@@ -71,7 +80,7 @@ public partial class RegistrationPage : ContentPage
     private void password_TextChanged(object sender, TextChangedEventArgs e)
     {
         string pwd;
-        if (password.Text.Length > 3 && password.Text.Contains(password2.Text))
+        if (password2.Text.Length > 3 || password.Text.Contains(password2.Text))
         {
             pwd = password.Text;
             var complexity = UserRegistration.EvaluatePassword(pwd);
@@ -129,7 +138,7 @@ public partial class RegistrationPage : ContentPage
         }
     }
 
-    private async void ButtonAngry()
+    private async void ButtonShake()
     {
         await registerGrid.TranslateTo(25, 0, 150);
         await registerGrid.TranslateTo(-50, 0, 150);

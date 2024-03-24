@@ -23,10 +23,23 @@
                   VerticalOptions="End">
                 </Grid>
             </Grid>
-            <CollectionView
+            <VerticalStackLayout
                             Grid.Row="1"
                             BackgroundColor="#4B8C69">
-            </CollectionView>
+                <Grid HeightRequest="55">
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
+                    </Grid.GestureRecognizers>
+                    <Grid BackgroundColor="Gray" Opacity=".7"/>
+                    <Label Text="Sign Out"
+                           FontSize="18"
+                           FontFamily="InterBold"
+                           TextColor="DarkRed"
+                           Margin="20,0,20,0"
+                           VerticalOptions="Center"/>
+                </Grid>
+                
+            </VerticalStackLayout>
         </Grid>
     </Grid>
 </ContentPage>

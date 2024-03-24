@@ -3,57 +3,52 @@ using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using flare_app.Models;
 using flare_csharp;
+using System.Runtime.CompilerServices;
+using flare_app.Services;
+using flare_app.Views;
 namespace flare_app.ViewModels;
 
 public partial class MainViewModel : ObservableObject
 {
+    public AsyncRelayCommand<string> AddUserCommand { get; }
+    public AsyncRelayCommand<string> RemoveUserCommand { get; }
+    public AsyncRelayCommand<string> PerformMyUserSearchCommand { get; }
+    public AsyncRelayCommand RefreshCommand { get; }
 
-    private List<User> initMyUsers;
     private List<User> initDiscoveryList;
+    bool isRefreshing;
+    bool refreshFirstTime = false;
+
+    public bool IsRefreshing
+    {
+        get { return isRefreshing; }
+        set { isRefreshing = value; OnPropertyChanged(); }
+    }
 
     // List should be taken from client class
     public MainViewModel()
     {
-        initDiscoveryList = new List<User>();
-        initMyUsers = new List<User> // sample list
-        {
-            new User
-            {
-                UserName = "Petras",
-            },
-            new User
-            {
-                UserName = "Jonas",
-            },
-            new User
-            {
-                UserName = "Baryga",
-            },
-            new User
-            {
-                UserName = "Gola",
-            },
-            new User
-            {
-                UserName = "UwU",
-            },
-            new User
-            {
-                UserName = "Opel_Zafira_2TDI",
-            }
-        };
+        AddUserCommand = new AsyncRelayCommand<string>(AddUser);
+        RemoveUserCommand = new AsyncRelayCommand<string>(RemoveUser);
+        PerformMyUserSearchCommand = new AsyncRelayCommand<string>(PerformMyUserSearch);
+        RefreshCommand = new AsyncRelayCommand(Refresh);
 
-        ReloadInitDiscoveryList();
+        initDiscoveryList = new List<User>();
 
         DiscoveryList = new ObservableCollection<User>();
-        MyUsers = new ObservableCollection<User>();
+        MyUsers = new ObservableCollection<MyContact>();
 
-        //ReloadDiscoveryList();
-        ReloadMyUsers();
+        ReloadInitDiscoveryList();
+        if (!refreshFirstTime)
+        {
+            refreshFirstTime = true;
+            Task.Run(Refresh);
+        }
+        //ReloadInitMyUsers();
     }
 
     [ObservableProperty]
-    ObservableCollection<User> myUsers; // Observable.
+    ObservableCollection<MyContact> myUsers; // Observable.
     [ObservableProperty]
     ObservableCollection<User> discoveryList; // Observable.
 
@@ -69,56 +64,40 @@ public partial class MainViewModel : ObservableObject
 
             initDiscoveryList.Add(itm);
         }
-
         ReloadDiscoveryList();
     }
 
     void ReloadDiscoveryList()
     {
-        foreach (var usr in initDiscoveryList)
+        DiscoveryList.Clear();
+        foreach (var user in initDiscoveryList)
         {
-            DiscoveryList.Add(usr);
-        }
-
-        //ResetBackGroundColor(DiscoveryList);
-    }
-
-    void ReloadMyUsers()
-    {
-        foreach (var usr in initMyUsers)
-        {
-            MyUsers.Add(usr);
-        }
-
-        //ResetBackGroundColor(MyUsers);
-    }
-
-    [RelayCommand]
-    void AddUser(string s) // Adds form discovery list to my user list
-    {
-        User? removeThis = DiscoveryList.FirstOrDefault(u => u.UserName == s);
-
-        if (removeThis != null)
-        {
-            //DiscoveryList.Remove(removeThis); // to be decided
-            MyUsers.Add(removeThis);
-            //ResetBackGroundColor(NewUsers);
-            //ResetBackGroundColor(DiscoveryList);
+            DiscoveryList.Add(user);
         }
     }
 
-    [RelayCommand]
-    void RemoveUser(string s)
+    async Task AddUser(string s) // Adds form discovery list to my user list
     {
-        User? removeThis = MyUsers.FirstOrDefault(u => u.UserName == s);
-
-        if (removeThis != null)
+        var addThis = new MyContact { ContactUserName = s, ContactOwner = Client.Username };
+        try
         {
+            await LocalUserDBService.InsertContact(addThis);
+            MyUsers.Add(addThis);
+        }
+        catch { }
+        //await Refresh();
+    }
+
+    async Task RemoveUser(string s)
+    {
+        MyContact removeThis = MyUsers.FirstOrDefault(u => u.ContactUserName == s && u.ContactOwner == Client.Username);
+        try
+        {
+            await LocalUserDBService.DeleteContact(removeThis);
             MyUsers.Remove(removeThis);
-            //DiscoveryList.Add(removeThis); // to be decided
-            //ResetBackGroundColor(MyUsers);
-            //ResetBackGroundColor(DiscoveryList);
         }
+        catch { }
+        //await Refresh();
     }
 
     [RelayCommand]
@@ -126,13 +105,7 @@ public partial class MainViewModel : ObservableObject
     {
         if (query == string.Empty)
         {
-            DiscoveryList.Clear();
-            foreach (var user in initDiscoveryList)
-            {
-                DiscoveryList.Add(user);
-            }
-
-            //ResetBackGroundColor(DiscoveryList);
+            ReloadDiscoveryList();
         }
         else
         {
@@ -144,40 +117,19 @@ public partial class MainViewModel : ObservableObject
                     DiscoveryList.Add(user);
                 }
             }
-
-            //ResetBackGroundColor(DiscoveryList);
         }
     }
 
-    [RelayCommand]
-    void PerformMyUserSearch(string query)
+    async Task PerformMyUserSearch(string query)
     {
-        if (query == string.Empty)
+        MyUsers.Clear();
+        foreach (var itm in await LocalUserDBService.SearchMyContact(query, Client.Username))
         {
-            MyUsers.Clear();
-            foreach (var user in initMyUsers)
-            {
-                MyUsers.Add(user);
-            }
-
-            //ResetBackGroundColor(MyUsers);
-        }
-        else
-        {
-            MyUsers.Clear();
-            foreach (var user in initMyUsers)
-            {
-                if(user.UserName.ToLower().Contains(query.ToLower()))
-                {
-                    MyUsers.Add(user);
-                }
-            }
-
-            //ResetBackGroundColor(MyUsers);
+            MyUsers.Add(itm);
         }
     }
 
-    void ResetBackGroundColor(ObservableCollection<User> list)
+    /*void ResetBackGroundColor(ObservableCollection<User> list)
     {
         for (int i = 0; i < list.Count(); i++)
         {
@@ -191,6 +143,19 @@ public partial class MainViewModel : ObservableObject
                 list[i].BackGroundColor = "LightStyle";
             }
         }
-    }
+    }*/
 
+    async Task Refresh()
+    {
+        IsRefreshing = true;
+        MyUsers.Clear();
+        var list = await LocalUserDBService.GetAllMyContacts(Client.Username);
+        foreach (var itm in list)
+        {
+            if (MyUsers.Contains(itm))
+                continue;
+            MyUsers.Add(itm);
+        }
+        IsRefreshing = false;
+    }
 }

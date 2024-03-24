@@ -55,40 +55,38 @@
                     </Border>
                 </Grid>
             </Grid>
-            <CollectionView x:Name="UserCollection"
-                            ItemsSource="{Binding MyUsers}"
-                            Grid.Row="1"
-                            BackgroundColor="#4B8C69">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="{x:Type models:User}">
-                        <Grid x:Name="userGridElement"
-                              HeightRequest="55"
-                              BackgroundColor="Transparent">
-                                <Grid Style="{Binding BackGroundColor}"
-                                  Opacity=".7"
-                                  HeightRequest="55"/>
-                                <Label Text="{Binding UserName}"
-                                   TextColor="White"
-                                   FontFamily="Inter"
-                                   FontSize="18"
-                                   VerticalOptions="Center"
-                                   HorizontalOptions="Start"
-                                   Margin="20,0,20,0"/>
-                                <Button
-                                Text="Remove"
-                                Margin="20,10,10,10"
-                                Opacity="0.7"
-                                HorizontalOptions="End"
-                                VerticalOptions="Center"
-                                BackgroundColor="DarkRed"
-                                TextColor="White"
-                                FontFamily="inter"
-                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MainViewModel}}, Path=RemoveUserCommand}"
-                                CommandParameter="{Binding UserName}"/>
-                        </Grid>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+            <RefreshView Grid.Row="1"
+                         BackgroundColor="White"
+                         IsRefreshing="{Binding IsRefreshing}"
+                         Command="{Binding RefreshCommand}">
+                <ScrollView>
+                    <VerticalStackLayout BackgroundColor="#4B8C69" BindableLayout.ItemsSource="{Binding MyUsers}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="{x:Type models:MyContact}">
+                                <Grid HeightRequest="55">
+                                    <Grid BackgroundColor="#8A8888" Opacity=".7"/>
+                                    <Label Text="{Binding ContactUserName}"
+                                           FontSize="18"
+                                           TextColor="White"
+                                           FontFamily="Inter"
+                                           VerticalOptions="Center"
+                                           LineBreakMode="NoWrap"
+                                           Margin="10,0,10,0"/>
+                                    <Button
+                                    Text="Remove"
+                                    Margin="20,10,10,10"
+                                    HorizontalOptions="End"
+                                    VerticalOptions="Center"
+                                    BackgroundColor="DarkRed"
+                                    TextColor="Black"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MainViewModel}}, Path=RemoveUserCommand}"
+                                    CommandParameter="{Binding ContactUserName}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+                </ScrollView>
+            </RefreshView>
         </Grid>
     </Grid>
 </ContentPage>
