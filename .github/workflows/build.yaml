@@ -1,0 +1,79 @@
+name: Produce app artifacts
+
+on: [push, pull_request]
+
+env:
+  DOTNET_NOLOGO: true                     # Disable the .NET logo
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true # Disable the .NET first time experience
+  DOTNET_CLI_TELEMETRY_OPTOUT: true       # Disable sending .NET CLI telemetry
+
+jobs:
+  build-android:
+    runs-on: windows-2022
+    name: Android Build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - uses: actions/setup-java@v2
+        with:
+          distribution: 'microsoft'
+          java-version: '11'
+
+      - name: Install MAUI Workloads
+        run: |
+          dotnet workload install android --ignore-failed-sources
+          dotnet workload install maui --ignore-failed-sources
+
+      - name: Restore Dependencies
+        run: dotnet restore
+
+      - name: Build MAUI Android
+        run: dotnet build flare-app/flare-app.csproj -c Release -f net8.0-android --no-restore
+
+      - name: Upload Android Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-ci-build
+          path: |
+            ./**/*.aab
+            ./**/*.apk
+
+  build-ios:
+    runs-on: macos-13
+    name: iOS Build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Install MAUI Workload
+        run: |
+          dotnet workload install ios --ignore-failed-sources
+          dotnet workload install maui --ignore-failed-sources
+
+      - name: Set XCode Version
+        shell: bash
+        run: |
+          sudo xcode-select -s /Applications/Xcode_15.1.app
+
+      - name: Restore Dependencies
+        run: dotnet restore
+
+      - name: Build MAUI iOS
+        run: dotnet build flare-app/flare-app.csproj -c Release -f net8.0-ios --no-restore
+
+      - name: Upload iOS Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-ci-build
+          path: flare-app/bin/Release/net8.0-ios/**/*.app/
