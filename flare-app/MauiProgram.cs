@@ -1,12 +1,12 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Flare;
 using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using flare_csharp;
 using flare_app.ViewModels;
 using flare_app.Views;
+using flare_app.Services;
 
 namespace flare_app
 {
@@ -30,11 +30,11 @@ namespace flare_app
 #if DEBUG
     		builder.Logging.AddDebug();
 #endif
+            //builder.Services.AddSingleton<LocalUserDBService>();
+            builder.Services.AddScoped<MainViewModel>();
 
-            builder.Services.AddSingleton<Views.DiscoveryPage>();
-            builder.Services.AddSingleton<MainViewModel>();
-
-            builder.Services.AddSingleton<Views.MainPage>();
+            builder.Services.AddSingleton<MainPage>();
+            builder.Services.AddSingleton<DiscoveryPage>();
 
             return builder.Build();
 

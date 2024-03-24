@@ -37,23 +37,23 @@
                                FontFamily="Inter"
                                FontSize="18"
                                VerticalOptions="Center"
-                               ClearButtonVisibility="WhileEditing"
                                TextChanged="search_TextChanged"
+                               ClearButtonVisibility="WhileEditing"
                                Margin="5,0,5,0"/>
                     </Border>
                 </Grid>
             </Grid>
             <CollectionView x:Name="DiscoveryListCollection"
+                        ItemsSource="{Binding DiscoveryList}"
                         Grid.Row="1"
-                        BackgroundColor="#4B8C69"
-                        ItemsSource="{Binding DiscoveryList}">
+                        BackgroundColor="#4B8C69">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="{x:Type models:User}">
                         <Grid 
                           HeightRequest="55"
                           BackgroundColor="Transparent">
                             <Grid
-                              BackgroundColor="{Binding BackGroundColor}"
+                              BackgroundColor="#8A8888"
                               Opacity=".7"
                               HeightRequest="55"/>
                             <Label Text="{Binding UserName}"
@@ -72,7 +72,6 @@
                             TextColor="Black"
                             Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MainViewModel}}, Path=AddUserCommand}"
                             CommandParameter="{Binding UserName}"/>
-
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

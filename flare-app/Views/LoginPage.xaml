@@ -30,7 +30,7 @@
                        VerticalOptions="End"/>
             </Grid>
             <Grid Grid.Row="1">
-                <Grid x:Name="loginGrid" 
+                <Grid x:Name="loginGrid"
                     HeightRequest="320"
                     WidthRequest="375"
                     MaximumWidthRequest="1000"

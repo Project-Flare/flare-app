@@ -7,7 +7,7 @@
             InitializeComponent();
 
             MainPage = new AppShell();
-            Application.Current.UserAppTheme = AppTheme.Unspecified;
+            //Application.Current.UserAppTheme = AppTheme.Unspecified;
         }
     }
 }

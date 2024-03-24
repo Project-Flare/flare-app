@@ -1,3 +1,6 @@
+using flare_app.Models;
+using flare_app.Services;
+using flare_app.ViewModels;
 using flare_csharp;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -19,11 +22,11 @@ public partial class LoginPage : ContentPage
 
     private async void LoginButton_Clicked(object sender, EventArgs e)
     {
-        if (username.Text == "" || password.Text == "")
+        /*if (username.Text == "" || password.Text == "")
         {
-            ButtonAngry();
+            ButtonShake();
             return;
-        }
+        }*/
 
         // Initiate login.
 
@@ -76,6 +79,12 @@ public partial class LoginPage : ContentPage
             //return;
         }
 
+        try
+        {
+            await LocalUserDBService.InsertLocalUser(new LocalUser { LocalUserName = username.Text, Password = Client.Password, AuthToken = Client.AuthToken });
+        }
+        catch { }
+        
         // Success
         initLoadingScreen(false);
         await Shell.Current.GoToAsync("//MainPage", true);
@@ -99,7 +108,7 @@ public partial class LoginPage : ContentPage
         }
     }
 
-    private async void ButtonAngry()
+    private async void ButtonShake()
     {
         await loginGrid.TranslateTo(25, 0, 150);
         await loginGrid.TranslateTo(-50, 0, 150);
