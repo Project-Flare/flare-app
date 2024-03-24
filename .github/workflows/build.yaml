@@ -29,6 +29,10 @@ jobs:
         run: |
           dotnet workload install android --ignore-failed-sources
           dotnet workload install maui --ignore-failed-sources
+          
+      - name: Initialize submodules
+        run: |
+          git submodule update --init --recursive
 
       - name: Restore Dependencies
         run: dotnet restore
@@ -65,6 +69,10 @@ jobs:
         shell: bash
         run: |
           sudo xcode-select -s /Applications/Xcode_15.1.app
+          
+      - name: Initialize submodules
+        run: |
+          git submodule update --init --recursive
 
       - name: Restore Dependencies
         run: dotnet restore
