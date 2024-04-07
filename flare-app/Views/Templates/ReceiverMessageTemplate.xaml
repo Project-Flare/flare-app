@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="flare_app.Views.Templates.ReceiverMessageTemplate">
+    <ContentView.Resources>
+
+    </ContentView.Resources>
+    <Frame 
+        Margin="15,10,15,0"
+        Padding="6"
+        CornerRadius="9"
+        BackgroundColor="#2B5B58"
+        BorderColor="Transparent"
+        MaximumWidthRequest="300"
+        HorizontalOptions="Start">
+        <Label
+            Text="{Binding Content}"
+            LineBreakMode="WordWrap"
+            FontFamily="Inter"
+            FontSize="18"
+            VerticalOptions="Center"
+            HorizontalOptions="Center"/>
+    </Frame>
+</ContentView>

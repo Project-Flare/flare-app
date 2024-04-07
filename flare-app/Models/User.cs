@@ -11,7 +11,6 @@ namespace flare_app.Models
     {
         public string UserName { get; set; }
         public string LastMessage { get; set; }
-
         public string ProfilePicture { get; set; }
     }
 }
