@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="flare_app.Views.ChatPage"
+             xmlns:viewmodel="clr-namespace:flare_app.ViewModels"
+             xmlns:template="clr-namespace:flare_app.Views.Templates"
+             Title="ChatPage">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+
+            <DataTemplate x:Key="SenderMessageItmTemplate">
+                <template:SenderMessageTemplate />
+            </DataTemplate>
+
+            <DataTemplate x:Key="ReceiverMessageItmTemplate">
+                <template:ReceiverMessageTemplate />
+            </DataTemplate>
+
+            <template:MessageTemplateSelector
+                x:Key="MessageTemplateSelector"
+                SenderTemplate="{StaticResource SenderMessageItmTemplate}"
+                ReceiverTemplate="{StaticResource ReceiverMessageItmTemplate}" />
+
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.BindingContext>
+        <viewmodel:ChatViewModel/>
+    </ContentPage.BindingContext>
+    <Grid>
+        <Grid RowDefinitions="80, *, 90">
+            <Grid RowDefinitions="60, *"
+              BackgroundColor="#2B5B58">
+                <Grid Margin="20,10,0,0">
+                    <Label Text="{Binding User.LocalUserName}"
+                   TextColor="#FFFFFF"
+                   FontFamily="InterExtraBold"
+                   FontSize="32"
+                   AnchorY="0"/>
+                </Grid>
+            </Grid>
+            <Grid Grid.Row="1"
+                  BackgroundColor="#4B8C69">
+                <CollectionView
+                    ItemsSource="{Binding Messages}"
+                    ItemTemplate="{StaticResource MessageTemplateSelector}">
+                </CollectionView>
+
+            </Grid>
+            <Grid Grid.Row="2"
+                  BackgroundColor="#4B8C69">
+                <Grid Opacity=".7"
+                      Padding="20,25,20,20"
+                      VerticalOptions="End">
+                    <RoundRectangle Fill="#8A8888"
+                                        HeightRequest="40"
+                                        CornerRadius="12"/>
+                    <Entry Placeholder="message"
+                                   FontFamily="InterExtraBold"
+                                   FontSize="18"
+                                   VerticalOptions="CenterAndExpand"
+                                   Margin="10,0,10,0"
+                   PlaceholderColor="#FFFFFF"
+                   Opacity=".7"
+                   TextColor="#FFFFFF"/>
+                </Grid>
+
+            </Grid>
+        </Grid>
+    </Grid>
+</ContentPage>

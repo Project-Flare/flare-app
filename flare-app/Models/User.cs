@@ -10,6 +10,5 @@ namespace flare_app.Models
     public class User
     {
         public string UserName { get; set; }
-        public string BackGroundColor { get; set; }
     }
 }

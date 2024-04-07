@@ -1,4 +1,6 @@
-﻿namespace flare_app
+﻿using flare_app.Views;
+
+namespace flare_app
 {
     public partial class App : Application
     {
