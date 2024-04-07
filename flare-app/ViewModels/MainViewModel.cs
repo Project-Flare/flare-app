@@ -6,6 +6,7 @@ using flare_csharp;
 using System.Runtime.CompilerServices;
 using flare_app.Services;
 using flare_app.Views;
+using CommunityToolkit.Maui.Core.Views;
 namespace flare_app.ViewModels;
 
 public partial class MainViewModel : ObservableObject
@@ -14,10 +15,18 @@ public partial class MainViewModel : ObservableObject
     public AsyncRelayCommand<string> RemoveUserCommand { get; }
     public AsyncRelayCommand<string> PerformMyUserSearchCommand { get; }
     public AsyncRelayCommand RefreshCommand { get; }
+    public AsyncRelayCommand<string> AddUserOnPopCommand {  get; }
 
     private List<User> initDiscoveryList;
     bool isRefreshing;
     bool refreshFirstTime = false;
+
+    [ObservableProperty]
+    string text;
+
+    private bool _isHolding;
+    private string _contactUserNameToRemove;
+    private bool _userfound = false;
 
     public bool IsRefreshing
     {
@@ -32,26 +41,37 @@ public partial class MainViewModel : ObservableObject
         RemoveUserCommand = new AsyncRelayCommand<string>(RemoveUser);
         PerformMyUserSearchCommand = new AsyncRelayCommand<string>(PerformMyUserSearch);
         RefreshCommand = new AsyncRelayCommand(Refresh);
+        AddUserOnPopCommand = new AsyncRelayCommand<string> (AddUserOnPop);
 
-        initDiscoveryList = new List<User>();
-
+        initDiscoveryList =
+        [
+            new User { UserName = "Petras", LastMessage="Labas", ProfilePicture="picture1.jpg" },
+            new User { UserName = "Antanas", LastMessage="Testas tekstas", ProfilePicture="picture2.jpg"  },
+            new User { UserName = "Gražulis", LastMessage="Vienas du trys", ProfilePicture="picture3.jpg" },
+        ];
+ 
         DiscoveryList = new ObservableCollection<User>();
+
         MyUsers = new ObservableCollection<MyContact>();
 
-        ReloadInitDiscoveryList();
+        // ReloadInitDiscoveryList();
         if (!refreshFirstTime)
         {
             refreshFirstTime = true;
             Task.Run(Refresh);
         }
         //ReloadInitMyUsers();
+        ReloadDiscoveryList();
     }
 
     [ObservableProperty]
     ObservableCollection<MyContact> myUsers; // Observable.
+
+
     [ObservableProperty]
     ObservableCollection<User> discoveryList; // Observable.
 
+    [RelayCommand]
     void ReloadInitDiscoveryList()
     {
         initDiscoveryList.Clear();
@@ -66,7 +86,7 @@ public partial class MainViewModel : ObservableObject
         }
         ReloadDiscoveryList();
     }
-
+    [RelayCommand]
     void ReloadDiscoveryList()
     {
         DiscoveryList.Clear();
@@ -157,5 +177,20 @@ public partial class MainViewModel : ObservableObject
             MyUsers.Add(itm);
         }
         IsRefreshing = false;
+    }
+    async Task AddUserOnPop(string s) // Adds form discovery list to my user list, when app restarts random written usernames are implemented aswell
+    {
+        var addThis = new MyContact { ContactUserName = s, ContactOwner = Client.Username };
+        try
+        {
+            await LocalUserDBService.InsertContact(addThis);
+            bool userExistsInDiscoveryList = initDiscoveryList.Any(user => user.UserName.Equals(s));
+            if(userExistsInDiscoveryList)
+            {
+                MyUsers.Add(addThis);
+            }
+        }
+        catch { }
+        //await Refresh();
     }
 }

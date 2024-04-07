@@ -2,6 +2,7 @@ using flare_app.ViewModels;
 using flare_app.Models;
 using Microsoft.Maui.Controls;
 using flare_app.Services;
+using CommunityToolkit.Maui.Views;
 
 namespace flare_app.Views;
 
@@ -20,5 +21,10 @@ public partial class MainPage : ContentPage
     private void search_TextChanged(object sender, TextChangedEventArgs e)
     {
         _mainViewModel.PerformMyUserSearchCommand.Execute(e.NewTextValue);
+    }
+
+    private void Button_Clicked(object sender, EventArgs e)
+    {
+        this.ShowPopup(new UserAddPopupPage());
     }
 }
