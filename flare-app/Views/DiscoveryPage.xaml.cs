@@ -7,7 +7,6 @@ namespace flare_app.Views;
 public partial class DiscoveryPage : ContentPage
 {
     private readonly MainViewModel _mainViewModel;
-
     public DiscoveryPage (MainViewModel vm)
 	{
 		InitializeComponent();
@@ -18,5 +17,10 @@ public partial class DiscoveryPage : ContentPage
     private void search_TextChanged(object sender, TextChangedEventArgs e)
     {
         _mainViewModel.PerformDiscoverySearchCommand.Execute(e.NewTextValue);
+    }
+
+    private void ContentPage_Loaded(object sender, EventArgs e)
+    {
+        //_mainViewModel.ReloadInitDiscoveryListCommand.Execute(null);
     }
 }

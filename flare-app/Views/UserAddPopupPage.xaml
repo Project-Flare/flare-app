@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<mct:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="flare_app.Views.UserAddPopupPage"
+             xmlns:mct="clr-namespace:CommunityToolkit.Maui.Views;assembly=CommunityToolkit.Maui"
+             xmlns:viewmodels="clr-namespace:flare_app.ViewModels"
+             x:DataType="viewmodels:MainViewModel"
+            CanBeDismissedByTappingOutsideOfPopup="False">
+    <VerticalStackLayout BackgroundColor="DarkSeaGreen">
+        <Grid WidthRequest="300" HeightRequest="50" Padding="10">
+            <Label
+                Text="Enter user name to add to contacts"
+                FontSize="16"
+                FontAttributes="Bold"
+                TextColor="White"
+                />
+        </Grid>
+        <Grid WidthRequest="300" HeightRequest="50">
+            <Grid HeightRequest="60"
+                  WidthRequest="280"
+                  VerticalOptions="End"
+                  HorizontalOptions="Start"
+                  Padding="10">
+                <Entry
+                    Placeholder="Enter user name"
+                    Text="{Binding Text}"/>
+            </Grid>
+        </Grid>
+        <Grid
+            WidthRequest="300" HeightRequest="50" Padding="10">
+            <Button
+                Text="Add"
+                Background="Green"
+                WidthRequest="100"
+                HeightRequest="30"
+                VerticalOptions="Center"
+                HorizontalOptions="End"
+                Padding="0"
+                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MainViewModel}}, Path=AddUserOnPopCommand}"
+                CommandParameter="{Binding Text}"/>
+            <Button
+                Text="Close"
+                Background="Red"
+                Pressed="Button_Pressed"
+                WidthRequest="100"
+                HeightRequest="30"
+                VerticalOptions="Center"
+                HorizontalOptions="Start"
+                Padding="0"/>
+        </Grid>
+    </VerticalStackLayout>
+</mct:Popup>
