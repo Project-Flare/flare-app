@@ -30,7 +30,7 @@ public partial class LoginPage : ContentPage
 
         // Initiate login.
 
-        loadingMesg.Text = "";
+        /*loadingMesg.Text = "";
         initLoadingScreen(true); // Aditional 600ms to log in process.
 
         // Connecting to server
@@ -86,7 +86,7 @@ public partial class LoginPage : ContentPage
         catch { }
         
         // Success
-        initLoadingScreen(false);
+        initLoadingScreen(false);*/
         await Shell.Current.GoToAsync("//MainPage", true);
     }
 

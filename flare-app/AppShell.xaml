@@ -23,7 +23,7 @@
         </Style>
     </Shell.Resources>
 
-    <!--<ShellContent
+    <ShellContent
         Title="Login"
         ContentTemplate="{DataTemplate views:LoginPage}"
         Route="LoginPage" />
@@ -31,7 +31,7 @@
         <ShellContent
         Title="Registration"
         ContentTemplate="{DataTemplate views:RegistrationPage}"
-        Route="RegistrationPage" />-->
+        Route="RegistrationPage" />
 
 
     <TabBar>

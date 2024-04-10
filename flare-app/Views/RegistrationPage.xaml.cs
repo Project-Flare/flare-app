@@ -17,7 +17,7 @@ public partial class RegistrationPage : ContentPage
     {
         if(username.Text == "" || password.Text == "" || password2.Text == "")
         {
-            ButtonShake();
+            //ButtonShake();
             return;
         }
 
@@ -144,7 +144,7 @@ public partial class RegistrationPage : ContentPage
         }
     }
 
-    private async void ButtonShake()
+    /*private async void ButtonShake()
     {
         await registerGrid.TranslateTo(25, 0, 150);
         await registerGrid.TranslateTo(-50, 0, 150);
@@ -153,5 +153,5 @@ public partial class RegistrationPage : ContentPage
         await registerGrid.TranslateTo(-15, 0, 100);
 
         await registerGrid.TranslateTo(0, 0, 100);
-    }
+    }*/
 }

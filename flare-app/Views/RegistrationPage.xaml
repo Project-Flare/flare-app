@@ -3,119 +3,92 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="flare_app.Views.RegistrationPage"
              Title="RegistrationPage">
-    <Grid BackgroundColor="{AppThemeBinding Light={StaticResource Light4}, Dark={StaticResource Dark4}}">
-        <AbsoluteLayout>
-            <Ellipse WidthRequest="900" HeightRequest="900"
-             Fill="{AppThemeBinding Light={StaticResource MainLight}, Dark={StaticResource MainDark}}"
-             AbsoluteLayout.LayoutBounds="1.35, .5, 0, 0"
-             AbsoluteLayout.LayoutFlags="PositionProportional"/>
-            <Ellipse WidthRequest="280" HeightRequest="280"
-             Fill="{AppThemeBinding Light={StaticResource Light3}, Dark={StaticResource Dark3}}"
-             AbsoluteLayout.LayoutBounds="1.27, 0.24, 0, 0"
-             AbsoluteLayout.LayoutFlags="PositionProportional"/>
-        </AbsoluteLayout>
-        <Grid RowDefinitions="150, *">
-            <Grid.GestureRecognizers>
-            </Grid.GestureRecognizers>
-            <Grid Grid.Row="0">
-                <Grid WidthRequest="365" 
-                    VerticalOptions="Start"
-                      Margin="0,20,0,0">
-                </Grid>
-                <Grid WidthRequest="365"
-                      VerticalOptions="End"
-                      Margin="0,0,0,5">
-                    <Label Text="Register"
-                   FontSize="32"
-                   TextColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray200}}"
-                   FontFamily="InterExtraBold"/>
-                </Grid>
-            </Grid>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="EntryStyle" TargetType="Entry">
+                <Setter Property="FontFamily" Value="IBMPlexMono" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="Margin" Value="8,0,8,0" />
+            </Style>
+
+            <Style x:Key="ButtonStyle" TargetType="Button">
+                <Setter Property="FontFamily" Value="IBMPlexMono" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="CornerRadius" Value="25" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="BackgroundColor" Value="#5000A4" />
+                <Setter Property="HeightRequest" Value="46" />
+                <Setter Property="WidthRequest" Value="196" />
+            </Style>
+
+            <Style x:Key="EntryBoxStyle" TargetType="Border">
+                <Setter Property="BackgroundColor" Value="#382C4B" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="Stroke" Value="Transparent"/>
+                <Setter Property="HeightRequest" Value="45" />
+                <Setter Property="Opacity" Value=".9" />
+            </Style>
+
+            <Style x:Key="CornerStyle" TargetType="RoundRectangle">
+                <Setter Property="CornerRadius" Value="25" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <Grid BackgroundColor="#000000">
+        <Image Source="flare.svg"
+               VerticalOptions="Start"
+               HorizontalOptions="Center"
+               Scale="1.36" />
+        <Grid RowDefinitions="300, Auto">
             <Grid Grid.Row="1">
-                <Grid x:Name="registerGrid" 
-                    HeightRequest="365"
-                    WidthRequest="365"
-                    MaximumWidthRequest="800"
-                    VerticalOptions="Start"
-                    Margin="20,0,20,0"
-                      Opacity=".7">
-                    <RoundRectangle
-                        Fill="#FFFFFF"
-                        CornerRadius="30,30,30,30"/>
-                    <Grid Margin="15,20,15,0"
-                          RowDefinitions="*,*,*,*,*">
-                        <Grid Margin="0,0,0,0" Grid.Row="0" HeightRequest="55">
-                            <Border Padding="0"
-                                   BackgroundColor="#8A8888"
-                                   Stroke="Transparent">
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="12" />
-                                </Border.StrokeShape>
-                                <Entry x:Name="username"
-                                   Text=""
-                                   Placeholder="username"
-                                   FontFamily="InterExtraBold"
-                                   FontSize="18"
-                                   VerticalOptions="CenterAndExpand"
-                                   Margin="5,0,5,0"/>
-                            </Border>
-                        </Grid>
-                        <Grid Margin="0,0,0,0" Grid.Row="1" HeightRequest="55">
-                            <Border
-                                    Padding="0"
-                                    BackgroundColor="#8A8888"
-                                    Stroke="Transparent">
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="12" />
-                                </Border.StrokeShape>
-                                <Entry x:Name="password"
-                                   Text=""
-                                   Placeholder="password"
-                                   IsPassword="True"
-                                   FontFamily="InterExtraBold"
-                                   FontSize="18"
-                                   VerticalOptions="CenterAndExpand"
-                                   TextChanged="password_TextChanged"
-                                   Margin="5,0,5,0"/>
-                            </Border>
-                        </Grid>
-                        <Grid Margin="0,0,0,0" Grid.Row="2" HeightRequest="55">
-                            <Border Padding="0"
-                                   BackgroundColor="#8A8888"
-                                   Stroke="Transparent">
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="12" />
-                                </Border.StrokeShape>
-                                <Entry x:Name="password2"
-                                   Text=""
-                                   FontFamily="InterExtraBold"
-                                   IsPassword="True"
-                                   Placeholder="repeat password"
-                                   FontSize="18"
-                                   VerticalOptions="CenterAndExpand"
-                                   TextChanged="password_TextChanged"
-                                   Margin="5,0,5,0"/>
-                            </Border>
-                        </Grid>
-                        <Grid Grid.Row="3" Margin="0,7,0,0">
-                            <Label x:Name="RegisterErrorInfo" 
+                <VerticalStackLayout Margin="20,0,20,0" Spacing="15" >
+                    <Border Style="{StaticResource EntryBoxStyle}">
+                        <Border.StrokeShape>
+                            <RoundRectangle Style="{StaticResource CornerStyle}" />
+                        </Border.StrokeShape>
+
+                        <Entry x:Name="username"
+                               Text=""
+                               Placeholder="username"
+                               Style="{StaticResource EntryStyle}" />
+                    </Border>
+                    <Border Style="{StaticResource EntryBoxStyle}">
+                        <Border.StrokeShape>
+                            <RoundRectangle Style="{StaticResource CornerStyle}" />
+                        </Border.StrokeShape>
+                        <Entry x:Name="password"
+                               Text=""
+                               Placeholder="password"
+                               IsPassword="True"
+                               TextChanged="password_TextChanged"
+                               Style="{StaticResource EntryStyle}"/>
+                    </Border>
+                    <Border Style="{StaticResource EntryBoxStyle}">
+                        <Border.StrokeShape>
+                            <RoundRectangle Style="{StaticResource CornerStyle}" />
+                        </Border.StrokeShape>
+                        <Entry x:Name="password2"
+                               Text=""
+                               IsPassword="True"
+                               Placeholder="repeat"
+                               TextChanged="password_TextChanged"
+                               Style="{StaticResource EntryStyle}"/>
+                    </Border>
+                    <Label x:Name="RegisterErrorInfo" 
                                 Text=""
-                                FontSize="Medium"
-                                FontFamily="InterExtraBold"
-                                TextColor="#000000"/>
-                        </Grid>
-                        <Grid Grid.Row="4" HeightRequest="35" Margin="0,0,0,40">
-                            <Button x:Name="RegisterButton" 
+                                FontSize="14"
+                                FontFamily="IBMPlexMono"
+                                TextColor="#FFFFFF" />
+                    <Grid>
+                        <Image Source="button_aura.svg" Scale=".6" />
+                        <Button x:Name="RegisterButton" 
                                 Text="Register"
                                 Clicked="RegisterButton_Clicked"
-                                FontFamily="InterExtraBold"
-                                FontSize="18"
-                                BackgroundColor="#373636"
-                                Margin="0,0,0,0"
-                                Padding="0"/>
-                        </Grid>
+                                Style="{StaticResource ButtonStyle}"/>
                     </Grid>
-                </Grid>
+                </VerticalStackLayout>
             </Grid>
         </Grid>
         <Grid x:Name="loadingScreen"

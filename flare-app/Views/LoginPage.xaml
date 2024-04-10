@@ -3,108 +3,99 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="flare_app.Views.LoginPage"
              Title="LoginPage">
+    <ContentPage.Resources>
+        <ResourceDictionary>
 
-    <Grid BackgroundColor="{AppThemeBinding Light={StaticResource MainLight}, Dark={StaticResource MainDark}}">
-        <AbsoluteLayout>
-            <Ellipse WidthRequest="280" HeightRequest="280"
-             Fill="{AppThemeBinding Light={StaticResource Light3}, Dark={StaticResource Dark3}}"
-             AbsoluteLayout.LayoutBounds="0.27, 0.24, 0, 0"
-             AbsoluteLayout.LayoutFlags="PositionProportional"/>
-            <Ellipse WidthRequest="640" HeightRequest="640"
-             Fill="{AppThemeBinding Light={StaticResource Light2}, Dark={StaticResource Dark2}}"
-             AbsoluteLayout.LayoutBounds="0.91, 0.89, 0, 0"
-             AbsoluteLayout.LayoutFlags="PositionProportional"/>
-            <Ellipse WidthRequest="490" HeightRequest="490"
-             Fill="{AppThemeBinding Light={StaticResource Light1}, Dark={StaticResource Dark1}}"
-             AbsoluteLayout.LayoutBounds=" .825, .95, 0, 0"
-             AbsoluteLayout.LayoutFlags="PositionProportional"/>
-        </AbsoluteLayout>
-        <Grid RowDefinitions="150, 500">
-            <Grid Grid.Row="0">
+            <Style x:Key="EntryStyle" TargetType="Entry">
+                <Setter Property="FontFamily" Value="IBMPlexMono" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="Margin" Value="8,0,8,0" />
+            </Style>
 
-                <Label Text="Log in"
-                   FontSize="32"
-                   TextColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray200}}"
-                   FontFamily="InterExtraBold"
-                   Margin="20,0,0,0"
-                       VerticalOptions="End"/>
-            </Grid>
+            <Style x:Key="ButtonStyle" TargetType="Button">
+                <Setter Property="FontFamily" Value="IBMPlexMono" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="CornerRadius" Value="25" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="BackgroundColor" Value="#5000A4" />
+                <Setter Property="HeightRequest" Value="46" />
+                <Setter Property="WidthRequest" Value="192" />
+            </Style>
+
+            <Style x:Key="EntryBoxStyle" TargetType="Border">
+                <Setter Property="BackgroundColor" Value="#382C4B" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="Stroke" Value="Transparent"/>
+                <Setter Property="HeightRequest" Value="45" />
+                <Setter Property="Opacity" Value=".9" />
+            </Style>
+            
+            <Style x:Key="CornerStyle" TargetType="RoundRectangle">
+                <Setter Property="CornerRadius" Value="25" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid BackgroundColor="#000000">
+        <Image Source="flare.svg"
+               VerticalOptions="Start"
+               HorizontalOptions="Center"
+               Scale="1.36" />
+        <Grid RowDefinitions="320, Auto">
             <Grid Grid.Row="1">
                 <Grid x:Name="loginGrid"
                     HeightRequest="320"
                     WidthRequest="375"
                     MaximumWidthRequest="1000"
-                    VerticalOptions="Start"
-                      Opacity=".7">
-                    <RoundRectangle
-                        Fill="#FFFFFF"
-                        CornerRadius="30,30,30,30"/>
-                    <Grid Margin="15,20,15,0" RowDefinitions="*,*,*,*">
-                        <Grid Margin="0,0,0,0" Grid.Row="0" HeightRequest="55">
-                            <Border Padding="0"
-                                    BackgroundColor="#8A8888"
-                                    Stroke="Transparent">
+                    VerticalOptions="Start" >
+                    <VerticalStackLayout Margin="15,20,15,0" Spacing="15">
+                        <Border Style="{StaticResource EntryBoxStyle}">
                                 <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="12" />
+                                <RoundRectangle Style="{StaticResource CornerStyle}" />
                                 </Border.StrokeShape>
                                 <Entry x:Name="username"
                                    Text=""
                                    Placeholder="username"
-                                   FontFamily="InterExtraBold"
-                                   FontSize="18"
-                                   VerticalOptions="Center"
-                                   Margin="5,0,5,0"/>
+                                   Style="{StaticResource EntryStyle}" />
                             </Border>
-                        </Grid>
-                        <Grid Margin="0,20,0,0" Grid.Row="1" HeightRequest="55">
-                            <Border Padding="0"
-                                   BackgroundColor="#8A8888"
-                                   Stroke="Transparent">
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="12" />
-                                </Border.StrokeShape>
-                                <Entry x:Name="password"
+                        <Border Style="{StaticResource EntryBoxStyle}">
+                            <Border.StrokeShape>
+                                <RoundRectangle Style="{StaticResource CornerStyle}" />
+                            </Border.StrokeShape>
+                            <Entry x:Name="password"
                                    Text=""
                                    Placeholder="password"
-                                   FontFamily="InterExtraBold"
-                                   FontSize="18"
-                                   VerticalOptions="Center"
-                                   Margin="5,0,5,0"
-                                   IsPassword="True"/>
-                            </Border>
-                        </Grid>
-                        <Grid Grid.Row="2">
+                                   IsPassword="True"
+                                   Style="{StaticResource EntryStyle}"/>
+                        </Border>
+                        <Grid>
+                            <Image Source="button_aura.svg" Scale=".6"/>
                             <Button x:Name="LoginButton"
                                 Text="Log in"
                                 Clicked="LoginButton_Clicked"
-                                FontFamily="InterExtraBold"
-                                FontSize="18"
-                                BackgroundColor="#373636"
-                                HeightRequest="35"
-                                Margin="0,60,0,0"
-                                Padding="0"/>
+                                Style="{StaticResource ButtonStyle}"/>
                         </Grid>
-                        <Grid Grid.Row="3">
-                            <Label HorizontalTextAlignment="Center"
-                               Margin="0,12,0,0">
-                                <Label.FormattedText>
-                                    <FormattedString>
-                                        <Span Text="Don't have an account? "
-                                          FontFamily="InterExtraBold"
-                                          TextColor="#000000"/>
-                                        <Span x:Name="ToRegistrationButton"
+                        <Label HorizontalTextAlignment="Center"
+                               Margin="0,8,0,0">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Don't have an account? "
+                                          FontFamily="IBMPlexMono"
+                                          TextColor="#FFFFFF"/>
+                                    <Span x:Name="ToRegistrationButton"
                                           Text="Sign up"
-                                          FontFamily="InterExtraBold"
-                                          TextColor="#6B80CB">
-                                            <Span.GestureRecognizers>
-                                                <TapGestureRecognizer Tapped="ToRegistrationButton_Clicked"/>
-                                            </Span.GestureRecognizers>
-                                        </Span>
-                                    </FormattedString>
-                                </Label.FormattedText>
-                            </Label>
-                        </Grid>
-                    </Grid>
+                                          TextDecorations="Underline"
+                                          FontFamily="IBMPlexMono"
+                                          TextColor="#FF2975">
+                                        <Span.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="ToRegistrationButton_Clicked"/>
+                                        </Span.GestureRecognizers>
+                                    </Span>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    </VerticalStackLayout>
                 </Grid>
             </Grid>
         </Grid>
