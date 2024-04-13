@@ -27,4 +27,9 @@ public partial class MainPage : ContentPage
     {
         this.ShowPopup(new UserAddPopupPage());
     }
+
+    private async void Settings_Tapped(object sender, TappedEventArgs e)
+    {
+        await Shell.Current.GoToAsync(nameof(SettingsPage));
+    }
 }

@@ -28,21 +28,22 @@
         <viewmodel:ChatViewModel/>
     </ContentPage.BindingContext>
     <Grid>
-        <Grid RowDefinitions="70, *, 90">
+        <Grid RowDefinitions="70, *, 80">
             <Grid BackgroundColor="#000000"
                   RowDefinitions="*, 3">
-                <HorizontalStackLayout Spacing="8">
-                    <Image Source="arrow_back.svg"
-                           Background="DarkBlue"
-                           Margin="4,0,0,0"
-                           Scale="1.36">
-                        <Image.Behaviors>
-                            <toolkit:IconTintColorBehavior TintColor="#FFFFFF" />
-                        </Image.Behaviors>
-                        <Image.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
-                        </Image.GestureRecognizers>
-                    </Image>
+                <HorizontalStackLayout Spacing="12">
+                    <Grid>
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="GoBack_Tapped" />
+                        </Grid.GestureRecognizers>
+                        <Image Source="arrow_back_icon.svg"
+                               Margin="8,0,0,0"
+                               Scale="1.36">
+                            <Image.Behaviors>
+                                <toolkit:IconTintColorBehavior TintColor="#FFFFFF" />
+                            </Image.Behaviors>
+                        </Image>
+                    </Grid>
                     <Grid 
                         HeightRequest="48" 
                         WidthRequest="48"
@@ -59,7 +60,7 @@
                 <Grid Grid.Row="1">
                     <Rectangle Fill="White"/>
                 </Grid>
-                
+
             </Grid>
             <Grid Grid.Row="1"
                   BackgroundColor="#000000">
@@ -68,37 +69,52 @@
                     ItemsSource="{Binding Messages}"
                     ItemTemplate="{StaticResource MessageTemplateSelector}"
                     VerticalOptions="EndAndExpand" 
-                    ItemsUpdatingScrollMode="KeepLastItemInView"
-                    >
+                    ItemsUpdatingScrollMode="KeepLastItemInView">
                 </CollectionView>
 
             </Grid>
             <Grid Grid.Row="2"
                   BackgroundColor="#000000"
-                  ColumnDefinitions=".80*, .2*">
+                  ColumnDefinitions=".80*, .2*"
+                  RowDefinitions="3, *">
+                <Grid Grid.Row="0" Grid.ColumnSpan="2">
+                    <Rectangle Fill="#FFFFFF" />
+                </Grid>
                 <Grid
+                    Grid.Row="1"
                     Grid.Column="0"
-                    Padding="10,25,0,20"
-                    VerticalOptions="End">
+                    VerticalOptions="Center"
+                    HeightRequest="45"
+                    Margin="15,0,0,0">
                     <RoundRectangle Fill="#382C4B"
-                                        HeightRequest="40"
-                                        CornerRadius="30"/>
-                    <Entry Placeholder="message"
-                                   FontFamily="IBMPlexMonoBold"
-                                   FontSize="18"
-                                   VerticalOptions="CenterAndExpand"
-                           Margin="15,0,15,0"
-                           PlaceholderColor="Gray"
-                           TextColor="#FFFFFF"/>
+                                    CornerRadius="30"/>
+
+                    <Entry x:Name="messageEntry"
+                           Placeholder="message"
+                           PlaceholderColor="#928B9C"
+                           FontFamily="IBMPlexMonoBold"
+                           FontSize="18"
+                           VerticalOptions="Center"
+                           Margin="8,0,8,0"
+                           TextColor="#FFFFFF" />
                 </Grid>
                 <Grid
                     x:Name="sendButtonGrid"
+                    Grid.Row="1"
                     Grid.Column="1">
                     <Grid.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped_1" />
+                        <TapGestureRecognizer Tapped="Send_Tapped" />
                     </Grid.GestureRecognizers>
-                    <Ellipse />
-                    <Image Source="dotnet_bot.png" />
+                    <Ellipse Fill="#5000A4"
+                             HeightRequest="45"
+                             WidthRequest="45"/>
+                    <Image Source="send_icon.svg"
+                           HeightRequest="35"
+                           WidthRequest="35">
+                        <Image.Behaviors>
+                            <toolkit:IconTintColorBehavior TintColor="#FFFFFF" />
+                        </Image.Behaviors>
+                    </Image>
                 </Grid>
             </Grid>
         </Grid>

@@ -9,13 +9,13 @@ public partial class ChatPage : ContentPage
 		InitializeComponent();
 	}
 
-    private void TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)
+    private async void GoBack_Tapped(object sender, TappedEventArgs e)
     {
-
+        await Shell.Current.GoToAsync("../", true);
     }
 
-    private void TapGestureRecognizer_Tapped_1(object sender, TappedEventArgs e)
+    private void Send_Tapped(object sender, TappedEventArgs e)
     {
-
+        messageEntry.Text = "";
     }
 }

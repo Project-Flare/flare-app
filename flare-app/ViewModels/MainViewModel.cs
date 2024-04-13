@@ -26,9 +26,9 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     string text;
 
-    private bool _isHolding;
-    private string _contactUserNameToRemove;
-    private bool _userfound = false;
+    private bool? _isHolding;
+    private string? _contactUserNameToRemove;
+    private bool? _userfound = false;
 
     public bool IsRefreshing
     {

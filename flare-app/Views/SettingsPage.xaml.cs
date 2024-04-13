@@ -8,7 +8,13 @@ public partial class SettingsPage : ContentPage
 		InitializeComponent();
 	}
 
-    private async void TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)
+    private async void GoBack_Tapped(object sender, TappedEventArgs e)
+    {
+        //await Client.DisconnectFromServer();
+        await Shell.Current.GoToAsync("../", true);
+    }
+
+    private async void SingOut_Tapped(object sender, TappedEventArgs e)
     {
         //await Client.DisconnectFromServer();
         await Shell.Current.GoToAsync("//LoginPage", false);

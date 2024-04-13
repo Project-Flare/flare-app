@@ -37,35 +37,15 @@
         Title="Chat"
         ContentTemplate="{DataTemplate views:ChatPage}"
         Route="ChatPage" />
-
-    <TabBar>
-        <Tab
-            Title="Contacts"
-            Icon="User.png">
-            <ShellContent
-            Title="MainPage"
-            ContentTemplate="{DataTemplate views:MainPage}"
-            Route="MainPage" 
-            Style="{StaticResource TabBarDesign}"/>
-        </Tab>
-        <Tab
-            Title="Discover"
-            Icon="UserAdd.png">
-            <ShellContent
-            Title="Discovery"
-            ContentTemplate="{DataTemplate views:DiscoveryPage}"
-            Route="DiscoveryPage" 
-            Style="{StaticResource TabBarDesign}"/>
-
-        </Tab>
-        <Tab Title="Settings"
-             Icon="settings.png">
-            <ShellContent
-            Title="Settings"
-            ContentTemplate="{DataTemplate views:SettingsPage}"
-            Route="SettingsPage" 
-            Style="{StaticResource TabBarDesign}"/>
-        </Tab>
-    </TabBar>
+    
+    <ShellContent
+        Title="Main"
+        ContentTemplate="{DataTemplate views:MainPage}"
+        Route="MainPage" />
+    
+    <ShellContent
+        Title="Settings"
+        ContentTemplate="{DataTemplate views:SettingsPage}"
+        Route="SettingsPage" />
 
 </Shell>

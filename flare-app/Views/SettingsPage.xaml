@@ -1,44 +1,91 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="flare_app.Views.SettingsPage"
              Title="SettingsPage">
 
     <Grid>
-        <Grid RowDefinitions="140, *">
-            <Grid RowDefinitions="60, *"
-              BackgroundColor="#2B5B58">
-                <Grid>
+        <Grid RowDefinitions="70, *, 80">
+            <Grid BackgroundColor="#000000"
+                  RowDefinitions="*, 3">
+                <HorizontalStackLayout Spacing="12">
                     <Grid>
-                        <Label Text="Settings"
-                   TextColor="#FFFFFF"
-                   FontFamily="InterExtraBold"
-                   FontSize="32"
-                   Margin="20,10,0,0"/>
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="GoBack_Tapped" />
+                        </Grid.GestureRecognizers>
+                        <Image Source="arrow_back_icon.svg"
+                               Margin="8,0,0,0"
+                               Scale="1.36">
+                            <Image.Behaviors>
+                                <toolkit:IconTintColorBehavior TintColor="#FFFFFF" />
+                            </Image.Behaviors>
+                        </Image>
                     </Grid>
+                    <Label Text="Settings"
+                           TextColor="#FFFFFF"
+                           FontFamily="IBMPlexMonoBold"
+                           FontSize="28"
+                           VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+                <Grid Grid.Row="1">
+                    <Rectangle Fill="White"/>
                 </Grid>
-                <Grid Grid.Row="1"
-                  Margin="20,0,20,15"
-                  Opacity="1"
-                  VerticalOptions="End">
-                </Grid>
+                
             </Grid>
             <VerticalStackLayout
                             Grid.Row="1"
-                            BackgroundColor="#4B8C69">
-                <Grid HeightRequest="55">
+                            BackgroundColor="#000000">
+                <Label Text="Account:"
+                       FontFamily="IBMPlexMono"
+                       TextColor="#A3A3A3"
+                       Margin="10,50,0,0"/>
+                <Grid HeightRequest="55"
+                      RowDefinitions="*, 3">
                     <Grid.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
+                        <TapGestureRecognizer Tapped="SingOut_Tapped" />
                     </Grid.GestureRecognizers>
-                    <Grid BackgroundColor="Gray" Opacity=".7"/>
                     <Label Text="Sign Out"
                            FontSize="18"
-                           FontFamily="InterBold"
+                           FontFamily="IBMPlexMonoBold"
                            TextColor="DarkRed"
-                           Margin="20,0,20,0"
+                           Margin="20,0,0,0"
                            VerticalOptions="Center"/>
+                    <Grid Grid.Row="1">
+                        <Rectangle Fill="#FFFFFF" />
+                    </Grid>
                 </Grid>
-                
+
+                <Label Text="Other:"
+                       FontFamily="IBMPlexMono"
+                       TextColor="#A3A3A3"
+                       Margin="10,50,0,0"/>
+
+                <Grid HeightRequest="55"
+                      RowDefinitions="*, 3">
+                    <Label Text="Other1"
+                           FontSize="18"
+                           FontFamily="IBMPlexMono"
+                           TextColor="#FFFFFF"
+                           Margin="20,0,0,0"
+                           VerticalOptions="Center"/>
+                    <Grid Grid.Row="1">
+                        <Rectangle Fill="#FFFFFF" />
+                    </Grid>
+                </Grid>
+                <Grid HeightRequest="55"
+                      RowDefinitions="*, 3">
+                    <Label Text="Other2"
+                           FontSize="18"
+                           FontFamily="IBMPlexMono"
+                           TextColor="#FFFFFF"
+                           Margin="20,0,0,0"
+                           VerticalOptions="Center"/>
+                    <Grid Grid.Row="1">
+                        <Rectangle Fill="#FFFFFF" />
+                    </Grid>
+                </Grid>
+
             </VerticalStackLayout>
         </Grid>
     </Grid>

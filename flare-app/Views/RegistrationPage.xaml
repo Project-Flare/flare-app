@@ -26,7 +26,7 @@
             <Style x:Key="EntryBoxStyle" TargetType="Border">
                 <Setter Property="BackgroundColor" Value="#382C4B" />
                 <Setter Property="Padding" Value="0" />
-                <Setter Property="Stroke" Value="Transparent"/>
+                <Setter Property="StrokeThickness" Value="0" />
                 <Setter Property="HeightRequest" Value="45" />
                 <Setter Property="Opacity" Value="1" />
             </Style>
@@ -42,6 +42,10 @@
                VerticalOptions="Start"
                HorizontalOptions="Center"
                Scale="1.36" />
+        <Image Source="flare_logo.svg"
+               VerticalOptions="Start"
+               HeightRequest="100"
+               Margin="0,90,0,0"/>
         <Grid RowDefinitions="300, Auto">
             <Grid Grid.Row="0">
                 <HorizontalStackLayout HorizontalOptions="Start"
@@ -74,6 +78,7 @@
                         <Entry x:Name="username"
                                Text=""
                                Placeholder="username"
+                               PlaceholderColor="#928B9C"
                                Style="{StaticResource EntryStyle}"
                                Focused="Entry_Focused"
                                Unfocused="Entry_Unfocused"
@@ -87,6 +92,7 @@
                         <Entry x:Name="password"
                                Text=""
                                Placeholder="password"
+                               PlaceholderColor="#928B9C"
                                IsPassword="True"
                                TextChanged="password_TextChanged"
                                Style="{StaticResource EntryStyle}"
@@ -100,6 +106,7 @@
                                Text=""
                                IsPassword="True"
                                Placeholder="repeat"
+                               PlaceholderColor="#928B9C"
                                TextChanged="password_TextChanged"
                                Style="{StaticResource EntryStyle}"/>
                     </Border>
