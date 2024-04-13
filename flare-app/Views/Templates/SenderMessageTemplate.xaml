@@ -3,18 +3,19 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="flare_app.Views.Templates.SenderMessageTemplate">
     <Frame 
-        Margin="15,10,15,0"
+        Margin="15,5,15,5"
         Padding="6"
-        CornerRadius="9"
-        BackgroundColor="#415532"
+        CornerRadius="15"
+        BackgroundColor="#5000A4"
         BorderColor="Transparent"
-        MaximumWidthRequest="300"
+        MaximumWidthRequest="270"
         HorizontalOptions="End">
         <Label
             Text="{Binding Content}"
             LineBreakMode="WordWrap"
-            FontFamily="Inter"
-            FontSize="18"
+            FontFamily="IBMPlexMonoBold"
+            FontSize="16"
+            TextColor="#FFFFFF"
             VerticalOptions="Center"
             HorizontalOptions="Center"/>
     </Frame>

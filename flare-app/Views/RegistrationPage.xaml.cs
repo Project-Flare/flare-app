@@ -3,19 +3,24 @@ using flare_app.Models;
 using flare_app.Services;
 using flare_app.ViewModels;
 using flare_csharp;
+using CommunityToolkit.Maui.Core.Platform;
 
 namespace flare_app.Views;
 
 public partial class RegistrationPage : ContentPage
 {
+    private bool backSpanTapped = false;
+
     public RegistrationPage()
     {
         InitializeComponent();
     }
-
+    /// <summary>
+    /// 
+    /// </summary>
     private async void RegisterButton_Clicked(object sender, EventArgs e)
     {
-        if(username.Text == "" || password.Text == "" || password2.Text == "")
+        /*if(username.Text == "" || password.Text == "" || password2.Text == "")
         {
             //ButtonShake();
             return;
@@ -79,7 +84,7 @@ public partial class RegistrationPage : ContentPage
         }
         catch { }
 
-        initLoadingScreen(false);
+        initLoadingScreen(false);*/
         await Shell.Current.GoToAsync("//MainPage", true);
     }
 
@@ -143,6 +148,31 @@ public partial class RegistrationPage : ContentPage
             loadingIndicator.IsVisible = false;
         }
     }
+
+    private async void TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)
+    {
+        if (!backSpanTapped)
+        {
+            backSpanTapped = true;
+            await Shell.Current.GoToAsync("../", true);
+        }
+        backSpanTapped = false;
+    }
+
+    private async void Entry_Focused(object sender, FocusEventArgs e)
+    {
+        await Content.TranslateTo(0, -100);
+    }
+
+    private async void Entry_Unfocused(object sender, FocusEventArgs e)
+    {
+        await Content.TranslateTo(0, 0);
+    }
+
+    private void username_Completed(object sender, EventArgs e)
+    {
+    }
+
 
     /*private async void ButtonShake()
     {

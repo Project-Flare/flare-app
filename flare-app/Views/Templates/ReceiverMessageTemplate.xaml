@@ -5,20 +5,29 @@
     <ContentView.Resources>
 
     </ContentView.Resources>
-    <Frame 
-        Margin="15,10,15,0"
+    <Grid>
+        <Frame 
+        Margin="15,5,15,5"
         Padding="6"
-        CornerRadius="9"
-        BackgroundColor="#2B5B58"
+        CornerRadius="15"
+        BackgroundColor="#FF2975"
         BorderColor="Transparent"
-        MaximumWidthRequest="300"
+        MaximumWidthRequest="270"
         HorizontalOptions="Start">
-        <Label
-            Text="{Binding Content}"
-            LineBreakMode="WordWrap"
-            FontFamily="Inter"
-            FontSize="18"
-            VerticalOptions="Center"
-            HorizontalOptions="Center"/>
-    </Frame>
+            <Label Text="{Binding Content}"
+                   LineBreakMode="WordWrap"
+                   FontFamily="IBMPlexMonoBold"
+                   FontSize="16"
+                   TextColor="#FFFFFF"
+                   VerticalOptions="Center"
+                   HorizontalOptions="Center"/>
+        </Frame>
+        <Label Text="{Binding Time, StringFormat='{0:HH:mm}'}"
+               Margin="0,0,10,0"
+               FontFamily="IBMPlexMonoBold"
+               FontSize="12"
+               TextColor="#FFFFFF"
+               HorizontalOptions="End"
+               VerticalOptions="Center"/>
+    </Grid>
 </ContentView>

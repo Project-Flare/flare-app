@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using flare_app.Services;
 using flare_app.Views;
 using CommunityToolkit.Maui.Core.Views;
+using System.Windows.Input;
 namespace flare_app.ViewModels;
 
 public partial class MainViewModel : ObservableObject
@@ -15,7 +16,8 @@ public partial class MainViewModel : ObservableObject
     public AsyncRelayCommand<string> RemoveUserCommand { get; }
     public AsyncRelayCommand<string> PerformMyUserSearchCommand { get; }
     public AsyncRelayCommand RefreshCommand { get; }
-    public AsyncRelayCommand<string> AddUserOnPopCommand {  get; }
+    public AsyncRelayCommand<string> AddUserOnPopCommand { get; }
+    public AsyncRelayCommand<string> ChatDetailCommand { get; }
 
     private List<User> initDiscoveryList;
     bool isRefreshing;
@@ -41,7 +43,8 @@ public partial class MainViewModel : ObservableObject
         RemoveUserCommand = new AsyncRelayCommand<string>(RemoveUser);
         PerformMyUserSearchCommand = new AsyncRelayCommand<string>(PerformMyUserSearch);
         RefreshCommand = new AsyncRelayCommand(Refresh);
-        AddUserOnPopCommand = new AsyncRelayCommand<string> (AddUserOnPop);
+        AddUserOnPopCommand = new AsyncRelayCommand<string>(AddUserOnPop);
+        ChatDetailCommand = new AsyncRelayCommand<string>(ChatDetail);
 
         initDiscoveryList =
         [
@@ -192,5 +195,10 @@ public partial class MainViewModel : ObservableObject
         }
         catch { }
         //await Refresh();
+    }
+
+    async Task ChatDetail(string s)
+    {
+        await Shell.Current.GoToAsync(nameof(ChatPage));
     }
 }

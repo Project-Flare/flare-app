@@ -7,13 +7,13 @@
         <ResourceDictionary>
 
             <Style x:Key="EntryStyle" TargetType="Entry">
-                <Setter Property="FontFamily" Value="IBMPlexMono" />
+                <Setter Property="FontFamily" Value="IBMPlexMonoBold" />
                 <Setter Property="FontSize" Value="18" />
                 <Setter Property="Margin" Value="8,0,8,0" />
             </Style>
 
             <Style x:Key="ButtonStyle" TargetType="Button">
-                <Setter Property="FontFamily" Value="IBMPlexMono" />
+                <Setter Property="FontFamily" Value="IBMPlexMonoBold" />
                 <Setter Property="FontSize" Value="18" />
                 <Setter Property="CornerRadius" Value="25" />
                 <Setter Property="Padding" Value="0" />
@@ -27,7 +27,7 @@
                 <Setter Property="Padding" Value="0" />
                 <Setter Property="Stroke" Value="Transparent"/>
                 <Setter Property="HeightRequest" Value="45" />
-                <Setter Property="Opacity" Value=".9" />
+                <Setter Property="Opacity" Value="1" />
             </Style>
             
             <Style x:Key="CornerStyle" TargetType="RoundRectangle">
@@ -83,13 +83,13 @@
                                     <Span Text="Don't have an account? "
                                           FontFamily="IBMPlexMono"
                                           TextColor="#FFFFFF"/>
-                                    <Span x:Name="ToRegistrationButton"
+                                    <Span x:Name="ToRegistrationSpan"
                                           Text="Sign up"
                                           TextDecorations="Underline"
-                                          FontFamily="IBMPlexMono"
+                                          FontFamily="IBMPlexMonoBold"
                                           TextColor="#FF2975">
                                         <Span.GestureRecognizers>
-                                            <TapGestureRecognizer Tapped="ToRegistrationButton_Clicked"/>
+                                            <TapGestureRecognizer Tapped="ToRegistrationSpan_Tapped"/>
                                         </Span.GestureRecognizers>
                                     </Span>
                                 </FormattedString>

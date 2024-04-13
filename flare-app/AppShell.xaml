@@ -28,11 +28,15 @@
         ContentTemplate="{DataTemplate views:LoginPage}"
         Route="LoginPage" />
 
-        <ShellContent
+    <ShellContent
         Title="Registration"
         ContentTemplate="{DataTemplate views:RegistrationPage}"
         Route="RegistrationPage" />
 
+    <ShellContent
+        Title="Chat"
+        ContentTemplate="{DataTemplate views:ChatPage}"
+        Route="ChatPage" />
 
     <TabBar>
         <Tab
@@ -63,6 +67,5 @@
             Style="{StaticResource TabBarDesign}"/>
         </Tab>
     </TabBar>
-
 
 </Shell>

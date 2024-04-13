@@ -10,14 +10,11 @@ namespace flare_app.Views;
 
 public partial class LoginPage : ContentPage
 {
+    private bool toRegistrationTapped = false;
+
     public LoginPage()
     {
         InitializeComponent();
-    }
-
-    private void ToRegistrationButton_Clicked(object sender, EventArgs e)
-    {
-        Shell.Current.GoToAsync(nameof(RegistrationPage), true);
     }
 
     private async void LoginButton_Clicked(object sender, EventArgs e)
@@ -88,6 +85,16 @@ public partial class LoginPage : ContentPage
         // Success
         initLoadingScreen(false);*/
         await Shell.Current.GoToAsync("//MainPage", true);
+    }
+
+    private async void ToRegistrationSpan_Tapped(object sender, EventArgs e)
+    {
+        if (!toRegistrationTapped)
+        {
+            toRegistrationTapped = true;
+            await Shell.Current.GoToAsync(nameof(RegistrationPage), true);
+        }
+        toRegistrationTapped = false;
     }
 
     private async void initLoadingScreen(bool turnOn)

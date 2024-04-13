@@ -89,9 +89,10 @@
 	  <None Remove="Resources\Fonts\IBMPlexMono-Bold.ttf" />
 	  <None Remove="Resources\Fonts\IBMPlexMono-Italic.ttf" />
 	  <None Remove="Resources\Fonts\IBMPlexMono-Regular.ttf" />
+	  <None Remove="Resources\Images\arrow_back.svg" />
 	  <None Remove="Resources\Images\button_aura.svg" />
 	  <None Remove="Resources\Images\flarenoeff.svg" />
-	  <None Remove="Resources\Images\flarepng.png" />
+	  <None Remove="Resources\Images\send_icon.svg" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -133,6 +134,9 @@
 	  </MauiXaml>
 	  <MauiXaml Update="Views\Templates\SenderMessageTemplate.xaml">
             <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\Templates\UserTemplate.xaml">
+	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\UserAddPopupPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
