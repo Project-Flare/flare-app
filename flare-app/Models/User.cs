@@ -9,8 +9,8 @@ namespace flare_app.Models
 {
     public class User
     {
-        public string UserName { get; set; }
-        public string LastMessage { get; set; }
-        public string ProfilePicture { get; set; }
+        public required string UserName { get; set; }
+        public string? LastMessage { get; set; }
+        public string? ProfilePicture { get; set; }
     }
 }

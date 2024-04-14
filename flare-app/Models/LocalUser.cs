@@ -8,8 +8,8 @@ namespace flare_app.Models;
 public class LocalUser
 {
     [PrimaryKey, Unique]
-    public string LocalUserName { get; set; }
-    public string AuthToken { get; set; }
+    public string? LocalUserName { get; set; }
+    public string? AuthToken { get; set; }
 }
 
 public class MyContact
@@ -17,8 +17,8 @@ public class MyContact
     [PrimaryKey, AutoIncrement]
     public int Id { get; set; }
     [Indexed]
-    public string ContactOwner { get; set; }
-    public string ContactUserName { get; set; }
+    public string? ContactOwner { get; set; }
+    public string? ContactUserName { get; set; }
     [Unique]
-    public string OwnerContactPair { get; set; }
+    public string? OwnerContactPair { get; set; }
 }

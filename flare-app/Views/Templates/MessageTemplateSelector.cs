@@ -4,10 +4,10 @@ namespace flare_app.Views.Templates
 {
     internal class MessageTemplateSelector : DataTemplateSelector
     {
-        public DataTemplate SenderTemplate { get; set; }
-        public DataTemplate ReceiverTemplate { get; set; }
+        public DataTemplate? SenderTemplate { get; set; }
+        public DataTemplate? ReceiverTemplate { get; set; }
 
-        protected override DataTemplate OnSelectTemplate(object item, BindableObject container)
+        protected override DataTemplate? OnSelectTemplate(object item, BindableObject container)
         {
             var msg = (Message)item;
 

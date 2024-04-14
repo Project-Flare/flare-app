@@ -12,20 +12,29 @@
     
     <Grid
           RowDefinitions="*, 3"
-          RowSpacing="-3"
           HeightRequest="55">
         <Grid.GestureRecognizers>
             <TapGestureRecognizer
                 Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MainViewModel}}, Path=ChatDetailCommand}"
                 CommandParameter="{Binding ContactUserName}" />
         </Grid.GestureRecognizers>
-        <Grid Grid.Column="1">
+        <Grid>
+            <HorizontalStackLayout Spacing="12">
+                <Grid 
+                HeightRequest="40"
+                WidthRequest="40"
+                VerticalOptions="Center"
+                HorizontalOptions="Center"
+                    Margin="10,0,0,0">
+                <Ellipse Fill="White" HeightRequest="40" WidthRequest="40"/>
+            </Grid>
             <Label Text="{Binding ContactUserName}"
                    TextColor="#FFFFFF"
                    FontFamily="IBMPlexMonoBold"
-                   FontSize="16"
+                   FontSize="18"
                    VerticalOptions="Center"
-                   Margin="10,0,0,0"/>
+                   Margin="0,0,0,0"/>
+            </HorizontalStackLayout>
         </Grid>
         <Grid Grid.Row="1">
             <Rectangle Fill="White" />

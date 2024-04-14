@@ -8,6 +8,8 @@
 
             <Style x:Key="EntryStyle" TargetType="Entry">
                 <Setter Property="FontFamily" Value="IBMPlexMonoBold" />
+                <Setter Property="TextColor" Value="#FFFFFF" />
+                <Setter Property="PlaceholderColor" Value="#928B9C" />
                 <Setter Property="FontSize" Value="18" />
                 <Setter Property="Margin" Value="8,0,8,0" />
             </Style>
@@ -61,7 +63,6 @@
                             <Entry x:Name="username"
                                    Text=""
                                    Placeholder="username"
-                                   PlaceholderColor="#928B9C"
                                    Style="{StaticResource EntryStyle}" />
                         </Border>
                         <Border Style="{StaticResource EntryBoxStyle}">
@@ -71,7 +72,6 @@
                             <Entry x:Name="password"
                                    Text=""
                                    Placeholder="password"
-                                   PlaceholderColor="#928B9C"
                                    IsPassword="True"
                                    Style="{StaticResource EntryStyle}"/>
                         </Border>

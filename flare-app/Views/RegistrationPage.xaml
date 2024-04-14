@@ -9,6 +9,8 @@
 
             <Style x:Key="EntryStyle" TargetType="Entry">
                 <Setter Property="FontFamily" Value="IBMPlexMonoBold" />
+                <Setter Property="TextColor" Value="#FFFFFF" />
+                <Setter Property="PlaceholderColor" Value="#928B9C" />
                 <Setter Property="FontSize" Value="18" />
                 <Setter Property="Margin" Value="8,0,8,0" />
             </Style>
@@ -53,7 +55,7 @@
                                        VerticalOptions="Start"
                                        Padding="10,20,0,0">
                     <HorizontalStackLayout.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped"/>
+                        <TapGestureRecognizer Tapped="GoBack_Tapped"/>
                     </HorizontalStackLayout.GestureRecognizers>
                     <Image Source="arrow_back.svg">
                         <Image.Behaviors>
@@ -78,10 +80,7 @@
                         <Entry x:Name="username"
                                Text=""
                                Placeholder="username"
-                               PlaceholderColor="#928B9C"
                                Style="{StaticResource EntryStyle}"
-                               Focused="Entry_Focused"
-                               Unfocused="Entry_Unfocused"
                                toolkit:SetFocusOnEntryCompletedBehavior.NextElement="{x:Reference password}"/>
 
                     </Border>
@@ -92,7 +91,6 @@
                         <Entry x:Name="password"
                                Text=""
                                Placeholder="password"
-                               PlaceholderColor="#928B9C"
                                IsPassword="True"
                                TextChanged="password_TextChanged"
                                Style="{StaticResource EntryStyle}"
@@ -106,7 +104,6 @@
                                Text=""
                                IsPassword="True"
                                Placeholder="repeat"
-                               PlaceholderColor="#928B9C"
                                TextChanged="password_TextChanged"
                                Style="{StaticResource EntryStyle}"/>
                     </Border>
@@ -140,13 +137,13 @@
                 <Label x:Name="loadingMesg"
                    Text=""
                    LineBreakMode="WordWrap"
-                   TextColor="White"
+                   TextColor="#FFFFFF"
                    Margin="20,100,20,0"
                    FontFamily="InterBold"
                    HorizontalTextAlignment="Center"
                    VerticalOptions="Center"/>
                 <Label x:Name="loadingTime"
-                       TextColor="White"
+                       TextColor="#FFFFFF"
                        Margin="20,140,20,0"
                        FontFamily="InterBold"
                        HorizontalTextAlignment="Center"

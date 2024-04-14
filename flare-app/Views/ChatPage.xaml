@@ -91,12 +91,12 @@
 
                     <Entry x:Name="messageEntry"
                            Placeholder="message"
+                           TextColor="#FFFFFF"
                            PlaceholderColor="#928B9C"
                            FontFamily="IBMPlexMonoBold"
                            FontSize="18"
                            VerticalOptions="Center"
-                           Margin="8,0,8,0"
-                           TextColor="#FFFFFF" />
+                           Margin="8,0,8,0" />
                 </Grid>
                 <Grid
                     x:Name="sendButtonGrid"

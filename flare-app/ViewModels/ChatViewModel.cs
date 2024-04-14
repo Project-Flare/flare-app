@@ -48,7 +48,7 @@ namespace flare_app.ViewModels
 
         void OnBack()
         {
-            //Shell.Current.GoToAsync("../");
+            Shell.Current.GoToAsync("../");
         }
     }
 }

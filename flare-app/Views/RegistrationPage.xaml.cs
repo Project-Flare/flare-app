@@ -149,7 +149,7 @@ public partial class RegistrationPage : ContentPage
         }
     }
 
-    private async void TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)
+    private async void GoBack_Tapped(object sender, TappedEventArgs e)
     {
         if (!backSpanTapped)
         {
@@ -157,20 +157,6 @@ public partial class RegistrationPage : ContentPage
             await Shell.Current.GoToAsync("../", true);
         }
         backSpanTapped = false;
-    }
-
-    private async void Entry_Focused(object sender, FocusEventArgs e)
-    {
-        await Content.TranslateTo(0, -100);
-    }
-
-    private async void Entry_Unfocused(object sender, FocusEventArgs e)
-    {
-        await Content.TranslateTo(0, 0);
-    }
-
-    private void username_Completed(object sender, EventArgs e)
-    {
     }
 
 

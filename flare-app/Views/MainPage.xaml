@@ -11,17 +11,9 @@
         <viewmodels:MainViewModel />
     </ContentPage.BindingContext>
     <ContentPage.Resources>
-        <Style TargetType="Grid">
-            <Style.Triggers>
-                <Trigger TargetType="Grid" Property="Style" Value="DarkTile">
-                    <Setter Property="BackgroundColor" Value="Black" />
-                </Trigger>
-                <Trigger TargetType="Grid" Property="Style" Value="LightTile">
-                    <Setter Property="BackgroundColor" Value="White" />
-                </Trigger>
-            </Style.Triggers>
-        </Style>
+        
     </ContentPage.Resources>
+    
     <Grid>
         <Grid RowDefinitions="143, *">
             <Grid RowDefinitions="60, 80, 3"
@@ -69,6 +61,7 @@
                         </Border.StrokeShape>
                         <Entry Placeholder="search"
                                FontFamily="IBMPlexMonoBold"
+                               TextColor="#FFFFFF"
                                PlaceholderColor="#928B9C"
                                FontSize="18"
                                VerticalOptions="Center"
