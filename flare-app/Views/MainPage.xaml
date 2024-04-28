@@ -43,6 +43,7 @@
                                     <toolkit:IconTintColorBehavior TintColor="#FFFFFF" />
                                 </Image.Behaviors>
                                 <Image.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="Button_Clicked"/>
                                 </Image.GestureRecognizers>
                             </Image>
                         </HorizontalStackLayout>
@@ -77,6 +78,8 @@
             <CollectionView Grid.Row="1"
                         BackgroundColor="#000000"
                         ItemsSource="{Binding MyUsers}">
+                        
+                
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <templates:UserTemplate/>

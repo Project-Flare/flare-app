@@ -48,9 +48,12 @@ public partial class MainViewModel : ObservableObject
 
         initDiscoveryList =
         [
-            new User { UserName = "Petras", LastMessage="Labas", ProfilePicture="picture1.jpg" },
-            new User { UserName = "Antanas", LastMessage="Testas tekstas", ProfilePicture="picture2.jpg"  },
-            new User { UserName = "Gražulis", LastMessage="Vienas du trys", ProfilePicture="picture3.jpg" },
+            new User { UserName = "Petras", LastMessage="Labas", ProfilePicture="picture1.jpg", id=123456789 },
+            new User { UserName = "Antanas", LastMessage="Testas tekstas", ProfilePicture="picture2.jpg", id=147852369  },
+            new User { UserName = "Gražulis", LastMessage="Vienas du trys", ProfilePicture="picture3.jpg", id=987654321 },
+            new User { UserName = "Kempiniukas", LastMessage="Vienas du trys", ProfilePicture="picture4.jpg", id=987654321 },
+            new User { UserName = "Jonas", LastMessage="Vienas du trys", ProfilePicture="picture4.jpg", id=987654321 },
+            new User { UserName = "Daugvydas", LastMessage="Vienas du trys", ProfilePicture="picture4.jpg", id=987654321 },
         ];
  
         DiscoveryList = new ObservableCollection<User>();
@@ -186,15 +189,18 @@ public partial class MainViewModel : ObservableObject
         var addThis = new MyContact { ContactUserName = s, ContactOwner = Client.Username };
         try
         {
-            await LocalUserDBService.InsertContact(addThis);
-            bool userExistsInDiscoveryList = initDiscoveryList.Any(user => user.UserName.Equals(s));
-            if(userExistsInDiscoveryList)
+            foreach (var user in initDiscoveryList)
             {
-                MyUsers.Add(addThis);
+                if(user.UserName.Equals(s))
+                {
+                    await LocalUserDBService.InsertContact(addThis);
+                    MyUsers.Add(addThis);
+                }
             }
         }
         catch { }
-        //await Refresh();
+
+        await Refresh();
     }
 
     async Task ChatDetail(string s)

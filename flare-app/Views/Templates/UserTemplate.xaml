@@ -2,7 +2,8 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="flare_app.Views.Templates.UserTemplate"
-             xmlns:viewmodel="clr-namespace:flare_app.ViewModels">
+             xmlns:viewmodel="clr-namespace:flare_app.ViewModels"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit">
 
     <ContentView.Resources>
 
@@ -18,6 +19,9 @@
                 Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MainViewModel}}, Path=ChatDetailCommand}"
                 CommandParameter="{Binding ContactUserName}" />
         </Grid.GestureRecognizers>
+        <Image Source="warningicon.svg" HeightRequest="36">
+            
+        </Image>
         <Grid>
             <HorizontalStackLayout Spacing="12">
                 <Grid 

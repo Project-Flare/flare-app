@@ -18,12 +18,13 @@ public partial class MainPage : ContentPage
         _mainViewModel = vm;
     }
 
+
     private void search_TextChanged(object sender, TextChangedEventArgs e)
     {
         _mainViewModel.PerformMyUserSearchCommand.Execute(e.NewTextValue);
     }
 
-    private void Button_Clicked(object sender, EventArgs e)
+    private void Button_Clicked(object sender, TappedEventArgs e)
     {
         this.ShowPopup(new UserAddPopupPage());
     }
@@ -31,5 +32,10 @@ public partial class MainPage : ContentPage
     private async void Settings_Tapped(object sender, TappedEventArgs e)
     {
         await Shell.Current.GoToAsync(nameof(SettingsPage));
+    }
+
+    private void Button_Released(object sender, EventArgs e)
+    {
+        
     }
 }

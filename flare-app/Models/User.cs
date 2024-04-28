@@ -12,5 +12,7 @@ namespace flare_app.Models
         public required string UserName { get; set; }
         public string? LastMessage { get; set; }
         public string? ProfilePicture { get; set; }
+
+        public int id {  get; set; }
     }
 }
