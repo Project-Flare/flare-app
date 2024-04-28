@@ -13,6 +13,6 @@ namespace flare_app.Models
         public string? LastMessage { get; set; }
         public string? ProfilePicture { get; set; }
 
-        public int id {  get; set; }
+        public int id { get; set; }
     }
 }

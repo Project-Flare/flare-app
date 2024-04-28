@@ -9,7 +9,7 @@ namespace flare_app.Services
 {
     public class MessageService
     {
-        static MessageService _instance;
+        static MessageService? _instance;
 
         public static MessageService Instance
         {

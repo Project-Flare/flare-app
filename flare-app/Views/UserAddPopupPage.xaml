@@ -28,9 +28,9 @@
 
             <Grid WidthRequest="300" HeightRequest="50" Padding="10">
                 <Label
-         Text="Enter user name to add to contacts"
+         Text="Enter contact's username"
          FontSize="16"
-         FontAttributes="Bold"
+         FontFamily="IBMPlexMonoBold"
          TextColor="White"
          />
             </Grid>
@@ -43,7 +43,7 @@
 >
                     <Border StrokeShape="RoundRectangle 30,30,30,30" StrokeThickness="0" BackgroundColor="#382C4B">
                         <Entry
-                        Placeholder="Enter user name"
+                        Placeholder="Enter username"
                         TextColor="#FFFFFF"
                         PlaceholderColor="#928B9C"
                         FontSize="18"
@@ -59,6 +59,7 @@
      WidthRequest="300" HeightRequest="50" Padding="20,10" Grid.Row="20">
                 <Button
          Text="Add"
+         FontFamily="IBMPlexMonoBold"           
          Background="#5000A4"
          WidthRequest="100"
          HeightRequest="30"
@@ -71,6 +72,7 @@
                     />
                 <Button
          Text="Close"
+         FontFamily="IBMPlexMonoBold"
          Background="#5000A4"
          Pressed="Button_Pressed"
          WidthRequest="100"
