@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodel="clr-namespace:flare_app.ViewModels"
              xmlns:template="clr-namespace:flare_app.Views.Templates"
+             xmlns:model="clr-namespace:flare_app.Models"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="flare_app.Views.ChatPage"
              Title="ChatPage">
@@ -24,6 +25,7 @@
 
         </ResourceDictionary>
     </ContentPage.Resources>
+    
     <ContentPage.BindingContext>
         <viewmodel:ChatViewModel/>
     </ContentPage.BindingContext>
@@ -51,7 +53,8 @@
                         HorizontalOptions="Center">
                         <Ellipse Fill="White" HeightRequest="48" WidthRequest="48"/>
                     </Grid>
-                    <Label Text="{Binding User.LocalUserName}"
+                    <Label x:DataType="model:LocalUser"
+                           Text="{Binding User.LocalUserName}"
                            TextColor="#FFFFFF"
                            FontFamily="IBMPlexMonoBold"
                            FontSize="28"

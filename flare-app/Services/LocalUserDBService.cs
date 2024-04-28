@@ -9,7 +9,7 @@ namespace flare_app.Services;
 public class LocalUserDBService
 {
     private const string LOCAL_USERS = "local_AppDATA.db";
-    static SQLiteAsyncConnection _localUserConnection;
+	static SQLiteAsyncConnection _localUserConnection;
 
     public LocalUserDBService()
     {
@@ -31,7 +31,7 @@ public class LocalUserDBService
         return await _localUserConnection.Table<LocalUser>().ToListAsync();
     }
 
-    public static async Task<LocalUser> GetLocalUserByName(string UserName)
+    public static async Task<LocalUser?> GetLocalUserByName(string UserName)
     {
         await Init();
         foreach (LocalUser usr in await GetAllLocalUsers())
@@ -43,13 +43,13 @@ public class LocalUserDBService
         return null;
     }
 
-    public static async Task InsertLocalUser(LocalUser user)
+    public static async Task InsertLocalUser(LocalUser? user)
     {
         await Init();
         await _localUserConnection.InsertAsync(user);
     }
 
-    public static async Task DeleteLocalUser(LocalUser user)
+    public static async Task DeleteLocalUser(LocalUser? user)
     {
         await Init();
         await _localUserConnection.DeleteAsync(user);
@@ -89,7 +89,7 @@ public class LocalUserDBService
         await _localUserConnection.InsertAsync(contact);
     }
 
-    public static async Task DeleteContact(MyContact contact)
+    public static async Task DeleteContact(MyContact? contact)
     {
         await Init();
         await _localUserConnection.DeleteAsync(contact);
@@ -112,7 +112,7 @@ public class LocalUserDBService
     {
         await Init();
         return await _localUserConnection.Table<MyContact>()
-                                                         .Where(c => c.ContactUserName.Contains(query) && c.ContactOwner == owner)
+														 .Where(c => c.ContactUserName.Contains(query) && c.ContactOwner == owner)
                                                          .ToListAsync();
 
     }

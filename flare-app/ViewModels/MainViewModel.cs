@@ -26,7 +26,7 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     string text;
 
-    private bool? _isHolding;
+    //private bool? _isHolding;
     private string? _contactUserNameToRemove;
     private bool? _userfound = false;
 
@@ -102,7 +102,7 @@ public partial class MainViewModel : ObservableObject
         }
     }
 
-    async Task AddUser(string s) // Adds form discovery list to my user list
+    async Task AddUser(string? s) // Adds form discovery list to my user list
     {
         var addThis = new MyContact { ContactUserName = s, ContactOwner = Client.Username };
         try
@@ -114,9 +114,9 @@ public partial class MainViewModel : ObservableObject
         //await Refresh();
     }
 
-    async Task RemoveUser(string s)
+    async Task RemoveUser(string? s)
     {
-        MyContact removeThis = MyUsers.FirstOrDefault(u => u.ContactUserName == s && u.ContactOwner == Client.Username);
+        MyContact? removeThis = MyUsers.FirstOrDefault(u => u.ContactUserName == s && u.ContactOwner == Client.Username);
         try
         {
             await LocalUserDBService.DeleteContact(removeThis);
@@ -146,7 +146,7 @@ public partial class MainViewModel : ObservableObject
         }
     }
 
-    async Task PerformMyUserSearch(string query)
+    async Task PerformMyUserSearch(string? query)
     {
         MyUsers.Clear();
         foreach (var itm in await LocalUserDBService.SearchMyContact(query, Client.Username))
@@ -184,7 +184,7 @@ public partial class MainViewModel : ObservableObject
         }
         IsRefreshing = false;
     }
-    async Task AddUserOnPop(string s) // Adds form discovery list to my user list, when app restarts random written usernames are implemented aswell
+    async Task AddUserOnPop(string? s) // Adds form discovery list to my user list, when app restarts random written usernames are implemented aswell
     {
         var addThis = new MyContact { ContactUserName = s, ContactOwner = Client.Username };
         try
@@ -203,7 +203,7 @@ public partial class MainViewModel : ObservableObject
         await Refresh();
     }
 
-    async Task ChatDetail(string s)
+    async Task ChatDetail(string? s)
     {
         await Shell.Current.GoToAsync(nameof(ChatPage));
     }
