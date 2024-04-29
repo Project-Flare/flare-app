@@ -107,7 +107,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\flare-csharp\flare-csharp\flare-csharp.csproj" />
+	  <ProjectReference Include="D:\manlam\dev\repos\csharp\flare-app-1\flare-csharp\flare-csharp\flare-csharp.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

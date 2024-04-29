@@ -54,8 +54,6 @@
                         <Ellipse Fill="White" HeightRequest="48" WidthRequest="48"/>
                     </Grid>
                     <Label x:DataType="model:LocalUser"
-                           Text="{Binding User.LocalUserName}"
-                           TextColor="#FFFFFF"
                            FontFamily="IBMPlexMonoBold"
                            FontSize="28"
                            VerticalOptions="Center"/>

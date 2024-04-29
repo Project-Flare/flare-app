@@ -2,12 +2,12 @@
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using flare_app.Models;
-using flare_csharp;
 using System.Runtime.CompilerServices;
 using flare_app.Services;
 using flare_app.Views;
 using CommunityToolkit.Maui.Core.Views;
 using System.Windows.Input;
+using flare_csharp;
 namespace flare_app.ViewModels;
 
 public partial class MainViewModel : ObservableObject
