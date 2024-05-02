@@ -100,35 +100,35 @@ public partial class RegistrationPage : ContentPage
             return;
         }
 
-        var complexity = UserRegistration.EvaluatePassword(pwd_1);
-        switch (complexity)
-        {
-            case PasswordStrength.None:
-                {
-                    RegisterErrorInfo.TextColor = Color.FromArgb("000000");
-                    RegisterErrorInfo.Text = "";
-                    break;
-                };
-            case PasswordStrength.Unacceptable:
-            case PasswordStrength.Weak:
-                {
-                    RegisterErrorInfo.Text = "Password is too weak";
-                    RegisterErrorInfo.TextColor = Color.FromArgb("DE1212");
-                    break;
-                };
-            case (PasswordStrength.Good):
-                {
-                    RegisterErrorInfo.Text = "Password is okay";
-                    RegisterErrorInfo.TextColor = Color.FromArgb("AF6600");
-                    break;
-                };
-            case PasswordStrength.Excellent:
-                {
-                    RegisterErrorInfo.Text = "Password is excellent";
-                    RegisterErrorInfo.TextColor = Color.FromArgb("078100");
-                    break;
-                }
-        }
+        //var complexity = UserRegistration.EvaluatePassword(pwd_1);
+        //switch (complexity)
+        //{
+        //    case PasswordStrength.None:
+        //        {
+        //            RegisterErrorInfo.TextColor = Color.FromArgb("000000");
+        //            RegisterErrorInfo.Text = "";
+        //            break;
+        //        };
+        //    case PasswordStrength.Unacceptable:
+        //    case PasswordStrength.Weak:
+        //        {
+        //            RegisterErrorInfo.Text = "Password is too weak";
+        //            RegisterErrorInfo.TextColor = Color.FromArgb("DE1212");
+        //            break;
+        //        };
+        //    case (PasswordStrength.Good):
+        //        {
+        //            RegisterErrorInfo.Text = "Password is okay";
+        //            RegisterErrorInfo.TextColor = Color.FromArgb("AF6600");
+        //            break;
+        //        };
+        //    case PasswordStrength.Excellent:
+        //        {
+        //            RegisterErrorInfo.Text = "Password is excellent";
+        //            RegisterErrorInfo.TextColor = Color.FromArgb("078100");
+        //            break;
+        //        }
+        //}
     }
 
     private async void initLoadingScreen(bool turnOn)

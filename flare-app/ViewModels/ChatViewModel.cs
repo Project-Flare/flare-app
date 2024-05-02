@@ -13,8 +13,15 @@ using System.Windows.Input;
 
 namespace flare_app.ViewModels
 {
+    [QueryProperty("Username", "Username")]
     public partial class ChatViewModel : ObservableObject
     {
+        
+
+
+        [ObservableProperty]
+        string username;
+
         LocalUser _user;
         ObservableCollection<Message> _messages;
 

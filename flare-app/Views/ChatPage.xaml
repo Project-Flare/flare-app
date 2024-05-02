@@ -53,8 +53,8 @@
                         HorizontalOptions="Center">
                         <Ellipse Fill="White" HeightRequest="48" WidthRequest="48"/>
                     </Grid>
-                    <Label x:DataType="model:LocalUser"
-                           FontFamily="IBMPlexMonoBold"
+                    <Label x:DataType="viewmodel:ChatViewModel"
+                           Text="{Binding Username}"
                            FontSize="28"
                            VerticalOptions="Center"/>
                 </HorizontalStackLayout>
