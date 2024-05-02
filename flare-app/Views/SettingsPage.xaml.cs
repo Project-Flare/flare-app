@@ -10,13 +10,12 @@ public partial class SettingsPage : ContentPage
 
     private async void GoBack_Tapped(object sender, TappedEventArgs e)
     {
-        //await Client.DisconnectFromServer();
         await Shell.Current.GoToAsync("../", true);
     }
 
     private async void SingOut_Tapped(object sender, TappedEventArgs e)
     {
         //await Client.DisconnectFromServer();
-        await Shell.Current.GoToAsync("//LoginPage", false);
+        await Shell.Current.GoToAsync("//LoginPage", true);
     }
 }

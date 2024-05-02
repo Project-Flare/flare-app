@@ -9,20 +9,6 @@
     Shell.NavBarIsVisible="False"
     Title="flare_app">
 
-    <Shell.Resources>
-        <Style x:Key="TabBarDesign" 
-     TargetType="Element" 
-     BasedOn="{StaticResource BaseStyle}">
-            <Setter Property="Shell.TabBarBackgroundColor"
-            Value="#4C745E" />
-            <Setter Property="Shell.TabBarTitleColor"
-            Value="White" />
-            <Setter Property="Shell.TabBarUnselectedColor"
-            Value="Black" />
-            <Setter Property="Shell.TabBarDisabledColor" Value="Azure"/>
-        </Style>
-    </Shell.Resources>
-
     <ShellContent
         Title="Login"
         ContentTemplate="{DataTemplate views:LoginPage}"
@@ -34,15 +20,15 @@
         Route="RegistrationPage" />
 
     <ShellContent
-        Title="Chat"
-        ContentTemplate="{DataTemplate views:ChatPage}"
-        Route="ChatPage" />
-    
-    <ShellContent
         Title="Main"
         ContentTemplate="{DataTemplate views:MainPage}"
         Route="MainPage" />
-    
+
+    <ShellContent
+        Title="Chat"
+        ContentTemplate="{DataTemplate views:ChatPage}"
+        Route="ChatPage" />
+
     <ShellContent
         Title="Settings"
         ContentTemplate="{DataTemplate views:SettingsPage}"

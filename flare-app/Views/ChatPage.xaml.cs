@@ -1,3 +1,4 @@
+using flare_app.Models;
 using flare_app.ViewModels;
 
 namespace flare_app.Views;
@@ -25,4 +26,25 @@ public partial class ChatPage : ContentPage
 
         messageEntry.Text = "";
     }
+
+	private void messageEntry_Focused(object sender, FocusEventArgs e)
+	{
+
+	}
+	private void messageEntry_Unfocused(object sender, FocusEventArgs e)
+	{
+
+	}
+
+	private async void chatCollection_Loaded(object sender, EventArgs e)
+    {
+        await Task.Delay(10);
+        ScrollToBottom();
+    }
+
+    private void ScrollToBottom()
+    {
+		Message message = _chatViewModel.Messages.Last();
+        chatCollection.ScrollTo(message, position: ScrollToPosition.End, animate: true);
+	}
 }

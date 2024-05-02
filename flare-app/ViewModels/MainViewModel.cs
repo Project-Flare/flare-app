@@ -23,14 +23,14 @@ public partial class MainViewModel : ObservableObject
     bool refreshFirstTime = false;
 
     [ObservableProperty]
-    string text;
+    string? text;
 
     [ObservableProperty]
-    User user;
+    User? user;
 
     //private bool? _isHolding;
-    private string? _contactUserNameToRemove;
-    private bool? _userfound = false;
+    //private string? _contactUserNameToRemove;
+    //private bool? _userfound = false;
 
     public bool IsRefreshing
     {
@@ -111,22 +111,6 @@ public partial class MainViewModel : ObservableObject
         }
     }
 
-    /*void ResetBackGroundColor(ObservableCollection<User> list)
-    {
-        for (int i = 0; i < list.Count(); i++)
-        {
-            if (i % 2 == 0)
-            {
-                //{AppThemeBinding Light={StaticResource #D9D9D9} Dark={StaticResource #686868}}
-                list[i].BackGroundColor = "DarkTile";
-            }
-            else
-            {
-                list[i].BackGroundColor = "LightStyle";
-            }
-        }
-    }*/
-
     async Task Refresh()
     {
         IsRefreshing = true;
@@ -161,6 +145,6 @@ public partial class MainViewModel : ObservableObject
 
     async Task ChatDetail(string? s)
     {
-        await Shell.Current.GoToAsync($"{nameof(ChatPage)}?Username={s}");
+        await Shell.Current.GoToAsync($"//MainPage//ChatPage?Username={s}", animate: true);
     }
 }

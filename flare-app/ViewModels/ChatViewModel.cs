@@ -16,18 +16,15 @@ namespace flare_app.ViewModels
     [QueryProperty("Username", "Username")]
     public partial class ChatViewModel : ObservableObject
     {
-        
-
-
         [ObservableProperty]
-        string username;
+        string? username;
 
-        LocalUser _user;
-        ObservableCollection<Message> _messages;
+        LocalUser? _user;
+        ObservableCollection<Message>? _messages;
 
 		public RelayCommand<string> SendMesg { get; }
 
-		public LocalUser User
+		public LocalUser? User
         {
             get { return _user; }
             set
@@ -38,7 +35,7 @@ namespace flare_app.ViewModels
             }
         }
 
-        public ObservableCollection<Message> Messages
+        public ObservableCollection<Message>? Messages
         {
             get { return _messages; }
             set
@@ -50,22 +47,19 @@ namespace flare_app.ViewModels
 
         public ChatViewModel()
         {
-            User = new LocalUser { LocalUserName = "tempUsr" };
+            User = new LocalUser { LocalUserName = Username };
             Messages = new ObservableCollection<Message>(MessageService.Instance.GetMessages(User));
 			SendMesg = new RelayCommand<string>(SendMessage);
 		}
 
-        //public ICommand BackCommand => new Command(OnBack);
-
-
         void OnBack()
         {
-            Shell.Current.GoToAsync("../");
+            Shell.Current.GoToAsync("../", true);
         }
 
-        void SendMessage(string mesg)
+        void SendMessage(string? mesg)
         {
-            Messages.Add(new Message { Sender = User, Content = mesg, Time = DateTime.Now }) ;
+            Messages?.Add(new Message { Sender = User, Content = mesg, Time = DateTime.Now }) ;
         }
     }
 }

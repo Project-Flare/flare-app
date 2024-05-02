@@ -5,13 +5,12 @@ using flare_csharp;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Formats.Asn1;
+using CommunityToolkit.Maui.Core.Platform;
 
 namespace flare_app.Views;
 
 public partial class LoginPage : ContentPage
 {
-    private bool toRegistrationTapped = false;
-
     public LoginPage()
     {
         InitializeComponent();
@@ -25,6 +24,7 @@ public partial class LoginPage : ContentPage
             return;
         }*/
 
+        await HideKeyboard();
         // Initiate login.
 
         /*loadingMesg.Text = "";
@@ -89,12 +89,8 @@ public partial class LoginPage : ContentPage
 
     private async void ToRegistrationSpan_Tapped(object sender, EventArgs e)
     {
-        if (!toRegistrationTapped)
-        {
-            toRegistrationTapped = true;
-            await Shell.Current.GoToAsync(nameof(RegistrationPage), true);
-        }
-        toRegistrationTapped = false;
+        await HideKeyboard();
+        await Shell.Current.GoToAsync("//LoginPage//RegistrationPage", true);
     }
 
     private async void initLoadingScreen(bool turnOn)
@@ -125,4 +121,39 @@ public partial class LoginPage : ContentPage
 
         await loginGrid.TranslateTo(0, 0, 100);
     }
+
+	private async void Entry_Focused(object sender, FocusEventArgs e)
+	{
+		//var btn = BackBtn.TranslateTo(0, 100, easing: Easing.SinIn);
+		var ani = loginGrid.TranslateTo(0, -100, easing: Easing.SinIn);
+		await Task.WhenAll(ani);
+	}
+
+	private async void Entry_Unfocused(object sender, FocusEventArgs e)
+	{
+		var ani = loginGrid.TranslateTo(0, 0, easing: Easing.SinIn);
+		await Task.WhenAll(ani);
+	}
+
+	private async void Background_Tapped(object sender, TappedEventArgs e)
+	{
+		await HideKeyboard();
+	}
+
+	private async Task HideKeyboard()
+	{
+		if (username.IsFocused)
+		{
+			username.Unfocus();
+			await KeyboardExtensions.HideKeyboardAsync(username);
+			return;
+		}
+
+		if (password.IsFocused)
+		{
+			password.Unfocus();
+			await KeyboardExtensions.HideKeyboardAsync(password);
+			return;
+		}
+	}
 }
