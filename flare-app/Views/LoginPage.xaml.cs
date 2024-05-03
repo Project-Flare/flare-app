@@ -20,7 +20,7 @@ public partial class LoginPage : ContentPage
         var manager = new ClientManager("https://rpc.f2.project-flare.net");
         if (username.Text == "" || password.Text == "")
         {
-            await ButtonShake();
+            ButtonShake();
             return;
         }
 
@@ -28,7 +28,7 @@ public partial class LoginPage : ContentPage
         // Initiate login.
 
         loadingMesg.Text = "";
-        await initLoadingScreen(true); // Aditional 600ms to log in process.
+        initLoadingScreen(true); // Aditional 600ms to log in process.
 
         // Connecting to server
      //   if (Client.State != Client.ClientState.Connected)
@@ -36,7 +36,6 @@ public partial class LoginPage : ContentPage
             loadingMesg.Text = "Connecting to server...";
             try
             {
-                await Client.ConnectToServer();
             }
             catch (Exception)
             {
