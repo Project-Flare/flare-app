@@ -15,24 +15,24 @@ public partial class LoginPage : ContentPage
     {
         InitializeComponent();
     }
-
     private async void LoginButton_Clicked(object sender, EventArgs e)
     {
-        /*if (username.Text == "" || password.Text == "")
+        var manager = new ClientManager("https://rpc.f2.project-flare.net");
+        if (username.Text == "" || password.Text == "")
         {
-            ButtonShake();
+            await ButtonShake();
             return;
-        }*/
+        }
 
-        await HideKeyboard();
+        HideKeyboard();
         // Initiate login.
 
-        /*loadingMesg.Text = "";
-        initLoadingScreen(true); // Aditional 600ms to log in process.
+        loadingMesg.Text = "";
+        await initLoadingScreen(true); // Aditional 600ms to log in process.
 
         // Connecting to server
-        if (Client.State != Client.ClientState.Connected)
-        {
+     //   if (Client.State != Client.ClientState.Connected)
+     //   {
             loadingMesg.Text = "Connecting to server...";
             try
             {
@@ -44,16 +44,19 @@ public partial class LoginPage : ContentPage
                 MauiProgram.ErrorToast("Connection with server failed.");
                 return;
             }
-        }
+        //   }
 
-        Client.Username = username.Text;
-        Client.Password = password.Text;
+        manager.Credentials.Username = username.Text;
+        manager.Credentials.Password = password.Text;
+
+        WebSocketListener wsl = new WebSocketListener();
+        wsl.AuthToken = manager.Credentials.AuthToken;
 
         // Logging in
         loadingMesg.Text = "Logging in...";
         try
         {
-            await Client.LoginToServer();
+            await manager.LoginToServerAsync();
         }
         catch (Exception ex)
         {
@@ -62,10 +65,12 @@ public partial class LoginPage : ContentPage
             return;
         }
 
-        Client.Password = "";
+
+
+        manager.Credentials.Password = "";
         password.Text = "";
 
-        loadingMesg.Text = "Synchronising other users...";
+     /*   loadingMesg.Text = "Synchronising other users...";
         try
         {
             await Client.FillUserDiscovery();
@@ -74,18 +79,19 @@ public partial class LoginPage : ContentPage
         {
             MauiProgram.ErrorToast("Failed to synchronise other users.");
             //return;
-        }
+        } */
 
         try
         {
-            await LocalUserDBService.InsertLocalUser(new LocalUser { LocalUserName = username.Text, AuthToken = Client.AuthToken });
+            await LocalUserDBService.InsertLocalUser(new LocalUser { LocalUserName = username.Text, AuthToken = wsl.AuthToken });
         }
         catch { }
         
         // Success
-        initLoadingScreen(false);*/
+        initLoadingScreen(false);
         await Shell.Current.GoToAsync("//MainPage", true);
     }
+
 
     private async void ToRegistrationSpan_Tapped(object sender, EventArgs e)
     {
