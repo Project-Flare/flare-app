@@ -77,6 +77,7 @@
             </Grid>
             <CollectionView Grid.Row="1"
                         BackgroundColor="#000000"
+                        x:DataType="viewmodels:MainViewModel"
                         ItemsSource="{Binding MyUsers}">
                         
                 

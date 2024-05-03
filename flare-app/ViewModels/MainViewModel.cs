@@ -7,7 +7,6 @@ using flare_app.Services;
 using flare_app.Views;
 using CommunityToolkit.Maui.Core.Views;
 using System.Windows.Input;
-using flare_csharp;
 namespace flare_app.ViewModels;
 
 public partial class MainViewModel : ObservableObject
@@ -24,11 +23,14 @@ public partial class MainViewModel : ObservableObject
     bool refreshFirstTime = false;
 
     [ObservableProperty]
-    string text;
+    string? text;
+
+    [ObservableProperty]
+    User? user;
 
     //private bool? _isHolding;
-    private string? _contactUserNameToRemove;
-    private bool? _userfound = false;
+    //private string? _contactUserNameToRemove;
+    //private bool? _userfound = false;
 
     public bool IsRefreshing
     {
@@ -48,12 +50,8 @@ public partial class MainViewModel : ObservableObject
 
         initDiscoveryList =
         [
-            new User { UserName = "Petras", LastMessage="Labas", ProfilePicture="picture1.jpg", id=123456789 },
-            new User { UserName = "Antanas", LastMessage="Testas tekstas", ProfilePicture="picture2.jpg", id=147852369  },
-            new User { UserName = "Gražulis", LastMessage="Vienas du trys", ProfilePicture="picture3.jpg", id=987654321 },
-            new User { UserName = "Kempiniukas", LastMessage="Vienas du trys", ProfilePicture="picture4.jpg", id=987654321 },
-            new User { UserName = "Jonas", LastMessage="Vienas du trys", ProfilePicture="picture4.jpg", id=987654321 },
-            new User { UserName = "Daugvydas", LastMessage="Vienas du trys", ProfilePicture="picture4.jpg", id=987654321 },
+            new User { UserName = "TempUser1", LastMessage="Labas", ProfilePicture="picture1.jpg", id=123456789 },
+            new User { UserName = "TempUser2", LastMessage="Testas tekstas", ProfilePicture="picture2.jpg", id=147852369  },
         ];
  
         DiscoveryList = new ObservableCollection<User>();
@@ -67,7 +65,6 @@ public partial class MainViewModel : ObservableObject
             Task.Run(Refresh);
         }
         //ReloadInitMyUsers();
-        ReloadDiscoveryList();
     }
 
     [ObservableProperty]
@@ -77,34 +74,12 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     ObservableCollection<User> discoveryList; // Observable.
 
-    [RelayCommand]
-    void ReloadInitDiscoveryList()
-    {
-        initDiscoveryList.Clear();
-        foreach (var usr in Client.UserDiscoveryList)
-        {
-            User itm = new User
-            {
-                UserName = usr.Username
-            };
 
-            initDiscoveryList.Add(itm);
-        }
-        ReloadDiscoveryList();
-    }
-    [RelayCommand]
-    void ReloadDiscoveryList()
-    {
-        DiscoveryList.Clear();
-        foreach (var user in initDiscoveryList)
-        {
-            DiscoveryList.Add(user);
-        }
-    }
+
 
     async Task AddUser(string? s) // Adds form discovery list to my user list
     {
-        var addThis = new MyContact { ContactUserName = s, ContactOwner = Client.Username };
+        var addThis = new MyContact { ContactUserName = s, ContactOwner = "TempUser1" };
         try
         {
             await LocalUserDBService.InsertContact(addThis);
@@ -116,7 +91,7 @@ public partial class MainViewModel : ObservableObject
 
     async Task RemoveUser(string? s)
     {
-        MyContact? removeThis = MyUsers.FirstOrDefault(u => u.ContactUserName == s && u.ContactOwner == Client.Username);
+        MyContact? removeThis = MyUsers.FirstOrDefault(u => u.ContactUserName == s && u.ContactOwner == "TempUser1");
         try
         {
             await LocalUserDBService.DeleteContact(removeThis);
@@ -126,56 +101,21 @@ public partial class MainViewModel : ObservableObject
         //await Refresh();
     }
 
-    [RelayCommand]
-    void PerformDiscoverySearch(string query)
-    {
-        if (query == string.Empty)
-        {
-            ReloadDiscoveryList();
-        }
-        else
-        {
-            DiscoveryList.Clear();
-            foreach (var user in initDiscoveryList)
-            {
-                if (user.UserName.ToLower().Contains(query.ToLower()))
-                {
-                    DiscoveryList.Add(user);
-                }
-            }
-        }
-    }
 
     async Task PerformMyUserSearch(string? query)
     {
         MyUsers.Clear();
-        foreach (var itm in await LocalUserDBService.SearchMyContact(query, Client.Username))
+        foreach (var itm in await LocalUserDBService.SearchMyContact(query, "TempUser1"))
         {
             MyUsers.Add(itm);
         }
     }
 
-    /*void ResetBackGroundColor(ObservableCollection<User> list)
-    {
-        for (int i = 0; i < list.Count(); i++)
-        {
-            if (i % 2 == 0)
-            {
-                //{AppThemeBinding Light={StaticResource #D9D9D9} Dark={StaticResource #686868}}
-                list[i].BackGroundColor = "DarkTile";
-            }
-            else
-            {
-                list[i].BackGroundColor = "LightStyle";
-            }
-        }
-    }*/
-
     async Task Refresh()
     {
         IsRefreshing = true;
         MyUsers.Clear();
-        var list = await LocalUserDBService.GetAllMyContacts(Client.Username);
+        var list = await LocalUserDBService.GetAllMyContacts("TempUser1");
         foreach (var itm in list)
         {
             if (MyUsers.Contains(itm))
@@ -186,7 +126,7 @@ public partial class MainViewModel : ObservableObject
     }
     async Task AddUserOnPop(string? s) // Adds form discovery list to my user list, when app restarts random written usernames are implemented aswell
     {
-        var addThis = new MyContact { ContactUserName = s, ContactOwner = Client.Username };
+        var addThis = new MyContact { ContactUserName = s, ContactOwner = "TempUser1" };
         try
         {
             foreach (var user in initDiscoveryList)
@@ -205,6 +145,6 @@ public partial class MainViewModel : ObservableObject
 
     async Task ChatDetail(string? s)
     {
-        await Shell.Current.GoToAsync(nameof(ChatPage));
+        await Shell.Current.GoToAsync($"//MainPage//ChatPage?Username={s}", animate: true);
     }
 }

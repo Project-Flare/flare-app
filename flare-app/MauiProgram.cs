@@ -3,7 +3,6 @@ using Microsoft.Extensions.Logging;
 using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
-using flare_csharp;
 using flare_app.ViewModels;
 using flare_app.Views;
 using flare_app.Services;
@@ -34,7 +33,8 @@ namespace flare_app
             builder.Services.AddScoped<MainViewModel>();
 
             builder.Services.AddSingleton<MainPage>();
-            builder.Services.AddSingleton<DiscoveryPage>();
+
+            builder.Services.AddSingleton<ChatPage>();
 
             return builder.Build();
 

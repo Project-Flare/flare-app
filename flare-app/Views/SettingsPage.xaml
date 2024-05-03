@@ -6,7 +6,8 @@
              Title="SettingsPage">
 
     <Grid>
-        <Grid RowDefinitions="70, *, 80">
+        <Grid RowDefinitions="70, *, 80"
+              BackgroundColor="#000000">
             <Grid BackgroundColor="#000000"
                   RowDefinitions="*, 3">
                 <HorizontalStackLayout Spacing="12">
@@ -29,7 +30,7 @@
                            VerticalOptions="Center"/>
                 </HorizontalStackLayout>
                 <Grid Grid.Row="1">
-                    <Rectangle Fill="White"/>
+                    <Rectangle Fill="#FFFFFF"/>
                 </Grid>
                 
             </Grid>

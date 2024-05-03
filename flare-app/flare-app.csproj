@@ -107,14 +107,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="D:\manlam\dev\repos\csharp\flare-app-1\flare-csharp\flare-csharp\flare-csharp.csproj" />
+		<ProjectReference Include="..\flare-csharp\flare-csharp\flare-csharp.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <MauiXaml Update="Views\ChatPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\DiscoveryPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\LoginPage.xaml">

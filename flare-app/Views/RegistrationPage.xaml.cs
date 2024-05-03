@@ -4,20 +4,17 @@ using flare_app.Services;
 using flare_app.ViewModels;
 using flare_csharp;
 using CommunityToolkit.Maui.Core.Platform;
+using Microsoft.Maui.Controls;
 
 namespace flare_app.Views;
 
 public partial class RegistrationPage : ContentPage
 {
-    private bool backSpanTapped = false;
-
     public RegistrationPage()
     {
         InitializeComponent();
     }
-    /// <summary>
-    /// 
-    /// </summary>
+
     private async void RegisterButton_Clicked(object sender, EventArgs e)
     {
         /*if(username.Text == "" || password.Text == "" || password2.Text == "")
@@ -29,7 +26,11 @@ public partial class RegistrationPage : ContentPage
         if (password.Text != password2.Text)
             return;
 
-        // Initiate registration.
+        */
+
+        await HideKeyboard();
+
+        /*// Initiate registration.
         loadingMesg.Text = "";
         initLoadingScreen(true); // Aditional 600ms to log in process.
 
@@ -100,35 +101,35 @@ public partial class RegistrationPage : ContentPage
             return;
         }
 
-        var complexity = UserRegistration.EvaluatePassword(pwd_1);
-        switch (complexity)
-        {
-            case PasswordStrength.None:
-                {
-                    RegisterErrorInfo.TextColor = Color.FromArgb("000000");
-                    RegisterErrorInfo.Text = "";
-                    break;
-                };
-            case PasswordStrength.Unacceptable:
-            case PasswordStrength.Weak:
-                {
-                    RegisterErrorInfo.Text = "Password is too weak";
-                    RegisterErrorInfo.TextColor = Color.FromArgb("DE1212");
-                    break;
-                };
-            case (PasswordStrength.Good):
-                {
-                    RegisterErrorInfo.Text = "Password is okay";
-                    RegisterErrorInfo.TextColor = Color.FromArgb("AF6600");
-                    break;
-                };
-            case PasswordStrength.Excellent:
-                {
-                    RegisterErrorInfo.Text = "Password is excellent";
-                    RegisterErrorInfo.TextColor = Color.FromArgb("078100");
-                    break;
-                }
-        }
+        //var complexity = UserRegistration.EvaluatePassword(pwd_1);
+        //switch (complexity)
+        //{
+        //    case PasswordStrength.None:
+        //        {
+        //            RegisterErrorInfo.TextColor = Color.FromArgb("000000");
+        //            RegisterErrorInfo.Text = "";
+        //            break;
+        //        };
+        //    case PasswordStrength.Unacceptable:
+        //    case PasswordStrength.Weak:
+        //        {
+        //            RegisterErrorInfo.Text = "Password is too weak";
+        //            RegisterErrorInfo.TextColor = Color.FromArgb("DE1212");
+        //            break;
+        //        };
+        //    case (PasswordStrength.Good):
+        //        {
+        //            RegisterErrorInfo.Text = "Password is okay";
+        //            RegisterErrorInfo.TextColor = Color.FromArgb("AF6600");
+        //            break;
+        //        };
+        //    case PasswordStrength.Excellent:
+        //        {
+        //            RegisterErrorInfo.Text = "Password is excellent";
+        //            RegisterErrorInfo.TextColor = Color.FromArgb("078100");
+        //            break;
+        //        }
+        //}
     }
 
     private async void initLoadingScreen(bool turnOn)
@@ -151,23 +152,49 @@ public partial class RegistrationPage : ContentPage
 
     private async void GoBack_Tapped(object sender, TappedEventArgs e)
     {
-        if (!backSpanTapped)
-        {
-            backSpanTapped = true;
-            await Shell.Current.GoToAsync("../", true);
-        }
-        backSpanTapped = false;
+        await HideKeyboard();
+        await Shell.Current.GoToAsync("../", true);
     }
 
+	private async void Background_Tapped(object sender, TappedEventArgs e)
+	{
+		await HideKeyboard();
+	}
 
-    /*private async void ButtonShake()
-    {
-        await registerGrid.TranslateTo(25, 0, 150);
-        await registerGrid.TranslateTo(-50, 0, 150);
+	private async void Entry_Focused(object sender, FocusEventArgs e)
+	{
+		//var btn = BackBtn.TranslateTo(0, 100, easing: Easing.SinIn);
+		var ani = formGrid.TranslateTo(0, -100, easing: Easing.SinIn);
+		await Task.WhenAll(ani);
+	}
 
-        await registerGrid.TranslateTo(15, 0, 100);
-        await registerGrid.TranslateTo(-15, 0, 100);
+	private async void Entry_Unfocused(object sender, FocusEventArgs e)
+	{
+		var ani = formGrid.TranslateTo(0, 0, easing: Easing.SinIn);
+        await Task.WhenAll(ani);
+	}
 
-        await registerGrid.TranslateTo(0, 0, 100);
-    }*/
+	private async Task HideKeyboard()
+	{
+		if (username.IsFocused)
+		{
+			username.Unfocus();
+			await KeyboardExtensions.HideKeyboardAsync(username);
+			return;
+		}
+
+		if (password.IsFocused)
+		{
+			password.Unfocus();
+			await KeyboardExtensions.HideKeyboardAsync(password);
+			return;
+		}
+
+		if (password2.IsFocused)
+		{
+			password2.Unfocus();
+			await KeyboardExtensions.HideKeyboardAsync(password2);
+			return;
+		}
+	}
 }

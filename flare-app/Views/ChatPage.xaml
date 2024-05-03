@@ -6,7 +6,8 @@
              xmlns:model="clr-namespace:flare_app.Models"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="flare_app.Views.ChatPage"
-             Title="ChatPage">
+             Title="ChatPage"
+             x:Name="ChatPageContent">
     <ContentPage.Resources>
         <ResourceDictionary>
 
@@ -53,7 +54,8 @@
                         HorizontalOptions="Center">
                         <Ellipse Fill="White" HeightRequest="48" WidthRequest="48"/>
                     </Grid>
-                    <Label x:DataType="model:LocalUser"
+                    <Label x:DataType="viewmodel:ChatViewModel"
+                           Text="{Binding Username}"
                            FontFamily="IBMPlexMonoBold"
                            FontSize="28"
                            VerticalOptions="Center"/>
@@ -67,9 +69,11 @@
                   BackgroundColor="#000000">
                 <CollectionView
                     x:Name="chatCollection"
+                    Loaded="chatCollection_Loaded"
+                    x:DataType="viewmodel:ChatViewModel"
                     ItemsSource="{Binding Messages}"
                     ItemTemplate="{StaticResource MessageTemplateSelector}"
-                    VerticalOptions="EndAndExpand" 
+                    VerticalOptions="End" 
                     ItemsUpdatingScrollMode="KeepLastItemInView">
                 </CollectionView>
 
@@ -96,6 +100,8 @@
                            PlaceholderColor="#928B9C"
                            FontFamily="IBMPlexMonoBold"
                            FontSize="18"
+                           Focused="messageEntry_Focused"
+                           Unfocused="messageEntry_Unfocused"
                            VerticalOptions="Center"
                            Margin="8,0,8,0" />
                 </Grid>
