@@ -19,8 +19,12 @@ public partial class RegistrationPage : ContentPage
     {
         ClientManager manager;
         AuthorizationService authorizationService;
+        WebSocketListener wsl = new WebSocketListener();
+
         manager = new ClientManager("https://rpc.f2.project-flare.net");
         authorizationService = new AuthorizationService("https://rpc.f2.project-flare.net", manager.channel);
+        
+
         if (username.Text == "" || password.Text == "" || password2.Text == "")
         {
             //ButtonShake();
@@ -56,7 +60,7 @@ public partial class RegistrationPage : ContentPage
 
        
 
-        WebSocketListener wsl = new WebSocketListener();
+        
         wsl.AuthToken = manager.Credentials.AuthToken;
 
         manager.HashPassword();
