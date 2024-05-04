@@ -15,9 +15,9 @@ namespace ConsoleApp
 			GrpcChannel channel = GrpcChannel.ForAddress("https://rpc.f2.project-flare.net");
 			Credentials credentials = new Credentials();
 			credentials.Username = "testing_user_0";
-			credentials.Password = "190438934";
-			//authorizationService = new AuthorizationService("https://rpc.f2.project-flare.net", channel, credentials); // Add credentials (username and password need to be set, to login to server and don't go through registering routine
-			authorizationService = new AuthorizationService("https://rpc.f2.project-flare.net", channel, credentials: null); // Add credentials (username and password need to be set, to login to server and don't go through registering routine
+			credentials.Password = "u|O(h7gNUR'}@gmi=#5k^epf+i[UWyK'~cS.1qNx";
+			authorizationService = new AuthorizationService("https://rpc.f2.project-flare.net", channel, credentials); // Add credentials (username and password need to be set, to login to server and don't go through registering routine
+			//authorizationService = new AuthorizationService("https://rpc.f2.project-flare.net", channel, credentials: null); // Add credentials (username and password need to be set, to login to server and don't go through registering routine
 
 			authorizationService.StartService();
 
@@ -34,8 +34,8 @@ namespace ConsoleApp
 			authorizationService.ReceivedCredentialRequirements += PrintCredentialRequirements;
 			authorizationService.ReceivedCredentialRequirements += (AuthorizationService.ReceivedRequirementsEventArgs eventArgs) =>
 			{
-				string? username = string.Empty;
-				string? password = string.Empty;
+				string? username = "testing_user_0";
+				string? password = "u|O(h7gNUR'}@gmi=#5k^epf+i[UWyK'~cS.1qNx";
 				bool setComplete = false;
 				while (!setComplete)
 				{
