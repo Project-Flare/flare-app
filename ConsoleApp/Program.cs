@@ -14,8 +14,8 @@ namespace ConsoleApp
 			// THIS MUST BE SINGLETON AND USED THROUGHOUT THE WHOLE PROJECT
 			GrpcChannel channel = GrpcChannel.ForAddress("https://rpc.f2.project-flare.net");
 			Credentials credentials = new Credentials();
-			credentials.Username = "testing_user_0";
-			credentials.Password = "u|O(h7gNUR'}@gmi=#5k^epf+i[UWyK'~cS.1qNx";
+			credentials.Username = "hlk";
+			credentials.Password = "cacti-unit-emerald-pumping+31150p";
 			authorizationService = new AuthorizationService("https://rpc.f2.project-flare.net", channel, credentials); // Add credentials (username and password need to be set, to login to server and don't go through registering routine
 			//authorizationService = new AuthorizationService("https://rpc.f2.project-flare.net", channel, credentials: null); // Add credentials (username and password need to be set, to login to server and don't go through registering routine
 
@@ -34,8 +34,8 @@ namespace ConsoleApp
 			authorizationService.ReceivedCredentialRequirements += PrintCredentialRequirements;
 			authorizationService.ReceivedCredentialRequirements += (AuthorizationService.ReceivedRequirementsEventArgs eventArgs) =>
 			{
-				string? username = "testing_user_0";
-				string? password = "u|O(h7gNUR'}@gmi=#5k^epf+i[UWyK'~cS.1qNx";
+				string? username = string.Empty;
+				string? password = string.Empty;
 				bool setComplete = false;
 				while (!setComplete)
 				{
@@ -74,7 +74,7 @@ namespace ConsoleApp
 
 			authorizationService.RegistrationToServerEvent += (AuthorizationService.RegistrationToServerEventArgs eventArgs) =>
 			{
-				Console.WriteLine("Registration to server: ");
+				Console.WriteLine($"Registration to server is successfull: {eventArgs.RegistrationForm.UserRegisteredSuccessfully}");
 			};
 
 			Thread.Sleep(8000000);
