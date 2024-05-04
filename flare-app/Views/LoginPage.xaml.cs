@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Formats.Asn1;
 using CommunityToolkit.Maui.Core.Platform;
+using Grpc.Net.Client;
 
 namespace flare_app.Views;
 
@@ -17,78 +18,52 @@ public partial class LoginPage : ContentPage
     }
     private async void LoginButton_Clicked(object sender, EventArgs e)
     {
-        var manager = new ClientManager("https://rpc.f2.project-flare.net");
+        Credentials credentials;
+        AuthorizationService authorizationService;
+        credentials = new Credentials();
+        GrpcChannel channel = GrpcChannel.ForAddress("https://rpc.f2.project-flare.net");
+        authorizationService = new AuthorizationService("https://rpc.f2.project-flare.net", channel, credentials);
+
         if (username.Text == "" || password.Text == "")
         {
             ButtonShake();
             return;
         }
 
-        HideKeyboard();
+        await HideKeyboard();
         // Initiate login.
 
-        loadingMesg.Text = "";
-        initLoadingScreen(true); // Aditional 600ms to log in process.
-
-        // Connecting to server
-     //   if (Client.State != Client.ClientState.Connected)
-     //   {
-            loadingMesg.Text = "Connecting to server...";
-            try
-            {
-            }
-            catch (Exception)
-            {
-                initLoadingScreen(false);
-                MauiProgram.ErrorToast("Connection with server failed.");
-                return;
-            }
-        //   }
-
-        manager.Credentials.Username = username.Text;
-        manager.Credentials.Password = password.Text;
-
-        WebSocketListener wsl = new WebSocketListener();
-        wsl.AuthToken = manager.Credentials.AuthToken;
-
-        // Logging in
-        loadingMesg.Text = "Logging in...";
-        try
-        {
-            await manager.LoginToServerAsync();
-        }
-        catch (Exception ex)
-        {
-            initLoadingScreen(false);
-            MauiProgram.ErrorToast("Failed to log in: " + ex.Message);
-            return;
-        }
-
-
-
-        manager.Credentials.Password = "";
-        password.Text = "";
-
-     /*   loadingMesg.Text = "Synchronising other users...";
-        try
-        {
-            await Client.FillUserDiscovery();
-        }
-        catch (Exception)
-        {
-            MauiProgram.ErrorToast("Failed to synchronise other users.");
-            //return;
-        } */
+        credentials.Username = username.Text;
+        credentials.Password = password.Text;
 
         try
         {
-            await LocalUserDBService.InsertLocalUser(new LocalUser { LocalUserName = username.Text, AuthToken = wsl.AuthToken });
+            await LocalUserDBService.InsertLocalUser(new LocalUser { LocalUserName = username.Text, AuthToken = credentials.AuthToken });
         }
         catch { }
+
+        authorizationService.LoggedInToServerEvent += async (AuthorizationService.LoggedInEventArgs eventArgs) =>
+        {
+            if (eventArgs.LoggedInSuccessfully)
+            {
+                // Success
+                initLoadingScreen(false);
+                await Shell.Current.GoToAsync("//MainPage", true);
+            }
+            else
+                return;
+        };
+
+
+
+
+
+
+        /*
         
         // Success
         initLoadingScreen(false);
-        await Shell.Current.GoToAsync("//MainPage", true);
+        await Shell.Current.GoToAsync("//MainPage", true); */
     }
 
 

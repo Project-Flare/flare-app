@@ -5,6 +5,7 @@ using flare_app.ViewModels;
 using flare_csharp;
 using CommunityToolkit.Maui.Core.Platform;
 using Microsoft.Maui.Controls;
+using Grpc.Net.Client;
 
 namespace flare_app.Views;
 
@@ -17,7 +18,13 @@ public partial class RegistrationPage : ContentPage
 
     private async void RegisterButton_Clicked(object sender, EventArgs e)
     {
-        /*if(username.Text == "" || password.Text == "" || password2.Text == "")
+        Credentials credentials;
+        AuthorizationService authorizationService;
+        credentials = new Credentials();
+        GrpcChannel channel = GrpcChannel.ForAddress("https://rpc.f2.project-flare.net");
+        authorizationService = new AuthorizationService("https://rpc.f2.project-flare.net", channel, credentials);
+        
+        if (username.Text == "" || password.Text == "" || password2.Text == "")
         {
             //ButtonShake();
             return;
@@ -26,15 +33,7 @@ public partial class RegistrationPage : ContentPage
         if (password.Text != password2.Text)
             return;
 
-        */
-
-        await HideKeyboard();
-
-        /*// Initiate registration.
-        loadingMesg.Text = "";
-        initLoadingScreen(true); // Aditional 600ms to log in process.
-
-        if (Client.State != Client.ClientState.Connected)
+        /*if (Client.State != Client.ClientState.Connected)
         {
             loadingMesg.Text = "Connecting to server...";
             try
@@ -47,45 +46,49 @@ public partial class RegistrationPage : ContentPage
                 MauiProgram.ErrorToast("Connection with server failed.");
                 return;
             }
-        }
+        } */
+        
+        await HideKeyboard();
 
-        Client.Username = username.Text;
-        Client.Password = password.Text;
+        credentials.Username = username.Text;
+        credentials.Password = password.Text;
+
 
         loadingMesg.Text = "Registering user...";
+        authorizationService.StartService();
+        authorizationService.ReceivedCredentialRequirements += (AuthorizationService.ReceivedRequirementsEventArgs eventArgs) =>
+        {
+            string? tempUsername = username.Text;
+            string? tempPassword = password.Text;
+            if (!authorizationService.UsernameValid(tempUsername) || !authorizationService.PasswordValid(tempPassword))
+            {
+                //ButtonShake();
+                return;
+            }
+
+            if (authorizationService.UsernameValid(tempUsername) && authorizationService.PasswordValid(tempPassword))
+            {
+                if (authorizationService.TrySetUsername(tempUsername) && authorizationService.TrySetPassword(tempPassword))
+                {
+                    authorizationService.RegistrationToServerEvent += (AuthorizationService.RegistrationToServerEventArgs eventArgs) =>
+                    {
+                        loadingMesg.Text = "Registration to server";
+                    };
+                }
+
+            }
+        };
+         
+       
+
         try
         {
-            await Client.RegisterToServer();
-        }
-        catch (Exception ex)
-        {
-            initLoadingScreen(false);
-            MauiProgram.ErrorToast("Failed to register: " + ex.Message);
-            return;
-        }
-
-        Client.Password = "";
-        password.Text = "";
-        password2.Text = "";
-
-        loadingMesg.Text = "Synchronising other users...";
-        try
-        {
-            await Client.FillUserDiscovery();
-        }
-        catch (Exception ex)
-        {
-            MauiProgram.ErrorToast("Failed to synchronize: " + ex.Message);
-            //return;
-        }
-
-        try
-        {
-            await LocalUserDBService.InsertLocalUser(new LocalUser { LocalUserName = username.Text, AuthToken = Client.AuthToken });
+            
+            await LocalUserDBService.InsertLocalUser(new LocalUser { LocalUserName = username.Text, AuthToken = credentials.AuthToken });
         }
         catch { }
 
-        initLoadingScreen(false);*/
+        initLoadingScreen(false);
         await Shell.Current.GoToAsync("//MainPage", true);
     }
 
@@ -150,51 +153,52 @@ public partial class RegistrationPage : ContentPage
         }
     }
 
+
     private async void GoBack_Tapped(object sender, TappedEventArgs e)
     {
         await HideKeyboard();
         await Shell.Current.GoToAsync("../", true);
     }
 
-	private async void Background_Tapped(object sender, TappedEventArgs e)
-	{
-		await HideKeyboard();
-	}
+    private async void Background_Tapped(object sender, TappedEventArgs e)
+    {
+        await HideKeyboard();
+    }
 
-	private async void Entry_Focused(object sender, FocusEventArgs e)
-	{
-		//var btn = BackBtn.TranslateTo(0, 100, easing: Easing.SinIn);
-		var ani = formGrid.TranslateTo(0, -100, easing: Easing.SinIn);
-		await Task.WhenAll(ani);
-	}
-
-	private async void Entry_Unfocused(object sender, FocusEventArgs e)
-	{
-		var ani = formGrid.TranslateTo(0, 0, easing: Easing.SinIn);
+    private async void Entry_Focused(object sender, FocusEventArgs e)
+    {
+        //var btn = BackBtn.TranslateTo(0, 100, easing: Easing.SinIn);
+        var ani = formGrid.TranslateTo(0, -100, easing: Easing.SinIn);
         await Task.WhenAll(ani);
-	}
+    }
 
-	private async Task HideKeyboard()
-	{
-		if (username.IsFocused)
-		{
-			username.Unfocus();
-			await KeyboardExtensions.HideKeyboardAsync(username);
-			return;
-		}
+    private async void Entry_Unfocused(object sender, FocusEventArgs e)
+    {
+        var ani = formGrid.TranslateTo(0, 0, easing: Easing.SinIn);
+        await Task.WhenAll(ani);
+    }
 
-		if (password.IsFocused)
-		{
-			password.Unfocus();
-			await KeyboardExtensions.HideKeyboardAsync(password);
-			return;
-		}
+    private async Task HideKeyboard()
+    {
+        if (username.IsFocused)
+        {
+            username.Unfocus();
+            await KeyboardExtensions.HideKeyboardAsync(username);
+            return;
+        }
 
-		if (password2.IsFocused)
-		{
-			password2.Unfocus();
-			await KeyboardExtensions.HideKeyboardAsync(password2);
-			return;
-		}
-	}
+        if (password.IsFocused)
+        {
+            password.Unfocus();
+            await KeyboardExtensions.HideKeyboardAsync(password);
+            return;
+        }
+
+        if (password2.IsFocused)
+        {
+            password2.Unfocus();
+            await KeyboardExtensions.HideKeyboardAsync(password2);
+            return;
+        }
+    }
 }
