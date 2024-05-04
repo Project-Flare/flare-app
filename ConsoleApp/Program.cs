@@ -18,7 +18,7 @@ namespace ConsoleApp
 			authorizationService = new AuthorizationService("https://rpc.f2.project-flare.net", clientManager.channel);
 			authorizationService.StartService();
 			authorizationService.ReceivedCredentialRequirements += PrintCredentialRequirements;
-			authorizationService.ReceivedCredentialRequirements += (AuthorizationService.AuthServiceEventArgs eventArgs) =>
+			authorizationService.ReceivedCredentialRequirements += (AuthorizationService.ReceivedRequirementsEventArgs eventArgs) =>
 			{
 				string? username = string.Empty;
 				string? password = string.Empty;
@@ -55,13 +55,17 @@ namespace ConsoleApp
 							setComplete = true;
 						}
 					}
-
 				}
+			};
+
+			authorizationService.RegistrationToServerEvent += (AuthorizationService.RegistrationToServerEventArgs eventArgs) =>
+			{
+				Console.WriteLine("Registration to server: ");
 			};
 
 			Thread.Sleep(8000000);
 		}
-		private static void PrintCredentialRequirements(AuthorizationService.AuthServiceEventArgs eventArgs)
+		private static void PrintCredentialRequirements(AuthorizationService.ReceivedRequirementsEventArgs eventArgs)
 		{
 			Console.WriteLine(
 				$"Credential requirements:\n"
