@@ -24,7 +24,7 @@ public partial class LoginPage : ContentPage
             return;
         }
 
-        HideKeyboard();
+        await HideKeyboard();
         // Initiate login.
 
         loadingMesg.Text = "";
@@ -64,21 +64,6 @@ public partial class LoginPage : ContentPage
             return;
         }
 
-
-
-        manager.Credentials.Password = "";
-        password.Text = "";
-
-     /*   loadingMesg.Text = "Synchronising other users...";
-        try
-        {
-            await Client.FillUserDiscovery();
-        }
-        catch (Exception)
-        {
-            MauiProgram.ErrorToast("Failed to synchronise other users.");
-            //return;
-        } */
 
         try
         {

@@ -7,7 +7,7 @@ namespace ConsoleApp
 {
 	internal class Program
 	{
-		static async Task Main(string[] args)
+		public static void Main(string[] args)
 		{
 			ClientManager clientManager;
 			AuthorizationService authorizationService;
