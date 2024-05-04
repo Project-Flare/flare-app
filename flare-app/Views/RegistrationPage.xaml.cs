@@ -17,15 +17,7 @@ public partial class RegistrationPage : ContentPage
 
     private async void RegisterButton_Clicked(object sender, EventArgs e)
     {
-        ClientManager manager;
-        AuthorizationService authorizationService;
-        WebSocketListener wsl = new WebSocketListener();
-
-        manager = new ClientManager("https://rpc.f2.project-flare.net");
-        authorizationService = new AuthorizationService("https://rpc.f2.project-flare.net", manager.channel);
-        
-
-        if (username.Text == "" || password.Text == "" || password2.Text == "")
+        /*if(username.Text == "" || password.Text == "" || password2.Text == "")
         {
             //ButtonShake();
             return;
@@ -34,15 +26,15 @@ public partial class RegistrationPage : ContentPage
         if (password.Text != password2.Text)
             return;
 
-    
+        */
 
         await HideKeyboard();
 
-        // Initiate registration.
+        /*// Initiate registration.
         loadingMesg.Text = "";
         initLoadingScreen(true); // Aditional 600ms to log in process.
 
-      /*if (Client.State != Client.ClientState.Connected)
+        if (Client.State != Client.ClientState.Connected)
         {
             loadingMesg.Text = "Connecting to server...";
             try
@@ -55,63 +47,45 @@ public partial class RegistrationPage : ContentPage
                 MauiProgram.ErrorToast("Connection with server failed.");
                 return;
             }
-        } */
+        }
 
-
-       
-
-        
-        wsl.AuthToken = manager.Credentials.AuthToken;
-
-        manager.HashPassword();
-
+        Client.Username = username.Text;
+        Client.Password = password.Text;
 
         loadingMesg.Text = "Registering user...";
-        authorizationService.StartService();
-        authorizationService.ReceivedCredentialRequirements += (AuthorizationService.ReceivedRequirementsEventArgs eventArgs) =>
-        {
-            string? tempUsername = username.Text;
-            string? tempPassword = password.Text;
-            if (!authorizationService.UsernameValid(tempUsername) || !authorizationService.PasswordValid(tempPassword))
-            {
-                //ButtonShake();
-                return;
-            }
-
-            if(authorizationService.UsernameValid(tempUsername) && authorizationService.PasswordValid(tempPassword))
-            {
-                if (authorizationService.TrySetUsername(tempUsername) && authorizationService.TrySetPassword(tempPassword))
-                {
-                    authorizationService.RegistrationToServerEvent += (AuthorizationService.RegistrationToServerEventArgs eventArgs) =>
-                    {
-                        loadingMesg.Text = "Registration to server";
-                    };
-                }
-
-            }
-        };
-
-       /* loadingMesg.Text = "Registering user...";
         try
         {
-            await manager.RegisterToServerAsync();
+            await Client.RegisterToServer();
         }
         catch (Exception ex)
         {
             initLoadingScreen(false);
             MauiProgram.ErrorToast("Failed to register: " + ex.Message);
             return;
-        } */
+        }
 
-      
+        Client.Password = "";
+        password.Text = "";
+        password2.Text = "";
+
+        loadingMesg.Text = "Synchronising other users...";
+        try
+        {
+            await Client.FillUserDiscovery();
+        }
+        catch (Exception ex)
+        {
+            MauiProgram.ErrorToast("Failed to synchronize: " + ex.Message);
+            //return;
+        }
 
         try
         {
-            await LocalUserDBService.InsertLocalUser(new LocalUser { LocalUserName = username.Text, AuthToken = wsl.AuthToken });
+            await LocalUserDBService.InsertLocalUser(new LocalUser { LocalUserName = username.Text, AuthToken = Client.AuthToken });
         }
         catch { }
 
-        initLoadingScreen(false);
+        initLoadingScreen(false);*/
         await Shell.Current.GoToAsync("//MainPage", true);
     }
 
@@ -175,7 +149,6 @@ public partial class RegistrationPage : ContentPage
             loadingIndicator.IsVisible = false;
         }
     }
-    
 
     private async void GoBack_Tapped(object sender, TappedEventArgs e)
     {
