@@ -1,5 +1,6 @@
 ﻿using flare_csharp;
 using flare_csharp.Services;
+using Grpc.Net.Client;
 using System;
 using System.Diagnostics.CodeAnalysis;
 
@@ -7,16 +8,29 @@ namespace ConsoleApp
 {
 	internal class Program
 	{
-		static async Task Main(string[] args)
+		static void Main(string[] args)
 		{
-			ClientManager clientManager;
 			AuthorizationService authorizationService;
-			clientManager = new ClientManager("https://rpc.f2.project-flare.net");
-			clientManager.Credentials.Username = "testing_user_0";
-			clientManager.Credentials.Password = "190438934";
-			clientManager.Credentials.Argon2Hash = "$argon2i$v=19$m=524288,t=3,p=4$dGVzdGluZ191c2VyXzBwcm9qZWN0LWZsYXJlLm5ldGVNVEhJaWl0NlNTcWZKdWg2UEovM3c$tHhA3AmlEH8ao3vypVV36eyzbKfuX2b5a+5OCdD0kJI";
-			authorizationService = new AuthorizationService("https://rpc.f2.project-flare.net", clientManager.channel);
+			// THIS MUST BE SINGLETON AND USED THROUGHOUT THE WHOLE PROJECT
+			GrpcChannel channel = GrpcChannel.ForAddress("https://rpc.f2.project-flare.net");
+			Credentials credentials = new Credentials();
+			credentials.Username = "testing_user_0";
+			credentials.Password = "190438934";
+			//authorizationService = new AuthorizationService("https://rpc.f2.project-flare.net", channel, credentials); // Add credentials (username and password need to be set, to login to server and don't go through registering routine
+			authorizationService = new AuthorizationService("https://rpc.f2.project-flare.net", channel, credentials: null); // Add credentials (username and password need to be set, to login to server and don't go through registering routine
+
 			authorizationService.StartService();
+
+			authorizationService.LoggedInToServerEvent += (AuthorizationService.LoggedInEventArgs eventArgs) =>
+			{
+				if (eventArgs.LoggedInSuccessfully)
+					Console.WriteLine($"User {authorizationService.Username} logged in successfully");
+				else
+					Console.WriteLine($"User {authorizationService.Username} login failed because: {eventArgs.LoginFailureReason}"); // don't blindly throw an error to the user directly
+			};
+			
+			
+			// Won't fire
 			authorizationService.ReceivedCredentialRequirements += PrintCredentialRequirements;
 			authorizationService.ReceivedCredentialRequirements += (AuthorizationService.ReceivedRequirementsEventArgs eventArgs) =>
 			{
