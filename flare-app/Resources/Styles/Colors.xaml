@@ -18,6 +18,24 @@
     <Color x:Key="Magenta">#D600AA</Color>
     <Color x:Key="MidnightBlue">#190649</Color>
     <Color x:Key="OffBlack">#1f1f1f</Color>
+    
+    <!-- Aditional for Dark MODE -->
+
+    <Color x:Key="Dark1">#61635F</Color>
+    <Color x:Key="Dark2">#4C534F</Color>
+    <Color x:Key="Dark3">#2E3F36</Color>
+    <Color x:Key="Dark4">#113735</Color>
+    <Color x:Key="MainDark">#162E21</Color>
+    
+    <!-- Aditional for Light MODE -->
+
+    <Color x:Key="Light1">#415532</Color>
+    <Color x:Key="Light2">#40604E</Color>
+    <Color x:Key="Light3">#3FA970</Color>
+    <Color x:Key="Light4">#2B5B58</Color>
+    <Color x:Key="MainLight">#4B8C69</Color>
+
+    <!-- END -->
 
     <Color x:Key="Gray100">#E1E1E1</Color>
     <Color x:Key="Gray200">#C8C8C8</Color>

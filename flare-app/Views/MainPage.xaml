@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:models="clr-namespace:flare_app.Models"
+             xmlns:viewmodels="clr-namespace:flare_app.ViewModels"
+             xmlns:templates="clr-namespace:flare_app.Views.Templates"
+             x:Class="flare_app.Views.MainPage"
+             Title="MainPage">
+    <ContentPage.BindingContext>
+        <viewmodels:MainViewModel />
+    </ContentPage.BindingContext>
+    <ContentPage.Resources>
+        
+    </ContentPage.Resources>
+    
+    <Grid>
+        <Grid RowDefinitions="143, *">
+            <Grid RowDefinitions="60, 80, 3"
+              RowSpacing="0"
+              Background="#000000">
+                <Grid ColumnDefinitions=".3* ,.7*">
+                    <Label Text="Users"
+                       TextColor="#FFFFFF"
+                       FontFamily="IBMPlexMonoBold"
+                       FontSize="32"
+                       Margin="20,10,0,0"/>
+                    <Grid Grid.Column="1">
+                        <HorizontalStackLayout
+                        HorizontalOptions="End"
+                        Spacing="12"
+                        Margin="20,10,20,0">
+                            <Image Source="settings_icon.svg" HeightRequest="36">
+                                <Image.Behaviors>
+                                    <toolkit:IconTintColorBehavior TintColor="#FFFFFF" />
+                                </Image.Behaviors>
+                                <Image.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="Settings_Tapped" />
+                                </Image.GestureRecognizers>
+                            </Image>
+                            <Image Source="user_add_icon.svg" HeightRequest="36">
+                                <Image.Behaviors>
+                                    <toolkit:IconTintColorBehavior TintColor="#FFFFFF" />
+                                </Image.Behaviors>
+                                <Image.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="Button_Clicked"/>
+                                </Image.GestureRecognizers>
+                            </Image>
+                        </HorizontalStackLayout>
+                    </Grid>
+                </Grid>
+                <Grid Grid.Row="1"
+              Margin="20,0,20,0"
+              Opacity="1"
+              VerticalOptions="Center">
+                    <Border Padding="0"
+                        BackgroundColor="#382C4B"
+                        HeightRequest="45"
+                        StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="25" />
+                        </Border.StrokeShape>
+                        <Entry Placeholder="search"
+                               FontFamily="IBMPlexMonoBold"
+                               TextColor="#FFFFFF"
+                               PlaceholderColor="#928B9C"
+                               FontSize="18"
+                               VerticalOptions="Center"
+                               TextChanged="search_TextChanged"
+                               ClearButtonVisibility="WhileEditing"
+                               Margin="8,0,8,0"/>
+                    </Border>
+                </Grid>
+                <Grid Grid.Row="2">
+                    <Rectangle Fill="#FFFFFF" />
+                </Grid>
+            </Grid>
+            <CollectionView Grid.Row="1"
+                        BackgroundColor="#000000"
+                        x:DataType="viewmodels:MainViewModel"
+                        ItemsSource="{Binding MyUsers}">
+                        
+                
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <templates:UserTemplate/>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
+    </Grid>
+</ContentPage>

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="flare_app.Views.LoginPage"
+             Title="LoginPage"
+             x:Name="LoginPageContent">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="EntryStyle" TargetType="Entry">
+                <Setter Property="FontFamily" Value="IBMPlexMonoBold" />
+                <Setter Property="TextColor" Value="#FFFFFF" />
+                <Setter Property="PlaceholderColor" Value="#928B9C" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="Margin" Value="8,0,8,0" />
+            </Style>
+
+            <Style x:Key="ButtonStyle" TargetType="Button">
+                <Setter Property="FontFamily" Value="IBMPlexMonoBold" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="CornerRadius" Value="25" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="BackgroundColor" Value="#5000A4" />
+                <Setter Property="HeightRequest" Value="46" />
+                <Setter Property="WidthRequest" Value="192" />
+            </Style>
+
+            <Style x:Key="EntryBoxStyle" TargetType="Border">
+                <Setter Property="BackgroundColor" Value="#382C4B" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="HeightRequest" Value="45" />
+                <Setter Property="Opacity" Value="1" />
+            </Style>
+            
+            <Style x:Key="CornerStyle" TargetType="RoundRectangle">
+                <Setter Property="CornerRadius" Value="25" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid BackgroundColor="#000000">
+        <Grid.GestureRecognizers>
+            <TapGestureRecognizer Tapped="Background_Tapped" />
+        </Grid.GestureRecognizers>
+        
+        <Image Source="flare.svg"
+               VerticalOptions="Start"
+               HorizontalOptions="Center"
+               Scale="1.36" />
+        <Image Source="flare_logo.svg"
+               VerticalOptions="Start"
+               HeightRequest="100"
+               Margin="0,90,0,0"/>
+        <Grid RowDefinitions="320, Auto">
+            <Grid Grid.Row="1">
+                <Grid x:Name="loginGrid"
+                    HeightRequest="320"
+                    WidthRequest="375"
+                    MaximumWidthRequest="1000"
+                    VerticalOptions="Start" >
+                    <VerticalStackLayout Margin="15,20,15,0" Spacing="15">
+                        <Border Style="{StaticResource EntryBoxStyle}">
+                            <Border.StrokeShape>
+                                <RoundRectangle Style="{StaticResource CornerStyle}" />
+                            </Border.StrokeShape>
+                            <Entry x:Name="username"
+                                   Text=""
+                                   Focused="Entry_Focused"
+                                   Unfocused="Entry_Unfocused"
+                                   Placeholder="username"
+                                   Style="{StaticResource EntryStyle}"
+                                   toolkit:SetFocusOnEntryCompletedBehavior.NextElement="{x:Reference password}" />
+                        </Border>
+                        <Border Style="{StaticResource EntryBoxStyle}">
+                            <Border.StrokeShape>
+                                <RoundRectangle Style="{StaticResource CornerStyle}" />
+                            </Border.StrokeShape>
+                            <Entry x:Name="password"
+                                   Text=""
+                                   Focused="Entry_Focused"
+                                   Unfocused="Entry_Unfocused"
+                                   Placeholder="password"
+                                   IsPassword="True"
+                                   Style="{StaticResource EntryStyle}"/>
+                        </Border>
+                        <Grid>
+                            <Image Source="button_aura.svg" Scale=".6"/>
+                            <Button x:Name="LoginButton"
+                                Text="Log in"
+                                Clicked="LoginButton_Clicked"
+                                Style="{StaticResource ButtonStyle}"/>
+                        </Grid>
+                        <Label HorizontalTextAlignment="Center"
+                               Margin="0,8,0,0">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Don't have an account? "
+                                          FontFamily="IBMPlexMono"
+                                          TextColor="#FFFFFF"/>
+                                    <Span x:Name="ToRegistrationSpan"
+                                          Text="Sign up"
+                                          TextDecorations="Underline"
+                                          FontFamily="IBMPlexMonoBold"
+                                          TextColor="#FF2975">
+                                        <Span.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="ToRegistrationSpan_Tapped"/>
+                                        </Span.GestureRecognizers>
+                                    </Span>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    </VerticalStackLayout>
+                </Grid>
+            </Grid>
+        </Grid>
+        <Grid x:Name="loadingScreen"
+              Opacity="0"
+              RowDefinitions="*"
+              BackgroundColor="Black"
+              IsVisible="False">
+            <Grid Grid.Row="0" Margin="0,0,0,200">
+                <ActivityIndicator x:Name="loadingIndicator"
+                                   IsRunning="True"
+                                   Color="White"
+                                   HeightRequest="80"
+                                   VerticalOptions="Center"
+                                   HorizontalOptions="Center" />
+                <Label x:Name="loadingMesg"
+                   Text=""
+                   LineBreakMode="WordWrap"
+                   TextColor="White"
+                   Margin="20,100,20,0"
+                   FontFamily="InterBold"
+                   HorizontalTextAlignment="Center"
+                   VerticalOptions="Center"/>
+                <Label x:Name="loadingTime"
+                       TextColor="White"
+                       Margin="20,140,20,0"
+                       FontFamily="InterBold"
+                       HorizontalTextAlignment="Center"
+                       VerticalOptions="Center"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</ContentPage>

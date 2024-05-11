@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:flare_app.Models"
+             x:DataType="models:Message"
+             x:Class="flare_app.Views.Templates.ReceiverMessageTemplate">
+    <ContentView.Resources>
+
+    </ContentView.Resources>
+    <Grid>
+        <Frame 
+        Margin="15,5,15,5"
+        Padding="6"
+        CornerRadius="15"
+        BackgroundColor="#FF2975"
+        BorderColor="Transparent"
+        MaximumWidthRequest="270"
+        HorizontalOptions="Start">
+            <Label Text="{Binding Content}"
+                   LineBreakMode="WordWrap"
+                   FontFamily="IBMPlexMonoBold"
+                   FontSize="16"
+                   TextColor="#FFFFFF"
+                   VerticalOptions="Center"
+                   HorizontalOptions="Center"/>
+        </Frame>
+        <Label Text="{Binding Time, StringFormat='{0:HH:mm}'}"
+               Margin="0,0,10,0"
+               FontFamily="IBMPlexMonoBold"
+               FontSize="12"
+               TextColor="#FFFFFF"
+               HorizontalOptions="End"
+               VerticalOptions="Center"/>
+    </Grid>
+</ContentView>

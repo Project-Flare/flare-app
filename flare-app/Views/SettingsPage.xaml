@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="flare_app.Views.SettingsPage"
+             Title="SettingsPage">
+
+    <Grid>
+        <Grid RowDefinitions="70, *, 80"
+              BackgroundColor="#000000">
+            <Grid BackgroundColor="#000000"
+                  RowDefinitions="*, 3">
+                <HorizontalStackLayout Spacing="12">
+                    <Grid>
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="GoBack_Tapped" />
+                        </Grid.GestureRecognizers>
+                        <Image Source="arrow_back_icon.svg"
+                               Margin="8,0,0,0"
+                               Scale="1.36">
+                            <Image.Behaviors>
+                                <toolkit:IconTintColorBehavior TintColor="#FFFFFF" />
+                            </Image.Behaviors>
+                        </Image>
+                    </Grid>
+                    <Label Text="Settings"
+                           TextColor="#FFFFFF"
+                           FontFamily="IBMPlexMonoBold"
+                           FontSize="28"
+                           VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+                <Grid Grid.Row="1">
+                    <Rectangle Fill="#FFFFFF"/>
+                </Grid>
+                
+            </Grid>
+            <VerticalStackLayout
+                            Grid.Row="1"
+                            BackgroundColor="#000000">
+                <Label Text="Account:"
+                       FontFamily="IBMPlexMono"
+                       TextColor="#A3A3A3"
+                       Margin="10,50,0,0"/>
+                <Grid HeightRequest="55"
+                      RowDefinitions="*, 3">
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="SingOut_Tapped" />
+                    </Grid.GestureRecognizers>
+                    <Label Text="Sign Out"
+                           FontSize="18"
+                           FontFamily="IBMPlexMonoBold"
+                           TextColor="DarkRed"
+                           Margin="20,0,0,0"
+                           VerticalOptions="Center"/>
+                    <Grid Grid.Row="1">
+                        <Rectangle Fill="#FFFFFF" />
+                    </Grid>
+                </Grid>
+
+                <Label Text="Other:"
+                       FontFamily="IBMPlexMono"
+                       TextColor="#A3A3A3"
+                       Margin="10,50,0,0"/>
+
+                <Grid HeightRequest="55"
+                      RowDefinitions="*, 3">
+                    <Label Text="Other1"
+                           FontSize="18"
+                           FontFamily="IBMPlexMono"
+                           TextColor="#FFFFFF"
+                           Margin="20,0,0,0"
+                           VerticalOptions="Center"/>
+                    <Grid Grid.Row="1">
+                        <Rectangle Fill="#FFFFFF" />
+                    </Grid>
+                </Grid>
+                <Grid HeightRequest="55"
+                      RowDefinitions="*, 3">
+                    <Label Text="Other2"
+                           FontSize="18"
+                           FontFamily="IBMPlexMono"
+                           TextColor="#FFFFFF"
+                           Margin="20,0,0,0"
+                           VerticalOptions="Center"/>
+                    <Grid Grid.Row="1">
+                        <Rectangle Fill="#FFFFFF" />
+                    </Grid>
+                </Grid>
+
+            </VerticalStackLayout>
+        </Grid>
+    </Grid>
+</ContentPage>

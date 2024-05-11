@@ -4,23 +4,34 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:flare_app"
+    xmlns:views="clr-namespace:flare_app.Views"
     Shell.FlyoutBehavior="Disabled"
+    Shell.NavBarIsVisible="False"
     Title="flare_app">
 
     <ShellContent
         Title="Login"
-        ContentTemplate="{DataTemplate local:LoginPage}"
+        ContentTemplate="{DataTemplate views:LoginPage}"
         Route="LoginPage" />
 
     <ShellContent
         Title="Registration"
-        ContentTemplate="{DataTemplate local:RegistrationPage}"
+        ContentTemplate="{DataTemplate views:RegistrationPage}"
         Route="RegistrationPage" />
 
     <ShellContent
-        Title="User list"
-        ContentTemplate="{DataTemplate local:UserListPage}"
-        Route="UserListPage" />
+        Title="Main"
+        ContentTemplate="{DataTemplate views:MainPage}"
+        Route="MainPage" />
 
+    <ShellContent
+        Title="Chat"
+        ContentTemplate="{DataTemplate views:ChatPage}"
+        Route="ChatPage" />
+
+    <ShellContent
+        Title="Settings"
+        ContentTemplate="{DataTemplate views:SettingsPage}"
+        Route="SettingsPage" />
 
 </Shell>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodel="clr-namespace:flare_app.ViewModels"
+             xmlns:template="clr-namespace:flare_app.Views.Templates"
+             xmlns:model="clr-namespace:flare_app.Models"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="flare_app.Views.ChatPage"
+             Title="ChatPage"
+             x:Name="ChatPageContent">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+
+            <DataTemplate x:Key="SenderMessageItmTemplate">
+                <template:SenderMessageTemplate />
+            </DataTemplate>
+
+            <DataTemplate x:Key="ReceiverMessageItmTemplate">
+                <template:ReceiverMessageTemplate />
+            </DataTemplate>
+
+            <template:MessageTemplateSelector
+                x:Key="MessageTemplateSelector"
+                SenderTemplate="{StaticResource SenderMessageItmTemplate}"
+                ReceiverTemplate="{StaticResource ReceiverMessageItmTemplate}" />
+
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    
+    <ContentPage.BindingContext>
+        <viewmodel:ChatViewModel/>
+    </ContentPage.BindingContext>
+    <Grid>
+        <Grid RowDefinitions="70, *, 80">
+            <Grid BackgroundColor="#000000"
+                  RowDefinitions="*, 3">
+                <HorizontalStackLayout Spacing="12">
+                    <Grid>
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="GoBack_Tapped" />
+                        </Grid.GestureRecognizers>
+                        <Image Source="arrow_back_icon.svg"
+                               Margin="8,0,0,0"
+                               Scale="1.36">
+                            <Image.Behaviors>
+                                <toolkit:IconTintColorBehavior TintColor="#FFFFFF" />
+                            </Image.Behaviors>
+                        </Image>
+                    </Grid>
+                    <Grid 
+                        HeightRequest="48" 
+                        WidthRequest="48"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center">
+                        <Ellipse Fill="White" HeightRequest="48" WidthRequest="48"/>
+                    </Grid>
+                    <Label x:DataType="viewmodel:ChatViewModel"
+                           Text="{Binding Username}"
+                           FontFamily="IBMPlexMonoBold"
+                           FontSize="28"
+                           VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+                <Grid Grid.Row="1">
+                    <Rectangle Fill="White"/>
+                </Grid>
+
+            </Grid>
+            <Grid Grid.Row="1"
+                  BackgroundColor="#000000">
+                <CollectionView
+                    x:Name="chatCollection"
+                    Loaded="chatCollection_Loaded"
+                    x:DataType="viewmodel:ChatViewModel"
+                    ItemsSource="{Binding Messages}"
+                    ItemTemplate="{StaticResource MessageTemplateSelector}"
+                    VerticalOptions="End" 
+                    ItemsUpdatingScrollMode="KeepLastItemInView">
+                </CollectionView>
+
+            </Grid>
+            <Grid Grid.Row="2"
+                  BackgroundColor="#000000"
+                  ColumnDefinitions=".80*, .2*"
+                  RowDefinitions="3, *">
+                <Grid Grid.Row="0" Grid.ColumnSpan="2">
+                    <Rectangle Fill="#FFFFFF" />
+                </Grid>
+                <Grid
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    VerticalOptions="Center"
+                    HeightRequest="45"
+                    Margin="15,0,0,0">
+                    <RoundRectangle Fill="#382C4B"
+                                    CornerRadius="30"/>
+
+                    <Entry x:Name="messageEntry"
+                           Placeholder="message"
+                           TextColor="#FFFFFF"
+                           PlaceholderColor="#928B9C"
+                           FontFamily="IBMPlexMonoBold"
+                           FontSize="18"
+                           Focused="messageEntry_Focused"
+                           Unfocused="messageEntry_Unfocused"
+                           VerticalOptions="Center"
+                           Margin="8,0,8,0" />
+                </Grid>
+                <Grid
+                    x:Name="sendButtonGrid"
+                    Grid.Row="1"
+                    Grid.Column="1">
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="Send_Tapped" />
+                    </Grid.GestureRecognizers>
+                    <Ellipse Fill="#5000A4"
+                             HeightRequest="45"
+                             WidthRequest="45"/>
+                    <Image Source="send_icon.svg"
+                           HeightRequest="35"
+                           WidthRequest="35">
+                        <Image.Behaviors>
+                            <toolkit:IconTintColorBehavior TintColor="#FFFFFF" />
+                        </Image.Behaviors>
+                    </Image>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
+</ContentPage>
