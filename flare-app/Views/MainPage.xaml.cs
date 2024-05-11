@@ -4,6 +4,7 @@ using Microsoft.Maui.Controls;
 using flare_app.Services;
 using CommunityToolkit.Maui.Views;
 using flare_app.Views.Templates;
+using flare_csharp;
 
 namespace flare_app.Views;
 

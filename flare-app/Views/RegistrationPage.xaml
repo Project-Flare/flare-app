@@ -88,10 +88,17 @@
                                Placeholder="username"
                                Focused="Entry_Focused"
                                Unfocused="Entry_Unfocused"
+                               TextChanged="username_TextChanged"
                                Style="{StaticResource EntryStyle}"
                                toolkit:SetFocusOnEntryCompletedBehavior.NextElement="{x:Reference password}"/>
 
                     </Border>
+                    <Label x:Name="UsernameErrorInfo" 
+                                Text=""
+                                Margin="0,-15,0,-15"
+                                FontSize="14"
+                                FontFamily="IBMPlexMono"
+                                TextColor="#FFFFFF" />
                     <Border Style="{StaticResource EntryBoxStyle}">
                         <Border.StrokeShape>
                             <RoundRectangle Style="{StaticResource CornerStyle}" />

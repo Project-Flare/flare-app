@@ -50,7 +50,8 @@ namespace flare_app.ViewModels
             User = new LocalUser { LocalUserName = Username };
 
             // This loads all the messages with user.
-            Messages = new ObservableCollection<Message>(MessageService.Instance.GetMessages(User));
+            //Messages = new ObservableCollection<Message>(MessageService.Instance.GetMessages(User));
+            //Messages = await LocalUserDBService.GetMessages($"{}_{Username}");
 
             // Relay command for sending message.
 			SendMesg = new RelayCommand<string>(SendMessage);
@@ -59,10 +60,10 @@ namespace flare_app.ViewModels
         /// <summary>
         /// Sends message to collection list and should send to server.
         /// </summary>
-        /// <param name="mesg"></param>
-        void SendMessage(string? mesg)
+        async void SendMessage(string? mesg)
         {
-            Messages?.Add(new Message { Sender = User, Content = mesg, Time = DateTime.Now }) ;
+           // await LocalUserDBService.InsertMessage(new Message { KeyPair = $"{cia reikia}_{Username}"});
+            Messages?.Add(new Message { Sender = User, Content = mesg, Time = DateTime.Now });
         }
     }
 }

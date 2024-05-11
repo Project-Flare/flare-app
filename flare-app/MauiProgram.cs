@@ -7,6 +7,7 @@ using flare_app.ViewModels;
 using flare_app.Views;
 using flare_app.Services;
 using Grpc.Net.Client;
+using flare_csharp;
 
 namespace flare_app
 {
@@ -33,6 +34,8 @@ namespace flare_app
 			builder.Services.AddScoped<MainViewModel>();
             builder.Services.AddSingleton<MainPage>();
             builder.Services.AddSingleton<ChatPage>();
+            builder.Services.AddSingleton<MessagingSendingService>();
+            builder.Services.AddSingleton<MessageReceivingService>();
             return builder.Build();
 
         }

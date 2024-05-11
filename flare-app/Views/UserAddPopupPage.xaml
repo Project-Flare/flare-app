@@ -38,8 +38,7 @@
                         WidthRequest="280"
                         VerticalOptions="Center"
                         HorizontalOptions="Center"
-                        Padding="10"
->
+                        Padding="10">
                     <Border StrokeShape="RoundRectangle 30,30,30,30" StrokeThickness="0" BackgroundColor="#382C4B">
                         <Entry
                         Placeholder="Enter username"

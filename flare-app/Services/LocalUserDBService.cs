@@ -26,7 +26,7 @@ public class LocalUserDBService
         _localUserConnection = new SQLiteAsyncConnection(Path.Combine(FileSystem.AppDataDirectory, LOCAL_USERS));
         await _localUserConnection.CreateTableAsync<LocalUser>();
         await _localUserConnection.CreateTableAsync<MyContact>();
-        //await _localUserConnection.CreateTableAsync<Message>();
+        await _localUserConnection.CreateTableAsync<Message>();
     }
 
     /// <summary>
@@ -158,6 +158,25 @@ public class LocalUserDBService
                                                          .ToListAsync();
     }
 
-    // Messages part...
+	// Messages part...
 
+	public static async Task<IEnumerable<Message>> GetMessages(string user, string contact)
+	{
+		await Init();
+		return await _localUserConnection.Table<Message>()
+								 .Where(c => c.KeyPair == $"{user}_{contact}")
+								 .ToListAsync();
+	}
+
+	public static async Task InsertMessage(Message message)
+	{
+		await Init();
+		await _localUserConnection.InsertAsync(message);
+	}
+
+	public static async Task DeleteMessage(Message message)
+	{
+		await Init();
+		await _localUserConnection.DeleteAsync(message);
+	}
 }

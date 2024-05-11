@@ -120,6 +120,7 @@ public partial class MainViewModel : ObservableObject
     /// </summary>
     async Task Refresh()
     {
+        //[TODO]: implement user discovery page
         IsRefreshing = true;
         MyUsers.Clear();
         var list = await LocalUserDBService.GetAllMyContacts("TempUser1");
