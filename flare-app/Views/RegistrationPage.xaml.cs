@@ -11,7 +11,7 @@ namespace flare_app.Views;
 
 public partial class RegistrationPage : ContentPage
 {
-    public RegistrationPage()
+    public RegistrationPage(GrpcChannel channel)
     {
         InitializeComponent();
     }

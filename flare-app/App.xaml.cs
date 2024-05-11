@@ -7,9 +7,7 @@ namespace flare_app
         public App()
         {
             InitializeComponent();
-
             MainPage = new AppShell();
-            //Application.Current.UserAppTheme = AppTheme.Unspecified;
         }
     }
 }

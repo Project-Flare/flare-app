@@ -6,6 +6,7 @@ using CommunityToolkit.Maui.Core;
 using flare_app.ViewModels;
 using flare_app.Views;
 using flare_app.Services;
+using Grpc.Net.Client;
 
 namespace flare_app
 {
@@ -29,13 +30,9 @@ namespace flare_app
 #if DEBUG
     		builder.Logging.AddDebug();
 #endif
-            //builder.Services.AddSingleton<LocalUserDBService>();
-            builder.Services.AddScoped<MainViewModel>();
-
+			builder.Services.AddScoped<MainViewModel>();
             builder.Services.AddSingleton<MainPage>();
-
             builder.Services.AddSingleton<ChatPage>();
-
             return builder.Build();
 
         }

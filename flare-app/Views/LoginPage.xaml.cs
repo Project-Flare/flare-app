@@ -12,17 +12,20 @@ namespace flare_app.Views;
 
 public partial class LoginPage : ContentPage
 {
+    readonly string _serverUrl = "https://rpc.f2.project-flare.net";
+	GrpcChannel _channel;
+    AuthorizationService _service;
     public LoginPage()
     {
         InitializeComponent();
-    }
+        _channel = GrpcChannel.ForAddress(_serverUrl);
+        _service = new AuthorizationService(_serverUrl, _channel, credentials: null);
+	}
     private async void LoginButton_Clicked(object sender, EventArgs e)
     {
-        Credentials credentials;
-        AuthorizationService authorizationService;
-        credentials = new Credentials();
-        GrpcChannel channel = GrpcChannel.ForAddress("https://rpc.f2.project-flare.net");
-        authorizationService = new AuthorizationService("https://rpc.f2.project-flare.net", channel, credentials);
+        // hlk
+        // cacti-unit-emerald-pumping+31150p
+        Credentials credentials = new();
 
         if (username.Text == "" || password.Text == "")
         {
@@ -31,41 +34,74 @@ public partial class LoginPage : ContentPage
         }
 
         await HideKeyboard();
-        // Initiate login.
 
         credentials.Username = username.Text;
         credentials.Password = password.Text;
 
         try
         {
+            // Wtf is this
             await LocalUserDBService.InsertLocalUser(new LocalUser { LocalUserName = username.Text, AuthToken = credentials.AuthToken });
         }
         catch { }
-
-        authorizationService.LoggedInToServerEvent += async (AuthorizationService.LoggedInEventArgs eventArgs) =>
-        {
-            if (eventArgs.LoggedInSuccessfully)
-            {
-                // Success
-                initLoadingScreen(false);
-                await Shell.Current.GoToAsync("//MainPage", true);
-            }
-            else
-                return;
-        };
-
-
-
-
-
-
-        /*
-        
-        // Success
-        initLoadingScreen(false);
-        await Shell.Current.GoToAsync("//MainPage", true); */
+		initLoadingScreen(true);
+        _service.LoadUserCredentials(credentials);
+        _service.StartService();
+        MainThread.BeginInvokeOnMainThread(_service.RunServiceAsync);
+        _service.LoggedInToServerEvent += On_LoggedInToServer;
     }
 
+	/// <summary>
+	/// Invoked when the service executed the login operation, this is where unsuccessful login is handled and login was successful, the user is redirected to the home page
+	/// </summary>
+	/// <param name="eventArgs">Holds information gathered when login operation was executed</param>
+	private async void On_LoggedInToServer(AuthorizationService.LoggedInEventArgs eventArgs)
+    {
+        // The service completed its task
+		initLoadingScreen(false);
+
+        // The login is successful, the transition to the main page is now allowed
+		if (eventArgs.LoggedInSuccessfully)
+		{
+            // IMPORTANT! new acquired user credentials must be saved!
+            var credentials = _service.GetAcquiredCredentials();
+			await Shell.Current.GoToAsync("//MainPage", true);
+		}
+		else
+        {
+            // Something went wrong when trying to log in, need to handle all possible failure reasons and inform the user about it
+            switch (eventArgs.LoginFailureReason)
+            {
+                case AuthorizationService.LoggedInEventArgs.FailureReason.None:
+                    //Error: something went wrong, not sure why. Note:  the user does not need to know, a simple error message is sufficient.
+                    break;
+                case AuthorizationService.LoggedInEventArgs.FailureReason.UntrustworthyServer:
+                    //PANIC: the server cannot be trusted, exit immediately.
+                    break;
+                case AuthorizationService.LoggedInEventArgs.FailureReason.PasswordInvalid:
+                    //Error: The password the user entered is incorrect.
+                    break;
+                case AuthorizationService.LoggedInEventArgs.FailureReason.UsernameInvalid:
+                    //Error: the username is incorrect.
+                    break;
+                case AuthorizationService.LoggedInEventArgs.FailureReason.ServerError:
+					//Error: this is internal server error. Note: the user does not need to know, a simple error message is sufficient.
+					break;
+                case AuthorizationService.LoggedInEventArgs.FailureReason.UsernameNotExist:
+                    //Error: there is no user with such username
+                    break;
+                case AuthorizationService.LoggedInEventArgs.FailureReason.UserDoesNotExits:
+                    //Error: "Failed to login to server", Reason:"The user does not exits".
+                    break;
+                case AuthorizationService.LoggedInEventArgs.FailureReason.Unknown:
+                    // Simple error message, there is nothing we can say more about it.
+                    break;
+                default:
+                    // Also handle it, maybe simple error message. Act to your own accord.
+                    break;
+            }
+		}
+	}
 
     private async void ToRegistrationSpan_Tapped(object sender, EventArgs e)
     {
