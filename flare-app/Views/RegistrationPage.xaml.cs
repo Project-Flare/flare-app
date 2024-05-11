@@ -11,89 +11,37 @@ namespace flare_app.Views;
 
 public partial class RegistrationPage : ContentPage
 {
-    public RegistrationPage(GrpcChannel channel)
+    readonly string _serverUrl = "https://rpc.f2.project-flare.net";
+    GrpcChannel _channel;
+    AuthorizationService _service;
+	public RegistrationPage()
     {
         InitializeComponent();
+        _channel = GrpcChannel.ForAddress(_serverUrl);
+        _service = new AuthorizationService(_serverUrl, _channel, credentials: null);
+
     }
 
     private async void RegisterButton_Clicked(object sender, EventArgs e)
-    {
-        Credentials credentials;
-        AuthorizationService authorizationService;
-        credentials = new Credentials();
-        GrpcChannel channel = GrpcChannel.ForAddress("https://rpc.f2.project-flare.net");
-        authorizationService = new AuthorizationService("https://rpc.f2.project-flare.net", channel, credentials);
-        
+    {   
+        // [DEV_NOTE] C'mon, this should display something, or shake the buttons a bit
         if (username.Text == "" || password.Text == "" || password2.Text == "")
         {
-            //ButtonShake();
             return;
         }
 
+        // [DEV_NOTE] also, display something
         if (password.Text != password2.Text)
             return;
-
-        /*if (Client.State != Client.ClientState.Connected)
-        {
-            loadingMesg.Text = "Connecting to server...";
-            try
-            {
-                await Client.ConnectToServer();
-            }
-            catch (Exception)
-            {
-                initLoadingScreen(false);
-                MauiProgram.ErrorToast("Connection with server failed.");
-                return;
-            }
-        } */
         
         await HideKeyboard();
 
-        credentials.Username = username.Text;
-        credentials.Password = password.Text;
-
-
-        loadingMesg.Text = "Registering user...";
-        authorizationService.StartService();
-        authorizationService.ReceivedCredentialRequirements += (AuthorizationService.ReceivedRequirementsEventArgs eventArgs) =>
-        {
-            string? tempUsername = username.Text;
-            string? tempPassword = password.Text;
-            if (!authorizationService.UsernameValid(tempUsername) || !authorizationService.PasswordValid(tempPassword))
-            {
-                //ButtonShake();
-                return;
-            }
-
-            if (authorizationService.UsernameValid(tempUsername) && authorizationService.PasswordValid(tempPassword))
-            {
-                if (authorizationService.TrySetUsername(tempUsername) && authorizationService.TrySetPassword(tempPassword))
-                {
-                    authorizationService.RegistrationToServerEvent += (AuthorizationService.RegistrationToServerEventArgs eventArgs) =>
-                    {
-                        loadingMesg.Text = "Registration to server";
-                    };
-                }
-
-            }
-        };
-         
-       
-
-        try
-        {
-            
-            await LocalUserDBService.InsertLocalUser(new LocalUser { LocalUserName = username.Text, AuthToken = credentials.AuthToken });
-        }
-        catch { }
-
-        initLoadingScreen(false);
-        await Shell.Current.GoToAsync("//MainPage", true);
+        initLoadingScreen(true);
     }
 
     private void password_TextChanged(object sender, TextChangedEventArgs e)
     {
+        //[DEV_NOTE] the password strength checking and username validation must be reapplied
         var pwd_1 = password.Text;
         var pwd_2 = password2.Text;
 
@@ -104,35 +52,9 @@ public partial class RegistrationPage : ContentPage
             return;
         }
 
-        //var complexity = UserRegistration.EvaluatePassword(pwd_1);
-        //switch (complexity)
-        //{
-        //    case PasswordStrength.None:
-        //        {
-        //            RegisterErrorInfo.TextColor = Color.FromArgb("000000");
-        //            RegisterErrorInfo.Text = "";
-        //            break;
-        //        };
-        //    case PasswordStrength.Unacceptable:
-        //    case PasswordStrength.Weak:
-        //        {
-        //            RegisterErrorInfo.Text = "Password is too weak";
-        //            RegisterErrorInfo.TextColor = Color.FromArgb("DE1212");
-        //            break;
-        //        };
-        //    case (PasswordStrength.Good):
-        //        {
-        //            RegisterErrorInfo.Text = "Password is okay";
-        //            RegisterErrorInfo.TextColor = Color.FromArgb("AF6600");
-        //            break;
-        //        };
-        //    case PasswordStrength.Excellent:
-        //        {
-        //            RegisterErrorInfo.Text = "Password is excellent";
-        //            RegisterErrorInfo.TextColor = Color.FromArgb("078100");
-        //            break;
-        //        }
-        //}
+
+
+
     }
 
     private async void initLoadingScreen(bool turnOn)
