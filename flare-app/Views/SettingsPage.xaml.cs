@@ -7,12 +7,18 @@ public partial class SettingsPage : ContentPage
 	{
 		InitializeComponent();
 	}
-
+    
+    /// <summary>
+    /// Navigates back to previous page.
+    /// </summary>
     private async void GoBack_Tapped(object sender, TappedEventArgs e)
     {
         await Shell.Current.GoToAsync("../", true);
     }
 
+    /// <summary>
+    /// Navigates back to login page, signs out from current user.
+    /// </summary>
     private async void SingOut_Tapped(object sender, TappedEventArgs e)
     {
         //await Client.DisconnectFromServer();

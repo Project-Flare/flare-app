@@ -12,11 +12,17 @@ public partial class ChatPage : ContentPage
         _chatViewModel = (ChatViewModel)BindingContext;
 	}
 
+    /// <summary>
+    /// Navigate to previous page.
+    /// </summary>
     private async void GoBack_Tapped(object sender, TappedEventArgs e)
     {
         await Shell.Current.GoToAsync("../", true);
     }
 
+    /// <summary>
+    /// Method for sending message.
+    /// </summary>
     private void Send_Tapped(object sender, TappedEventArgs e)
     {
         if (messageEntry.Text == "")
@@ -36,12 +42,18 @@ public partial class ChatPage : ContentPage
 
 	}
 
+    /// <summary>
+    /// Called when whole chat is loaded. If there's no awaitable delay, this doesn't work.
+    /// </summary>
 	private async void chatCollection_Loaded(object sender, EventArgs e)
     {
         await Task.Delay(10);
         ScrollToBottom();
     }
 
+    /// <summary>
+    /// Scrolls to the bottom message of collection.
+    /// </summary>
     private void ScrollToBottom()
     {
 		Message message = _chatViewModel.Messages.Last();

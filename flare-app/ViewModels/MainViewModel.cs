@@ -28,9 +28,6 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     User? user;
 
-    //private bool? _isHolding;
-    //private string? _contactUserNameToRemove;
-    //private bool? _userfound = false;
 
     public bool IsRefreshing
     {
@@ -41,6 +38,7 @@ public partial class MainViewModel : ObservableObject
     // List should be taken from client class
     public MainViewModel()
     {
+        // Relay commands that can be called from XAML or page's class.
         AddUserCommand = new AsyncRelayCommand<string>(AddUser);
         RemoveUserCommand = new AsyncRelayCommand<string>(RemoveUser);
         PerformMyUserSearchCommand = new AsyncRelayCommand<string>(PerformMyUserSearch);
@@ -48,37 +46,39 @@ public partial class MainViewModel : ObservableObject
         AddUserOnPopCommand = new AsyncRelayCommand<string>(AddUserOnPop);
         ChatDetailCommand = new AsyncRelayCommand<string>(ChatDetail);
 
+        // NOTE: this should be loaded from server or W/E architecture we're using...
         initDiscoveryList =
         [
-            new User { UserName = "TempUser1", LastMessage="Labas", ProfilePicture="picture1.jpg", id=123456789 },
-            new User { UserName = "TempUser2", LastMessage="Testas tekstas", ProfilePicture="picture2.jpg", id=147852369  },
+            new User { UserName = "TempUser1", LastMessage="Labas", ProfilePicture="picture1.jpg" },
+            new User { UserName = "TempUser2", LastMessage="Testas tekstas", ProfilePicture="picture2.jpg" },
         ];
  
         DiscoveryList = new ObservableCollection<User>();
 
         MyUsers = new ObservableCollection<MyContact>();
 
-        // ReloadInitDiscoveryList();
         if (!refreshFirstTime)
         {
             refreshFirstTime = true;
             Task.Run(Refresh);
         }
-        //ReloadInitMyUsers();
     }
 
     [ObservableProperty]
-    ObservableCollection<MyContact> myUsers; // Observable.
+    ObservableCollection<MyContact> myUsers; 
 
 
     [ObservableProperty]
-    ObservableCollection<User> discoveryList; // Observable.
+    ObservableCollection<User> discoveryList;
 
 
 
-
-    async Task AddUser(string? s) // Adds form discovery list to my user list
+    /// <summary>
+    /// Adds user into local database and into 'MyUsers' list.
+    /// </summary>
+    async Task AddUser(string? s)
     {
+        // 'ContactOwner' should be the logged in user.
         var addThis = new MyContact { ContactUserName = s, ContactOwner = "TempUser1" };
         try
         {
@@ -86,9 +86,11 @@ public partial class MainViewModel : ObservableObject
             MyUsers.Add(addThis);
         }
         catch { }
-        //await Refresh();
     }
 
+    /// <summary>
+    /// Removes my contact from 'MyUsers' list and deletes from local database.
+    /// </summary>
     async Task RemoveUser(string? s)
     {
         MyContact? removeThis = MyUsers.FirstOrDefault(u => u.ContactUserName == s && u.ContactOwner == "TempUser1");
@@ -101,7 +103,9 @@ public partial class MainViewModel : ObservableObject
         //await Refresh();
     }
 
-
+    /// <summary>
+    /// Searches for my contact from local database and loads it into 'MyUsers' list.
+    /// </summary>
     async Task PerformMyUserSearch(string? query)
     {
         MyUsers.Clear();
@@ -111,6 +115,9 @@ public partial class MainViewModel : ObservableObject
         }
     }
 
+    /// <summary>
+    /// Refreshes 'MyUsers' list with data from local database.
+    /// </summary>
     async Task Refresh()
     {
         IsRefreshing = true;
@@ -124,7 +131,11 @@ public partial class MainViewModel : ObservableObject
         }
         IsRefreshing = false;
     }
-    async Task AddUserOnPop(string? s) // Adds form discovery list to my user list, when app restarts random written usernames are implemented aswell
+
+    /// <summary>
+    /// Adds user to local database and to 'MyUsers' list.
+    /// </summary>
+    async Task AddUserOnPop(string? s)
     {
         var addThis = new MyContact { ContactUserName = s, ContactOwner = "TempUser1" };
         try
@@ -143,6 +154,10 @@ public partial class MainViewModel : ObservableObject
         await Refresh();
     }
 
+    /// <summary>
+    /// Navigates to chat page and passes username parameter within URI.
+    /// NOTE: every time this method is called, new chat page is created.
+    /// </summary>
     async Task ChatDetail(string? s)
     {
         await Shell.Current.GoToAsync($"//MainPage//ChatPage?Username={s}", animate: true);

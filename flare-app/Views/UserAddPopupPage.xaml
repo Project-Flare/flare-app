@@ -6,8 +6,7 @@
              xmlns:viewmodels="clr-namespace:flare_app.ViewModels"
              x:DataType="viewmodels:MainViewModel"
              CanBeDismissedByTappingOutsideOfPopup="False"
-             Color="Transparent"
-               >
+             Color="Transparent" >
 
     <Border StrokeShape="RoundRectangle 10,10,10,10" StrokeThickness="0" BackgroundColor="Grey">
         <Grid WidthRequest="300"  HeightRequest="150">
