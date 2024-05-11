@@ -30,7 +30,6 @@ namespace flare_app.ViewModels
             set
             {
 				_user = value;
-                //_user = new LocalUser { LocalUserName = "Usr" };
                 OnPropertyChanged();
             }
         }
@@ -47,16 +46,20 @@ namespace flare_app.ViewModels
 
         public ChatViewModel()
         {
+            // The user we're chating with.
             User = new LocalUser { LocalUserName = Username };
+
+            // This loads all the messages with user.
             Messages = new ObservableCollection<Message>(MessageService.Instance.GetMessages(User));
+
+            // Relay command for sending message.
 			SendMesg = new RelayCommand<string>(SendMessage);
 		}
 
-        void OnBack()
-        {
-            Shell.Current.GoToAsync("../", true);
-        }
-
+        /// <summary>
+        /// Sends message to collection list and should send to server.
+        /// </summary>
+        /// <param name="mesg"></param>
         void SendMessage(string? mesg)
         {
             Messages?.Add(new Message { Sender = User, Content = mesg, Time = DateTime.Now }) ;

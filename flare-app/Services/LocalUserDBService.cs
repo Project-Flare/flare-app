@@ -15,6 +15,9 @@ public class LocalUserDBService
     {
     }
 
+    /// <summary>
+    /// Initiates whole local database, creates tables, initiates connection.
+    /// </summary>
     async static Task Init()
     {
         if(_localUserConnection != null)
@@ -23,14 +26,22 @@ public class LocalUserDBService
         _localUserConnection = new SQLiteAsyncConnection(Path.Combine(FileSystem.AppDataDirectory, LOCAL_USERS));
         await _localUserConnection.CreateTableAsync<LocalUser>();
         await _localUserConnection.CreateTableAsync<MyContact>();
+        //await _localUserConnection.CreateTableAsync<Message>();
     }
 
+    /// <summary>
+    /// Returns all saved local users in database.
+    /// </summary>
     public static async Task<IEnumerable<LocalUser>> GetAllLocalUsers()
     {
         await Init();
         return await _localUserConnection.Table<LocalUser>().ToListAsync();
     }
 
+    /// <summary>
+    /// Returns a local user from database.
+    /// </summary>
+    /// <returns>Local user</returns>
     public static async Task<LocalUser?> GetLocalUserByName(string UserName)
     {
         await Init();
@@ -43,18 +54,27 @@ public class LocalUserDBService
         return null;
     }
 
+    /// <summary>
+    /// Inserts new 'LocalUser' into database.
+    /// </summary>
     public static async Task InsertLocalUser(LocalUser? user)
     {
         await Init();
         await _localUserConnection.InsertAsync(user);
     }
 
+    /// <summary>
+    /// Deletes 'LocalUser' from database.
+    /// </summary>
     public static async Task DeleteLocalUser(LocalUser? user)
     {
         await Init();
         await _localUserConnection.DeleteAsync(user);
     }
 
+    /// <summary>
+    /// Deletes 'LocalUser' from database by name parameter.
+    /// </summary>
     public static async Task DeleteLocalUserByName(string UserName)
     {
         await Init();
@@ -68,12 +88,22 @@ public class LocalUserDBService
         }
     }
 
+    // Contacts part...
+
+    /// <summary>
+    /// Returns ALL contacts from database.
+    /// </summary>
+    /// <returns>Absolutely every contact</returns>
     public static async Task<IEnumerable<MyContact>> GetAllContacts()
     {
         await Init();
         return await _localUserConnection.Table<MyContact>().ToListAsync();
     }
 
+    /// <summary>
+    /// Returns ALL MY contacts from database.
+    /// </summary>
+    /// <returns>All my contacts</returns>
     public static async Task<IEnumerable<MyContact>> GetAllMyContacts(string ownerName)
     {
         await Init();
@@ -82,6 +112,9 @@ public class LocalUserDBService
                                  .ToListAsync();
     }
 
+    /// <summary>
+    /// Inserts my contact into database.
+    /// </summary>
     public static async Task InsertContact(MyContact contact)
     {
         await Init();
@@ -89,12 +122,18 @@ public class LocalUserDBService
         await _localUserConnection.InsertAsync(contact);
     }
 
+    /// <summary>
+    /// Deletes my contact form database.
+    /// </summary>
     public static async Task DeleteContact(MyContact? contact)
     {
         await Init();
         await _localUserConnection.DeleteAsync(contact);
     }
 
+    /// <summary>
+    /// Deletes my contact by his username and my username.
+    /// </summary>
     public static async Task DeleteContactByName(string UserName, string ownerName)
     {
         await Init();
@@ -108,12 +147,17 @@ public class LocalUserDBService
         }
     }
 
+    /// <summary>
+    /// Performs my contact search in database by name.
+    /// </summary>
     public static async Task<IEnumerable<MyContact>> SearchMyContact(string query, string owner)
     {
         await Init();
         return await _localUserConnection.Table<MyContact>()
 														 .Where(c => c.ContactUserName.Contains(query) && c.ContactOwner == owner)
                                                          .ToListAsync();
-
     }
+
+    // Messages part...
+
 }

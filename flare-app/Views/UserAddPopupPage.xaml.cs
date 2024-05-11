@@ -10,6 +10,9 @@ public partial class UserAddPopupPage : Popup
         InitializeComponent();
 	}
 
+    /// <summary>
+    /// Closes pop up.
+    /// </summary>
     private void Button_Pressed(object sender, EventArgs e)
     {
         Close();

@@ -21,21 +21,11 @@ namespace flare_app.Services
                 return _instance;
             }
         }
-
-        //temp hardcoded users.
-        readonly LocalUser user1 = new LocalUser { LocalUserName = "vartotojasHaha" };
-        readonly LocalUser user2 = new LocalUser { LocalUserName = "vartotojas2" };
-        readonly LocalUser user3 = new LocalUser { LocalUserName = "vairuotojas" };
-
-        public List<LocalUser> GetUsers()
-        {
-            return new List<LocalUser>
-            {
-                user1, user2, user3
-            };
-        }
-
-        public List<Message> GetMessages(LocalUser sender)
+		/// <summary>
+		/// Returns messages for the chat page.
+		/// NOTE: if we're using local database for meesages, then this MessageService is unnecessary, but let's leave it for now.
+		/// </summary>
+		public List<Message> GetMessages(LocalUser sender)
         {
             return new List<Message>
             {
