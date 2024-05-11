@@ -23,9 +23,11 @@ public partial class LoginPage : ContentPage
 	}
     private async void LoginButton_Clicked(object sender, EventArgs e)
     {
-        // hlk
-        // cacti-unit-emerald-pumping+31150p
-        Credentials credentials = new();
+		//[WARNING]: this is for debug mode only
+#if DEBUG
+	await Shell.Current.GoToAsync("//MainPage", true);
+#endif
+		Credentials credentials = new();
 
         if (username.Text == "" || password.Text == "")
         {

@@ -2,16 +2,16 @@
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using flare_app.Models;
-using System.Runtime.CompilerServices;
 using flare_app.Services;
-using flare_app.Views;
-using CommunityToolkit.Maui.Core.Views;
-using System.Windows.Input;
+using Grpc.Net.Client;
+using flare_csharp;
+
 namespace flare_app.ViewModels;
 
 public partial class MainViewModel : ObservableObject
 {
-    public AsyncRelayCommand<string> AddUserCommand { get; }
+	readonly string _serverUrl = "https://rpc.f2.project-flare.net";
+	public AsyncRelayCommand<string> AddUserCommand { get; }
     public AsyncRelayCommand<string> RemoveUserCommand { get; }
     public AsyncRelayCommand<string> PerformMyUserSearchCommand { get; }
     public AsyncRelayCommand RefreshCommand { get; }
@@ -21,6 +21,7 @@ public partial class MainViewModel : ObservableObject
     private List<User> initDiscoveryList;
     bool isRefreshing;
     bool refreshFirstTime = false;
+    private UserService _userService;
 
     [ObservableProperty]
     string? text;
@@ -46,13 +47,6 @@ public partial class MainViewModel : ObservableObject
         AddUserOnPopCommand = new AsyncRelayCommand<string>(AddUserOnPop);
         ChatDetailCommand = new AsyncRelayCommand<string>(ChatDetail);
 
-        // NOTE: this should be loaded from server or W/E architecture we're using...
-        initDiscoveryList =
-        [
-            new User { UserName = "TempUser1", LastMessage="Labas", ProfilePicture="picture1.jpg" },
-            new User { UserName = "TempUser2", LastMessage="Testas tekstas", ProfilePicture="picture2.jpg" },
-        ];
- 
         DiscoveryList = new ObservableCollection<User>();
 
         MyUsers = new ObservableCollection<MyContact>();
@@ -62,6 +56,8 @@ public partial class MainViewModel : ObservableObject
             refreshFirstTime = true;
             Task.Run(Refresh);
         }
+
+        _userService = new UserService(GrpcChannel.ForAddress(_serverUrl));
     }
 
     [ObservableProperty]
@@ -136,21 +132,32 @@ public partial class MainViewModel : ObservableObject
     /// <summary>
     /// Adds user to local database and to 'MyUsers' list.
     /// </summary>
-    async Task AddUserOnPop(string? s)
+    async Task AddUserOnPop(string? username)
     {
-        var addThis = new MyContact { ContactUserName = s, ContactOwner = "TempUser1" };
+        //HERE
+        if (username is null)
+            return;
+
+        Flare.V1.User? foundUser = await _userService.GetUser(username);
+
+        if (foundUser is null)
+        {
+            //[DEV_NOTES]: user not found display popup message
+            return;
+        }
+
+		// [DEV_NOTES] TempUser1 should be changed to the user that is signed in
+		var newContact = new MyContact { ContactUserName = foundUser.Username + " " + foundUser.IdPubKey, ContactOwner = "TempUser1" };
         try
         {
-            foreach (var user in initDiscoveryList)
-            {
-                if(user.UserName.Equals(s))
-                {
-                    await LocalUserDBService.InsertContact(addThis);
-                    MyUsers.Add(addThis);
-                }
-            }
+            // [DEV_NOTES]: check if the user is added
+            await LocalUserDBService.InsertContact(newContact);
+            MyUsers.Add(newContact);
         }
-        catch { }
+        catch 
+        {
+            // [DEV_NOTES]: resolve fucking error god damn it
+        }
 
         await Refresh();
     }
