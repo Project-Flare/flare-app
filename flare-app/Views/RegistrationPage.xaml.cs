@@ -14,12 +14,18 @@ public partial class RegistrationPage : ContentPage
     readonly string _serverUrl = "https://rpc.f2.project-flare.net";
     GrpcChannel _channel;
     AuthorizationService _service;
+    Task _serviceTask;
+    AuthorizationService.CredentialRequirements? _credentialRequirements;
 	public RegistrationPage()
     {
         InitializeComponent();
         _channel = GrpcChannel.ForAddress(_serverUrl);
         _service = new AuthorizationService(_serverUrl, _channel, credentials: null);
-
+        _service.ReceivedCredentialRequirements += On_CredentialRequirementsReceived;
+        _service.RegistrationToServerEvent += On_RegistrationToServerResponseReceived;
+		_service.StartService();
+        _serviceTask = new Task(_service.RunServiceAsync);
+        _serviceTask.Start();
     }
 
     private async void RegisterButton_Clicked(object sender, EventArgs e)
@@ -57,6 +63,46 @@ public partial class RegistrationPage : ContentPage
 
     }
 
+    /// <summary>
+    /// Received credential requirements from the server where there is the rules of password and username/
+    /// </summary>
+    /// <param name="eventArgs"></param>
+    private void On_CredentialRequirementsReceived(AuthorizationService.ReceivedRequirementsEventArgs eventArgs)
+    {
+        // Save received credential requirements from the server
+        _credentialRequirements = eventArgs.CredentialRequirements;
+    }
+
+
+    private async void On_RegistrationToServerResponseReceived(AuthorizationService.RegistrationToServerEventArgs eventArgs)
+    {
+		// [DEV_NOTE]: this is where you save the credentials and the user is redirected to the home page
+		if (eventArgs.RegistrationForm.UserRegisteredSuccessfully)
+        {
+            var credentialsToSave = _service.GetAcquiredCredentials();
+			await Shell.Current.GoToAsync("//MainPage", true);
+		}
+        // [DEV_NOTE]: registration failed and the reasons are defined by the enum in registration form
+        else
+        {
+            // [DEV_NOTE]: every failure reason is pretty self explanatory
+            switch(eventArgs.RegistrationForm.RegistrationFailureReason)
+            {
+                case AuthorizationService.RegistrationToServerEventArgs.RegistrationResponse.FailureReason.UsernameIsTaken:
+                    break;
+                case AuthorizationService.RegistrationToServerEventArgs.RegistrationResponse.FailureReason.BadUsername:
+                    break;
+                case AuthorizationService.RegistrationToServerEventArgs.RegistrationResponse.FailureReason.BadPassword:
+                    break;
+                case AuthorizationService.RegistrationToServerEventArgs.RegistrationResponse.FailureReason.None:
+                    // treat it as an unknown error, straightforward messages shouldn't be for the app user, you might think of something better
+                    break;
+                default:
+                    // also must be handled, but treat it this should never fire, only when there are implemented some backend changes to the service
+                    break;
+			}
+		}
+    }
     private async void initLoadingScreen(bool turnOn)
     {
         if (turnOn)
