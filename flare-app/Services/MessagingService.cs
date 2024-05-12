@@ -10,6 +10,7 @@ namespace flare_app.Services;
 
 internal class MessagingService
 {
+	public bool IsRunning { get; private set; }
 	private static MessagingService _instance = new MessagingService();
 	public static MessagingService Instance { get => _instance; }
 	public MessageSendingService? MessageSendingService
@@ -26,7 +27,7 @@ internal class MessagingService
 	public MessageReceivingService? MessageReceivingService 
 	{
 		get => _messageReceivingService;
-		set
+		private set
 		{
 			if (value is null)
 				return;
@@ -39,9 +40,23 @@ internal class MessagingService
 	private Task? _messageSendingServiceTask;
 	private Task? _messageReceivingServiceTask;
 	public MessagingService() { }
-	public void InitServices(string serverGrpcUrl, string serverWSUrl, string authToken, GrpcChannel grpcChannel)
+	public void InitServices(string serverGrpcUrl, string serverWSUrl, Credentials credentials, GrpcChannel grpcChannel)
 	{
-		Instance.MessageSendingService = new MessageSendingService(new Process<MSSState, MSSCommand>(MSSState.Initialized), serverGrpcUrl, authToken, grpcChannel);
-		Instance.MessageReceivingService = new MessageReceivingService(new Process<MRSState, MRSCommand>(MRSState.Initialized), serverWSUrl, authToken);
+		MessageSendingService = new MessageSendingService(new Process<MSSState, MSSCommand>(MSSState.Initialized), serverGrpcUrl, credentials, grpcChannel);
+		MessageReceivingService = new MessageReceivingService(new Process<MRSState, MRSCommand>(MRSState.Initialized), serverWSUrl, credentials);
+		IsRunning = false;
+	}
+
+	public void StartServices()
+	{
+		if (_messageReceivingService is null || _messageSendingService is null)
+			throw new InvalidOperationException("Service is not initialized");
+
+		_messageReceivingService.StartService();
+		_messageSendingService.StartService();
+		// The tasks are initialized together with services
+		_messageReceivingServiceTask!.Start();
+		_messageSendingServiceTask!.Start();
+		IsRunning = true;
 	}
 }

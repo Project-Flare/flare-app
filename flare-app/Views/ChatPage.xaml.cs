@@ -1,5 +1,7 @@
 using flare_app.Models;
+using flare_app.Services;
 using flare_app.ViewModels;
+using flare_csharp;
 
 namespace flare_app.Views;
 
@@ -27,6 +29,10 @@ public partial class ChatPage : ContentPage
     {
         if (messageEntry.Text == "")
             return;
+
+        // HERE
+        MessageSendingService.Message message = new(_chatViewModel.Username!.Split(' ').First(), messageEntry.Text);
+        MessagingService.Instance.MessageSendingService!.SendMessage(message);
 
         _chatViewModel.SendMesg.Execute(messageEntry.Text);
 

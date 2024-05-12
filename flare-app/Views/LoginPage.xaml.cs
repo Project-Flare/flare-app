@@ -43,10 +43,16 @@ public partial class LoginPage : ContentPage
             await LocalUserDBService.InsertLocalUser(new LocalUser { LocalUserName = username.Text, AuthToken = credentials.AuthToken });
         }
         catch { }
+
+#if DEBUG
+        credentials.Username = "laimonas_vaitkevicius";
+        credentials.Password = "1^e,C6R{D^U?$}>[Ipk?B1`D.lr%9j";
+#endif
 		initLoadingScreen(true);
-        _service.LoadUserCredentials(credentials);
-        _service.StartService();
-        MainThread.BeginInvokeOnMainThread(_service.RunServiceAsync);
+		_service.LoadUserCredentials(credentials);
+		_service.StartService();
+
+		MainThread.BeginInvokeOnMainThread(_service.RunServiceAsync);
         _service.LoggedInToServerEvent += On_LoggedInToServer;
     }
 
@@ -64,12 +70,12 @@ public partial class LoginPage : ContentPage
 		{
             // IMPORTANT! new acquired user credentials must be saved!
             var credentials = _service.GetAcquiredCredentials();
-            MessagingService.Instance.InitServices(_serverGrpcUrl, _serverWebSocketUrl, credentials.AuthToken, _channel);
+            MessagingService.Instance.InitServices(_serverGrpcUrl, _serverWebSocketUrl, credentials, _channel);
 			await Shell.Current.GoToAsync("//MainPage", true);
 		}
 		else
         {
-            // Something went wrong when trying to log in, need to handle all possible failure reasons and inform the user about it
+            // [DEV_NOTES]: Something went wrong when trying to log in, need to handle all possible failure reasons and inform the user about it
             switch (eventArgs.LoginFailureReason)
             {
                 case AuthorizationService.LoggedInEventArgs.FailureReason.None:
