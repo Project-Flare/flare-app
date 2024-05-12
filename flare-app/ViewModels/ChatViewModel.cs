@@ -60,10 +60,10 @@ namespace flare_app.ViewModels
         /// <summary>
         /// Sends message to collection list and should send to server.
         /// </summary>
-        async void SendMessage(string? mesg)
+        void SendMessage(string? mesg)
         {
            // await LocalUserDBService.InsertMessage(new Message { KeyPair = $"{cia reikia}_{Username}"});
-            Messages?.Add(new Message { Sender = User.LocalUserName!, Content = mesg, Time = DateTime.Now });
+            Messages?.Add(new Message { Sender = User!.LocalUserName!, Content = mesg, Time = DateTime.Now });
         }
     }
 }

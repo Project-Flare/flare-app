@@ -18,7 +18,7 @@ public partial class MainViewModel : ObservableObject
     public AsyncRelayCommand<string> AddUserOnPopCommand { get; }
     public AsyncRelayCommand<string> ChatDetailCommand { get; }
 
-    private List<User> initDiscoveryList;
+    private List<User>? initDiscoveryList;
     bool isRefreshing;
     bool refreshFirstTime = false;
     private UserService _userService;
