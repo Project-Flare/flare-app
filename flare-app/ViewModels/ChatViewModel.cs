@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using flare_app.Models;
 using flare_app.Services;
+using flare_csharp;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -50,8 +51,24 @@ namespace flare_app.ViewModels
             User = new LocalUser { LocalUserName = Username };
 
             // This loads all the messages with user.
-            Messages = new ObservableCollection<Message>(MessageService.Instance.GetMessages(User.LocalUserName!)); // [DEV_NOTE]: idk if this a good practice, just trying to bind with the local DB API
+            //Messages = new ObservableCollection<Message>(MessageService.Instance.GetMessages(User.LocalUserName!)); // [DEV_NOTE]: idk if this a good practice, just trying to bind with the local DB API
             //Messages = await LocalUserDBService.GetMessages($"{}_{Username}");
+
+            Messages = new ObservableCollection<Message>();
+            List<MessageReceivingService.Message> receivedMessages = MessagingService.Instance.MessageReceivingService!.FetchReceivedMessages();
+            foreach (var receivedMessage in receivedMessages)
+            {
+                if (receivedMessage.InboundUserMessage.SenderUsername == Username)
+                {
+					Messages.Add(new Message
+					{
+						Content = Encoding.Default.GetString(receivedMessage.InboundUserMessage.EncryptedMessage.Ciphertext.ToArray()),
+						KeyPair = "",
+						Sender = receivedMessage.InboundUserMessage.SenderUsername,
+						Time = DateTime.UtcNow
+					});
+				}
+            }
 
             // Relay command for sending message.
 			SendMesg = new RelayCommand<string>(SendMessage);

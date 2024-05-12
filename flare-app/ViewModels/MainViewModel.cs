@@ -166,7 +166,7 @@ public partial class MainViewModel : ObservableObject
     /// Navigates to chat page and passes username parameter within URI.
     /// NOTE: every time this method is called, new chat page is created.
     /// </summary>
-    async Task ChatDetail(string s)
+    async Task ChatDetail(string? s)
     {
         await Shell.Current.GoToAsync($"//MainPage//ChatPage?Username={s}", animate: true);
     }

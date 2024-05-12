@@ -12,6 +12,11 @@ public partial class ChatPage : ContentPage
 	{
 		InitializeComponent();
         _chatViewModel = (ChatViewModel)BindingContext;
+        if (_chatViewModel is null)
+            return;
+        if (_chatViewModel.Messages is null)
+            _chatViewModel.Messages = new System.Collections.ObjectModel.ObservableCollection<Message>();
+        _chatViewModel.Messages.Add(new Message());
 	}
 
     /// <summary>
