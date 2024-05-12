@@ -11,16 +11,16 @@ namespace flare_app.Views;
 
 public partial class RegistrationPage : ContentPage
 {
-	readonly string _serverUrl = "https://rpc.f2.project-flare.net";
+	readonly string _serverGrpcUrl = "https://rpc.f2.project-flare.net";
+	readonly string _serverWebSocketUrl = "wss://ws.f2.project-flare.net/";
 	GrpcChannel _channel;
 	AuthorizationService _service;
 	Task _serviceTask;
-	AuthorizationService.CredentialRequirements? _credentialRequirements;
 	public RegistrationPage()
 	{
 		InitializeComponent();
-		_channel = GrpcChannel.ForAddress(_serverUrl);
-		_service = new AuthorizationService(_serverUrl, _channel, credentials: null);
+		_channel = GrpcChannel.ForAddress(_serverGrpcUrl);
+		_service = new AuthorizationService(_serverGrpcUrl, _channel, credentials: null);
 		_service.RegistrationToServerEvent += On_RegistrationToServerResponseReceived;
 		_service.StartService();
 		_serviceTask = new Task(_service.RunServiceAsync);
@@ -99,7 +99,7 @@ public partial class RegistrationPage : ContentPage
 			return;
 		}
 
-		if (_credentialRequirements is null)
+		if (_service.UserCredentialRequirements is null)
 			return;
 
 		switch (_service.EvaluatePassword(password.Text))
@@ -108,7 +108,7 @@ public partial class RegistrationPage : ContentPage
 				RegisterErrorInfo.Text = "Password can't be empty";
 				break;
 			case AuthorizationService.PasswordState.TooLong:
-				RegisterErrorInfo.Text = $"Password can only be {_credentialRequirements.ValidPasswordRules.MaxLength} character length";
+				RegisterErrorInfo.Text = $"Password can only be {_service.UserCredentialRequirements.ValidPasswordRules.MaxLength} character length";
 				break;
 			case AuthorizationService.PasswordState.NotAllAscii:
 				RegisterErrorInfo.Text = $"Password can only contain ASCII characters.";
@@ -158,6 +158,7 @@ public partial class RegistrationPage : ContentPage
 				await LocalUserDBService.InsertLocalUser(new LocalUser { LocalUserName = credentials.Username, AuthToken = credentials.AuthToken });
 			}
 			catch { }
+			MessagingService.Instance.InitServices(_serverGrpcUrl, _serverWebSocketUrl, credentials.AuthToken, _channel);
 			await Shell.Current.GoToAsync("//MainPage", true);
 		}
 		// [DEV_NOTE]: registration failed and the reasons are defined by the enum in registration form

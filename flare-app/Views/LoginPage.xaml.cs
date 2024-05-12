@@ -12,21 +12,18 @@ namespace flare_app.Views;
 
 public partial class LoginPage : ContentPage
 {
-    readonly string _serverUrl = "https://rpc.f2.project-flare.net";
+    readonly string _serverGrpcUrl = "https://rpc.f2.project-flare.net";
+    readonly string _serverWebSocketUrl = "wss://ws.f2.project-flare.net/";
 	GrpcChannel _channel;
     AuthorizationService _service;
     public LoginPage()
     {
         InitializeComponent();
-        _channel = GrpcChannel.ForAddress(_serverUrl);
-        _service = new AuthorizationService(_serverUrl, _channel, credentials: null);
+        _channel = GrpcChannel.ForAddress(_serverGrpcUrl);
+        _service = new AuthorizationService(_serverGrpcUrl, _channel, credentials: null);
 	}
     private async void LoginButton_Clicked(object sender, EventArgs e)
     {
-		//[WARNING]: this is for debug mode only
-#if DEBUG
-	await Shell.Current.GoToAsync("//MainPage", true);
-#endif
 		Credentials credentials = new();
 
         if (username.Text == "" || password.Text == "")
@@ -67,6 +64,7 @@ public partial class LoginPage : ContentPage
 		{
             // IMPORTANT! new acquired user credentials must be saved!
             var credentials = _service.GetAcquiredCredentials();
+            MessagingService.Instance.InitServices(_serverGrpcUrl, _serverWebSocketUrl, credentials.AuthToken, _channel);
 			await Shell.Current.GoToAsync("//MainPage", true);
 		}
 		else

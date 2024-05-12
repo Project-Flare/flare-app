@@ -14,7 +14,7 @@ namespace flare_app.Views.Templates
         {
             var msg = (Message)item;
 
-            if (msg.Sender != null)
+            if (msg.Sender == null)
             {
                 return ReceiverTemplate;
             }

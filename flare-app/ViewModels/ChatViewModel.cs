@@ -46,11 +46,11 @@ namespace flare_app.ViewModels
 
         public ChatViewModel()
         {
-            // The user we're chating with.
+            // The user we're chatting with.
             User = new LocalUser { LocalUserName = Username };
 
             // This loads all the messages with user.
-            //Messages = new ObservableCollection<Message>(MessageService.Instance.GetMessages(User));
+            Messages = new ObservableCollection<Message>(MessageService.Instance.GetMessages(User.LocalUserName!)); // [DEV_NOTE]: idk if this a good practice, just trying to bind with the local DB API
             //Messages = await LocalUserDBService.GetMessages($"{}_{Username}");
 
             // Relay command for sending message.
@@ -63,7 +63,7 @@ namespace flare_app.ViewModels
         async void SendMessage(string? mesg)
         {
            // await LocalUserDBService.InsertMessage(new Message { KeyPair = $"{cia reikia}_{Username}"});
-            Messages?.Add(new Message { Sender = User, Content = mesg, Time = DateTime.Now });
+            Messages?.Add(new Message { Sender = User.LocalUserName!, Content = mesg, Time = DateTime.Now });
         }
     }
 }
