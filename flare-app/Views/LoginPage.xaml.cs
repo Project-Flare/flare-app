@@ -24,7 +24,8 @@ public partial class LoginPage : ContentPage
 	}
     private async void LoginButton_Clicked(object sender, EventArgs e)
     {
-		Credentials credentials = new();
+        Credentials credentials = new();
+
 
         if (username.Text == "" || password.Text == "")
         {
@@ -37,6 +38,11 @@ public partial class LoginPage : ContentPage
         credentials.Username = username.Text;
         credentials.Password = password.Text;
 
+#if DEBUG
+        credentials.Username = "test_user";
+        credentials.Password = "katinas-suo-zmogus";
+#endif
+
         try
         {
             // Wtf is this
@@ -44,10 +50,6 @@ public partial class LoginPage : ContentPage
         }
         catch { }
 
-#if DEBUG
-        credentials.Username = "laimonas_vaitkevicius";
-        credentials.Password = "1^e,C6R{D^U?$}>[Ipk?B1`D.lr%9j";
-#endif
 		initLoadingScreen(true);
 		_service.LoadUserCredentials(credentials);
 		_service.StartService();
