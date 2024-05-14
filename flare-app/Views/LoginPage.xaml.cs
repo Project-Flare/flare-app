@@ -42,7 +42,7 @@ public partial class LoginPage : ContentPage
         credentials.Password = password.Text;
 
 #if DEBUG
-        credentials.Username = "test_user_0";
+        credentials.Username = "test_user";
         credentials.Password = "katinas-suo-zmogus";
 #endif
 
@@ -56,8 +56,8 @@ public partial class LoginPage : ContentPage
 		initLoadingScreen(true);
 		_service.LoadUserCredentials(credentials);
 		_service.StartService();
-		_serviceTask.Start();
         _service.LoggedInToServerEvent += On_LoggedInToServer;
+		MainThread.BeginInvokeOnMainThread(_service.RunServiceAsync);
     }
 
 	/// <summary>
