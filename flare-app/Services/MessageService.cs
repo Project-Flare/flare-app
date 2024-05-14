@@ -25,7 +25,7 @@ namespace flare_app.Services
 		/// Returns messages for the chat page.
 		/// NOTE: if we're using local database for meesages, then this MessageService is unnecessary, but let's leave it for now.
 		/// </summary>
-		public List<Message> GetMessages(LocalUser sender)
+		public List<Message> GetMessages(string sender)
         {
             return new List<Message>
             {

@@ -55,7 +55,7 @@
                         <Ellipse Fill="White" HeightRequest="48" WidthRequest="48"/>
                     </Grid>
                     <Label x:DataType="viewmodel:ChatViewModel"
-                           Text="{Binding Username}"
+                           Text="{Binding User}"
                            FontFamily="IBMPlexMonoBold"
                            FontSize="28"
                            VerticalOptions="Center"/>

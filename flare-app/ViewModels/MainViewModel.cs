@@ -18,7 +18,7 @@ public partial class MainViewModel : ObservableObject
     public AsyncRelayCommand<string> AddUserOnPopCommand { get; }
     public AsyncRelayCommand<string> ChatDetailCommand { get; }
 
-    private List<User> initDiscoveryList;
+    private List<User>? initDiscoveryList;
     bool isRefreshing;
     bool refreshFirstTime = false;
     private UserService _userService;
@@ -89,14 +89,19 @@ public partial class MainViewModel : ObservableObject
     /// </summary>
     async Task RemoveUser(string? s)
     {
+        if (s is null)
+            return;
         MyContact? removeThis = MyUsers.FirstOrDefault(u => u.ContactUserName == s && u.ContactOwner == "TempUser1");
-        try
+        if (removeThis is not null)
         {
-            await LocalUserDBService.DeleteContact(removeThis);
-            MyUsers.Remove(removeThis);
+            try
+            {
+                await LocalUserDBService.DeleteContact(removeThis);
+                MyUsers.Remove(removeThis);
+            }
+            catch { }
         }
-        catch { }
-        //await Refresh();
+        await Refresh();
     }
 
     /// <summary>

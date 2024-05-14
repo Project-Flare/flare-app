@@ -34,14 +34,14 @@ namespace flare_app
 			builder.Services.AddScoped<MainViewModel>();
             builder.Services.AddSingleton<MainPage>();
             builder.Services.AddSingleton<ChatPage>();
-            builder.Services.AddSingleton<MessagingSendingService>();
-            builder.Services.AddSingleton<MessageReceivingService>();
+            builder.Services.AddSingleton<MessagingService>();
             return builder.Build();
 
         }
 
         public static async void ErrorToast(string message)
         {
+            // [DEV_NOTE]: should not make default cancellation token source, add timespan to the constructor
             CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
             ToastDuration duration = ToastDuration.Long;

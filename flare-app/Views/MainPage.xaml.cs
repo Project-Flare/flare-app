@@ -17,6 +17,8 @@ public partial class MainPage : ContentPage
         InitializeComponent();
         BindingContext = vm;
         _mainViewModel = vm;
+        if (!MessagingService.Instance.IsRunning)
+            MessagingService.Instance.StartServices();
     }
 
     /// <summary>

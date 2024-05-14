@@ -8,26 +8,25 @@ using System.Formats.Asn1;
 using CommunityToolkit.Maui.Core.Platform;
 using Grpc.Net.Client;
 
+
 namespace flare_app.Views;
 
 public partial class LoginPage : ContentPage
 {
-    readonly string _serverUrl = "https://rpc.f2.project-flare.net";
+    readonly string _serverGrpcUrl = "https://rpc.f2.project-flare.net";
+    readonly string _serverWebSocketUrl = "wss://ws.f2.project-flare.net/";
 	GrpcChannel _channel;
     AuthorizationService _service;
     public LoginPage()
     {
         InitializeComponent();
-        _channel = GrpcChannel.ForAddress(_serverUrl);
-        _service = new AuthorizationService(_serverUrl, _channel, credentials: null);
+        _channel = GrpcChannel.ForAddress(_serverGrpcUrl);
+        _service = new AuthorizationService(_serverGrpcUrl, _channel, credentials: null);
 	}
     private async void LoginButton_Clicked(object sender, EventArgs e)
     {
-		//[WARNING]: this is for debug mode only
-#if DEBUG
-	await Shell.Current.GoToAsync("//MainPage", true);
-#endif
-		Credentials credentials = new();
+        Credentials credentials = new();
+
 
         if (username.Text == "" || password.Text == "")
         {
@@ -40,16 +39,23 @@ public partial class LoginPage : ContentPage
         credentials.Username = username.Text;
         credentials.Password = password.Text;
 
+#if DEBUG
+        credentials.Username = "test_user_0";
+        credentials.Password = "katinas-suo-zmogus-0";
+#endif
+
         try
         {
             // Wtf is this
             await LocalUserDBService.InsertLocalUser(new LocalUser { LocalUserName = username.Text, AuthToken = credentials.AuthToken });
         }
         catch { }
+
 		initLoadingScreen(true);
-        _service.LoadUserCredentials(credentials);
-        _service.StartService();
-        MainThread.BeginInvokeOnMainThread(_service.RunServiceAsync);
+		_service.LoadUserCredentials(credentials);
+		_service.StartService();
+
+		MainThread.BeginInvokeOnMainThread(_service.RunServiceAsync);
         _service.LoggedInToServerEvent += On_LoggedInToServer;
     }
 
@@ -67,41 +73,53 @@ public partial class LoginPage : ContentPage
 		{
             // IMPORTANT! new acquired user credentials must be saved!
             var credentials = _service.GetAcquiredCredentials();
+            MessagingService.Instance.InitServices(_serverGrpcUrl, _serverWebSocketUrl, credentials, _channel);
 			await Shell.Current.GoToAsync("//MainPage", true);
 		}
 		else
         {
-            // Something went wrong when trying to log in, need to handle all possible failure reasons and inform the user about it
-            switch (eventArgs.LoginFailureReason)
-            {
-                case AuthorizationService.LoggedInEventArgs.FailureReason.None:
-                    //Error: something went wrong, not sure why. Note:  the user does not need to know, a simple error message is sufficient.
-                    break;
-                case AuthorizationService.LoggedInEventArgs.FailureReason.UntrustworthyServer:
-                    //PANIC: the server cannot be trusted, exit immediately.
-                    break;
-                case AuthorizationService.LoggedInEventArgs.FailureReason.PasswordInvalid:
-                    //Error: The password the user entered is incorrect.
-                    break;
-                case AuthorizationService.LoggedInEventArgs.FailureReason.UsernameInvalid:
-                    //Error: the username is incorrect.
-                    break;
-                case AuthorizationService.LoggedInEventArgs.FailureReason.ServerError:
-					//Error: this is internal server error. Note: the user does not need to know, a simple error message is sufficient.
+            string title = "Login failed";
+			string cancel = "OK";
+			string message;
+			// [DEV_NOTES]: Something went wrong when trying to log in, need to handle all possible failure reasons and inform the user about it
+			switch (eventArgs.LoginFailureReason)
+			{
+				case AuthorizationService.LoggedInEventArgs.FailureReason.None:
+					//Error: something went wrong, not sure why. Note:  the user does not need to know, a simple error message is sufficient.
+					message = "The oration couldn't be completed properly";
 					break;
-                case AuthorizationService.LoggedInEventArgs.FailureReason.UsernameNotExist:
-                    //Error: there is no user with such username
-                    break;
-                case AuthorizationService.LoggedInEventArgs.FailureReason.UserDoesNotExits:
-                    //Error: "Failed to login to server", Reason:"The user does not exits".
-                    break;
-                case AuthorizationService.LoggedInEventArgs.FailureReason.Unknown:
-                    // Simple error message, there is nothing we can say more about it.
-                    break;
-                default:
-                    // Also handle it, maybe simple error message. Act to your own accord.
-                    break;
-            }
+				case AuthorizationService.LoggedInEventArgs.FailureReason.UntrustworthyServer:
+					message = "The server is untrustworthy, operation was aborted";
+					break;
+				case AuthorizationService.LoggedInEventArgs.FailureReason.PasswordInvalid:
+					message = "The password is incorrect";
+					break;
+				case AuthorizationService.LoggedInEventArgs.FailureReason.UsernameInvalid:
+					//Error: the username is incorrect.
+					message = "The username is incorrect";
+					break;
+				case AuthorizationService.LoggedInEventArgs.FailureReason.ServerError:
+					//Error: this is internal server error. Note: the user does not need to know, a simple error message is sufficient.
+					message = "The server failed to respond";
+					break;
+				case AuthorizationService.LoggedInEventArgs.FailureReason.UsernameNotExist:
+					//Error: there is no user with such username
+					message = $"The username {_service.GetAcquiredCredentials().Username} is not registered";
+					break;
+				case AuthorizationService.LoggedInEventArgs.FailureReason.UserDoesNotExits:
+					//Error: "Failed to login to server", Reason:"The user does not exits".
+					message = $"The username {_service.GetAcquiredCredentials().Username} is not registered";
+					break;
+				case AuthorizationService.LoggedInEventArgs.FailureReason.Unknown:
+					// Simple error message, there is nothing we can say more about it.
+					message = "The oration couldn't be completed properly";
+					break;
+				default:
+					// Also handle it, maybe simple error message. Act to your own accord.
+					message = "The oration couldn't be completed properly";
+					break;
+			}
+			await DisplayAlert(title, message, cancel);
 		}
 	}
 
