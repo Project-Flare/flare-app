@@ -19,10 +19,15 @@
                 <template:ReceiverMessageTemplate />
             </DataTemplate>
 
+            <DataTemplate x:Key="InfoMessageItmTemplate">
+                <template:InfoMessageTemplate />
+            </DataTemplate>
+
             <template:MessageTemplateSelector
                 x:Key="MessageTemplateSelector"
                 SenderTemplate="{StaticResource SenderMessageItmTemplate}"
-                ReceiverTemplate="{StaticResource ReceiverMessageItmTemplate}" />
+                ReceiverTemplate="{StaticResource ReceiverMessageItmTemplate}"
+                InfoTemplate="{StaticResource InfoMessageItmTemplate}" />
 
         </ResourceDictionary>
     </ContentPage.Resources>
@@ -55,8 +60,9 @@
                         <Ellipse Fill="White" HeightRequest="48" WidthRequest="48"/>
                     </Grid>
                     <Label x:DataType="viewmodel:ChatViewModel"
-                           Text="{Binding User}"
+                           Text="{Binding Username}"
                            FontFamily="IBMPlexMonoBold"
+                           TextColor="#FFFFFF"
                            FontSize="28"
                            VerticalOptions="Center"/>
                 </HorizontalStackLayout>

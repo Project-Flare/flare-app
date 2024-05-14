@@ -40,8 +40,8 @@ public partial class LoginPage : ContentPage
         credentials.Password = password.Text;
 
 #if DEBUG
-        credentials.Username = "test_user_0";
-        credentials.Password = "katinas-suo-zmogus-0";
+        credentials.Username = "tst";
+        credentials.Password = "SulpHyRnBEDgGhb.";
 #endif
 
         try
