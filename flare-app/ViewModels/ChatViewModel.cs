@@ -1,5 +1,4 @@
-﻿//using AuthenticationServices;
-using CommunityToolkit.Maui.Core.Extensions;
+﻿using CommunityToolkit.Maui.Core.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using flare_app.Models;
@@ -56,12 +55,10 @@ namespace flare_app.ViewModels
             // The user we're chatting with.
             User = new LocalUser { LocalUserName = Username };
 
-            // This loads all the messages with user.
-            //Messages = new ObservableCollection<Message>(MessageService.Instance.GetMessages(User.LocalUserName!)); // [DEV_NOTE]: idk if this a good practice, just trying to bind with the local DB API
-            //Messages = await LocalUserDBService.GetMessages($"{}_{Username}");
+			// This loads all the messages with user.
+			//Messages = new ObservableCollection<Message>(MessageService.Instance.GetMessages(User.LocalUserName!)); // [DEV_NOTE]: idk if this a good practice, just trying to bind with the local DB API
 
-            Messages = new ObservableCollection<Message>();
-            List<MessageReceivingService.Message> receivedMessages = MessagingService.Instance.MessageReceivingService!.FetchReceivedMessages();
+			/*List<MessageReceivingService.Message> receivedMessages = MessagingService.Instance.MessageReceivingService!.FetchReceivedMessages();
             foreach (var receivedMessage in receivedMessages)
             {
                 if (receivedMessage.InboundUserMessage.SenderUsername == Username)
@@ -74,51 +71,37 @@ namespace flare_app.ViewModels
 						Time = DateTime.UtcNow
 					});
 				}
-            }
-            //Messages = new ObservableCollection<Message>();
+            }*/
 
-            //IEnumerable<Message> enumerableLoaded = (IEnumerable<Message>)LoadMessagesFromDB();
+			Messages = new ObservableCollection<Message>();
 
-            //List<Message> loaded = enumerableLoaded.ToList();
+			//Messages.Add(new Message { Content = "Your chat begins here", Sender = "ChatViewModel", Time = DateTime.UtcNow });
 
-            //LoadMessagesIntoCollection(loaded);
+			Task.Run(LoadMessagesFromDB);
 
-            // Relay command for sending message.
+			// Relay command for sending message.
 			SendMesg = new RelayCommand<string>(SendMessage);
 		}
 
-        private async Task<IEnumerable<Message>> LoadMessagesFromDB()
+        private async Task LoadMessagesFromDB()
         {
-            //while(Username is null)
-            //{
-            //    await Task.Yield();
-            //}
-
-            try
+            while (Username is null)
             {
-                return await MessagesDBService.GetMessages($"TestUser1_asf");
+                await Task.Yield();
             }
-            catch { }
+
+            var list = await MessagesDBService.GetMessages($"TempUser1_{Username}");
 
 
-            return null;
-        }
+            if (list.Count() != 0)
+            {
+                Messages = new ObservableCollection<Message>(list);
+            }
+            else
+            {
+				Messages.Add(new Message { Content = "Your chat begins here", Sender = "ChatViewModel", Time = DateTime.UtcNow });
+			}
 
-        private void LoadMessagesIntoCollection(List<Message> list)
-        {
-            //if (list is null || list.Count() == 0)
-            //{
-            //    Messages.Add(new Message { Content = "niekas", Sender = "ChatViewModel", Time = DateTime.UtcNow });
-            //}
-            //else
-            //{
-            //    //Messages = new ObservableCollection<Message>(list);
-            //    foreach (var message in list)
-            //    {
-            //        Messages.Add(message);
-            //    }
-            //}
-            // DO nothing
         }
 
         /// <summary>
@@ -126,12 +109,17 @@ namespace flare_app.ViewModels
         /// </summary>
         private async void SendMessage(string? mesg)
         {
-            //while (Username is null)
-            //{
-            //    await Task.Yield();
-            //}
+			while (Username is null)
+			{
+				await Task.Yield();
+			}
 
-            await LocalUserDBService.InsertMessage(new Message { KeyPair = $"TempUser1_asf", Content = mesg, Sender = null, Time = DateTime.UtcNow});
+			//while (Username is null)
+			//{
+			//    await Task.Yield();
+			//}
+
+			await MessagesDBService.InsertMessage(new Message { KeyPair = $"TempUser1_{Username}", Content = mesg, Sender = null, Time = DateTime.UtcNow});
             Messages?.Add(new Message { Sender = null, Content = mesg, Time = DateTime.Now });
         }
     }

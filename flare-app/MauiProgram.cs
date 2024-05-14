@@ -33,7 +33,7 @@ namespace flare_app
 #endif
 			builder.Services.AddScoped<MainViewModel>();
             builder.Services.AddSingleton<MainPage>();
-            builder.Services.AddSingleton<ChatPage>();
+            //builder.Services.AddSingleton<ChatPage>();
             builder.Services.AddSingleton<MessagingService>();
             return builder.Build();
 

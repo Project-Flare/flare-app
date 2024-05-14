@@ -10,6 +10,8 @@ public class LocalUser
     [PrimaryKey, Unique]
     public string? LocalUserName { get; set; }
     public string? AuthToken { get; set; }
+    public string? PublicKey {  get; set; }
+    public string? PrivateKey { get; set; }
 }
 
 public class MyContact

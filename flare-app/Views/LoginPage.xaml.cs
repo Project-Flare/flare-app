@@ -22,7 +22,10 @@ public partial class LoginPage : ContentPage
         InitializeComponent();
         _channel = GrpcChannel.ForAddress(_serverGrpcUrl);
         _service = new AuthorizationService(_serverGrpcUrl, _channel, credentials: null);
+
+		//Task.Run(WasLoggedOn);
 	}
+
     private async void LoginButton_Clicked(object sender, EventArgs e)
     {
         Credentials credentials = new();
@@ -42,14 +45,8 @@ public partial class LoginPage : ContentPage
 #if DEBUG
         credentials.Username = "tst";
         credentials.Password = "SulpHyRnBEDgGhb.";
-#endif
 
-        try
-        {
-            // Wtf is this
-            await LocalUserDBService.InsertLocalUser(new LocalUser { LocalUserName = username.Text, AuthToken = credentials.AuthToken });
-        }
-        catch { }
+#endif
 
 		initLoadingScreen(true);
 		_service.LoadUserCredentials(credentials);
@@ -73,7 +70,18 @@ public partial class LoginPage : ContentPage
 		{
             // IMPORTANT! new acquired user credentials must be saved!
             var credentials = _service.GetAcquiredCredentials();
-            MessagingService.Instance.InitServices(_serverGrpcUrl, _serverWebSocketUrl, credentials, _channel);
+			try
+			{
+				await LocalUserDBService.InsertLocalUser(new LocalUser
+				{
+					LocalUserName = credentials.Username,
+					AuthToken = credentials.AuthToken,
+					PublicKey = credentials.IdentityPublicKey,
+					PrivateKey = credentials.IdentityPrivateKey
+				});
+			}
+			catch { /*TODO POP UP OR SOMETHING...*/ }
+			MessagingService.Instance.InitServices(_serverGrpcUrl, _serverWebSocketUrl, credentials, _channel);
 			await Shell.Current.GoToAsync("//MainPage", true);
 		}
 		else
@@ -121,6 +129,26 @@ public partial class LoginPage : ContentPage
 			}
 			await DisplayAlert(title, message, cancel);
 		}
+	}
+
+	// [TODO]: Login routine.
+	private async Task WasLoggedOn()
+	{
+		var user = await LocalUserDBService.GetAllLocalUsers();
+
+		if (user.Count() == 0)
+		{
+			return;
+        }
+
+		LocalUser loaded = user.ElementAt(0);
+
+		initLoadingScreen(true);
+		//_service.LoadUserCredentials(credentials);
+		_service.StartService();
+
+		MainThread.BeginInvokeOnMainThread(_service.RunServiceAsync);
+		_service.LoggedInToServerEvent += On_LoggedInToServer;
 	}
 
     private async void ToRegistrationSpan_Tapped(object sender, EventArgs e)

@@ -1,7 +1,6 @@
 ﻿using SQLite;
 using flare_app.Models;
 using System;
-using System.Collections.Generic;
 
 namespace flare_app.Services
 {
@@ -30,7 +29,9 @@ namespace flare_app.Services
         {
             await Init();
             //if (_messagesConnection is not null)
-            return await _messagesConnection.Table<Message>().Where(c => c.KeyPair == keypair).ToListAsync();
+            return await _messagesConnection.Table<Message>()
+                                             .Where(c => c.KeyPair == keypair)
+                                             .ToListAsync();
 
             //return Enumerable.Empty<Message>();
         }

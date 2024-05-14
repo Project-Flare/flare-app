@@ -1,8 +1,5 @@
 ﻿using SQLite;
 using flare_app.Models;
-using System.Reflection.Emit;
-using System.Reflection.Metadata;
-using System.Collections.ObjectModel;
 
 namespace flare_app.Services;
 
@@ -26,7 +23,6 @@ public class LocalUserDBService
         _localUserConnection = new SQLiteAsyncConnection(Path.Combine(FileSystem.AppDataDirectory, LOCAL_USERS));
         await _localUserConnection.CreateTableAsync<LocalUser>();
         await _localUserConnection.CreateTableAsync<MyContact>();
-        await _localUserConnection.CreateTableAsync<Message>();
     }
 
     /// <summary>
@@ -34,9 +30,8 @@ public class LocalUserDBService
     /// </summary>
     public static async Task<IEnumerable<LocalUser>> GetAllLocalUsers()
     {
-        if (_localUserConnection is null)
-            await Init();
-        return await _localUserConnection!.Table<LocalUser>().ToListAsync();
+        await Init();
+        return await _localUserConnection.Table<LocalUser>().ToListAsync();
     }
 
     /// <summary>
@@ -60,8 +55,9 @@ public class LocalUserDBService
     /// </summary>
     public static async Task InsertLocalUser(LocalUser? user)
     {
-        await Init();
-        await _localUserConnection.InsertAsync(user);
+		await Init();
+		if(_localUserConnection is not null)
+            await _localUserConnection.InsertAsync(user);
     }
 
     /// <summary>
@@ -70,13 +66,24 @@ public class LocalUserDBService
     public static async Task DeleteLocalUser(LocalUser? user)
     {
         await Init();
-        await _localUserConnection.DeleteAsync(user);
+		if(_localUserConnection is null)
+            await _localUserConnection.DeleteAsync(user);
     }
 
-    /// <summary>
-    /// Deletes 'LocalUser' from database by name parameter.
-    /// </summary>
-    public static async Task DeleteLocalUserByName(string UserName)
+	/// <summary>
+	/// Deletes ALL 'LocalUser' from database.
+	/// </summary>
+	public static async Task DeleteAllLocalUsers()
+	{
+		await Init();
+		//await _localUserConnection.DeleteAllAsync(new LocalUser { });
+		await _localUserConnection.ExecuteAsync("DELETE FROM LocalUser");
+	}
+
+	/// <summary>
+	/// Deletes 'LocalUser' from database by name parameter.
+	/// </summary>
+	public static async Task DeleteLocalUserByName(string UserName)
     {
         await Init();
         foreach (LocalUser usr in await GetAllLocalUsers())
@@ -155,29 +162,8 @@ public class LocalUserDBService
     {
         await Init();
         return await _localUserConnection.Table<MyContact>()
-														 .Where(c => c.ContactUserName.Contains(query) && c.ContactOwner == owner)
+														 .Where(c => c.ContactUserName.ToLower().Contains(query.ToLower()) && c.ContactOwner == owner)
                                                          .ToListAsync();
     }
 
-	// Messages part...
-
-	public static async Task<IEnumerable<Message>> GetMessages(string user, string contact)
-	{
-		await Init();
-		return await _localUserConnection.Table<Message>()
-								 .Where(c => c.KeyPair == $"{user}_{contact}")
-								 .ToListAsync();
-	}
-
-	public static async Task InsertMessage(Message message)
-	{
-		await Init();
-		await _localUserConnection.InsertAsync(message);
-	}
-
-	public static async Task DeleteMessage(Message message)
-	{
-		await Init();
-		await _localUserConnection.DeleteAsync(message);
-	}
 }

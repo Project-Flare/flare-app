@@ -155,7 +155,13 @@ public partial class RegistrationPage : ContentPage
 			try
 			{
 				// [DEV_NOTE]: fix this shit
-				await LocalUserDBService.InsertLocalUser(new LocalUser { LocalUserName = credentials.Username, AuthToken = credentials.AuthToken });
+				await LocalUserDBService.InsertLocalUser(new LocalUser
+				{
+					LocalUserName = username.Text,
+					AuthToken = credentials.AuthToken,
+					PublicKey = credentials.IdentityPublicKey,
+					PrivateKey = credentials.IdentityPrivateKey
+				});
 			}
 			catch { }
 			MessagingService.Instance.InitServices(_serverGrpcUrl, _serverWebSocketUrl, credentials, _channel);
