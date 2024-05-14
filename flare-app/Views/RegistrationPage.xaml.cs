@@ -147,10 +147,9 @@ public partial class RegistrationPage : ContentPage
 
 	private async void On_RegistrationToServerResponseReceived(AuthorizationService.RegistrationToServerEventArgs eventArgs)
 	{
-
-		// [DEV_NOTE]: this is where you save the credentials and the user is redirected to the home page
 		if (eventArgs.RegistrationForm.UserRegisteredSuccessfully)
 		{
+			_service.EndService();
 			Credentials credentials = _service.GetAcquiredCredentials();
 			try
 			{

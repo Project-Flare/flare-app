@@ -17,13 +17,12 @@ public partial class LoginPage : ContentPage
     readonly string _serverWebSocketUrl = "wss://ws.f2.project-flare.net/";
 	GrpcChannel _channel;
     AuthorizationService _service;
+	Task _serviceTask;
     public LoginPage()
     {
         InitializeComponent();
         _channel = GrpcChannel.ForAddress(_serverGrpcUrl);
         _service = new AuthorizationService(_serverGrpcUrl, _channel, credentials: null);
-
-		//Task.Run(WasLoggedOn);
 	}
 
     private async void LoginButton_Clicked(object sender, EventArgs e)
@@ -43,17 +42,15 @@ public partial class LoginPage : ContentPage
         credentials.Password = password.Text;
 
 #if DEBUG
-        credentials.Username = "tst";
-        credentials.Password = "SulpHyRnBEDgGhb.";
-
+        credentials.Username = "test_user";
+        credentials.Password = "katinas-suo-zmogus";
 #endif
 
 		initLoadingScreen(true);
 		_service.LoadUserCredentials(credentials);
 		_service.StartService();
-
-		MainThread.BeginInvokeOnMainThread(_service.RunServiceAsync);
         _service.LoggedInToServerEvent += On_LoggedInToServer;
+		MainThread.BeginInvokeOnMainThread(_service.RunServiceAsync);
     }
 
 	/// <summary>
@@ -69,6 +66,7 @@ public partial class LoginPage : ContentPage
 		if (eventArgs.LoggedInSuccessfully)
 		{
             // IMPORTANT! new acquired user credentials must be saved!
+			_service.EndService();
             var credentials = _service.GetAcquiredCredentials();
 			try
 			{
