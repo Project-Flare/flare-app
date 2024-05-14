@@ -55,6 +55,7 @@ namespace flare_app.ViewModels
             // The user we're chatting with.
             User = new LocalUser { LocalUserName = Username };
 
+            //[TODO]: bind backend API with DB
 			// This loads all the messages with user.
 			//Messages = new ObservableCollection<Message>(MessageService.Instance.GetMessages(User.LocalUserName!)); // [DEV_NOTE]: idk if this a good practice, just trying to bind with the local DB API
 
@@ -120,7 +121,7 @@ namespace flare_app.ViewModels
 			//}
 
 			await MessagesDBService.InsertMessage(new Message { KeyPair = $"TempUser1_{Username}", Content = mesg, Sender = null, Time = DateTime.UtcNow});
-            Messages?.Add(new Message { Sender = null, Content = mesg, Time = DateTime.Now });
+            Messages?.Add(new Message { Sender = null, Content = mesg, Time = DateTime.UtcNow });
         }
     }
 }

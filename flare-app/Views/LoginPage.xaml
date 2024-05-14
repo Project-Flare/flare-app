@@ -41,7 +41,7 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <Grid BackgroundColor="#000000">
+    <Grid BackgroundColor="#000000" Loaded="Grid_Loaded">
         <Grid.GestureRecognizers>
             <TapGestureRecognizer Tapped="Background_Tapped" />
         </Grid.GestureRecognizers>
