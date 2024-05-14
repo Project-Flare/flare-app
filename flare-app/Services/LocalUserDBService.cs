@@ -60,10 +60,30 @@ public class LocalUserDBService
             await _localUserConnection.InsertAsync(user);
     }
 
-    /// <summary>
-    /// Deletes 'LocalUser' from database.
-    /// </summary>
-    public static async Task DeleteLocalUser(LocalUser? user)
+	/// <summary>
+	/// Updates 'LocalUser' (his AuthToken).
+	/// </summary>
+    // Can be redesigned to be updated by only using user's primary key (LocalUserName).
+	public static async Task UpdateLocalUserAuthToken(LocalUser user, string newAuthToken)
+	{
+		await Init();
+
+        LocalUser updated = new LocalUser
+        {
+            LocalUserName = user.LocalUserName,
+            AuthToken = newAuthToken,
+            PublicKey = user.PublicKey,
+            PrivateKey = user.PrivateKey
+        };
+
+        if (_localUserConnection is not null)
+            await _localUserConnection.UpdateAsync(updated);
+	}
+
+	/// <summary>
+	/// Deletes 'LocalUser' from database.
+	/// </summary>
+	public static async Task DeleteLocalUser(LocalUser? user)
     {
         await Init();
 		if(_localUserConnection is null)
