@@ -153,13 +153,12 @@ public partial class RegistrationPage : ContentPage
 			Credentials credentials = _service.GetAcquiredCredentials();
 			try
 			{
-				// [DEV_NOTE]: fix this shit
 				await LocalUserDBService.InsertLocalUser(new LocalUser
 				{
-					LocalUserName = username.Text,
+					LocalUserName = credentials.Username,
 					AuthToken = credentials.AuthToken,
 					PublicKey = credentials.IdentityPublicKey,
-					PrivateKey = credentials.IdentityPrivateKey
+					PrivateKey = credentials.IdentityPrivateKey + " " + credentials.Argon2Hash // [WARNING_TODO]: this is just a quick fix, this MUST be changed
 				});
 			}
 			catch { }

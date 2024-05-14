@@ -17,7 +17,6 @@ public partial class LoginPage : ContentPage
     readonly string _serverWebSocketUrl = "wss://ws.f2.project-flare.net/";
 	GrpcChannel _channel;
     AuthorizationService _service;
-	Task _serviceTask;
     public LoginPage()
     {
         InitializeComponent();
@@ -75,7 +74,7 @@ public partial class LoginPage : ContentPage
 					LocalUserName = credentials.Username,
 					AuthToken = credentials.AuthToken,
 					PublicKey = credentials.IdentityPublicKey,
-					PrivateKey = credentials.IdentityPrivateKey
+					PrivateKey = credentials.IdentityPrivateKey + " " + credentials.Argon2Hash // [WARNING_TODO]: this is just a quick fix, this MUST be changed
 				});
 			}
 			catch { /*TODO POP UP OR SOMETHING...*/ }
@@ -127,26 +126,6 @@ public partial class LoginPage : ContentPage
 			}
 			await DisplayAlert(title, message, cancel);
 		}
-	}
-
-	// [TODO]: Login routine.
-	private async Task WasLoggedOn()
-	{
-		var user = await LocalUserDBService.GetAllLocalUsers();
-
-		if (user.Count() == 0)
-		{
-			return;
-        }
-
-		LocalUser loaded = user.ElementAt(0);
-
-		initLoadingScreen(true);
-		//_service.LoadUserCredentials(credentials);
-		_service.StartService();
-
-		MainThread.BeginInvokeOnMainThread(_service.RunServiceAsync);
-		_service.LoggedInToServerEvent += On_LoggedInToServer;
 	}
 
     private async void ToRegistrationSpan_Tapped(object sender, EventArgs e)
@@ -217,5 +196,40 @@ public partial class LoginPage : ContentPage
 			await KeyboardExtensions.HideKeyboardAsync(password);
 			return;
 		}
+	}
+
+	private async void Grid_Loaded(object sender, EventArgs e)
+	{
+		IEnumerable<LocalUser> users;
+		try
+		{
+			users = await LocalUserDBService.GetAllLocalUsers();
+		}
+		catch
+		{
+			return;
+		}
+
+		if (users.Count() == 0)
+		{
+			return;
+		}
+
+		LocalUser loaded = users.First();
+
+		initLoadingScreen(true);
+		Credentials credentials = new Credentials();
+		credentials.Username = loaded.LocalUserName!;
+		credentials.AuthToken = loaded.AuthToken!;
+		credentials.IdentityPublicKey = loaded.PublicKey;
+		credentials.IdentityPrivateKey = loaded.PrivateKey!.Split(' ').First();
+		credentials.Argon2Hash = loaded.PrivateKey.Split(' ').Last();
+
+
+		_service.StartService();
+		_service.LoadUserCredentials(credentials);
+
+		MainThread.BeginInvokeOnMainThread(_service.RunServiceAsync);
+		_service.LoggedInToServerEvent += On_LoggedInToServer;
 	}
 }
