@@ -9,7 +9,7 @@ namespace flare_app.Services;
 public class LocalUserDBService
 {
     private const string LOCAL_USERS = "local_AppDATA.db";
-	static SQLiteAsyncConnection _localUserConnection;
+    static SQLiteAsyncConnection? _localUserConnection;
 
     public LocalUserDBService()
     {
@@ -34,8 +34,9 @@ public class LocalUserDBService
     /// </summary>
     public static async Task<IEnumerable<LocalUser>> GetAllLocalUsers()
     {
-        await Init();
-        return await _localUserConnection.Table<LocalUser>().ToListAsync();
+        if (_localUserConnection is null)
+            await Init();
+        return await _localUserConnection!.Table<LocalUser>().ToListAsync();
     }
 
     /// <summary>
