@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:flare_app.Models"
+             x:DataType="models:Message"
+             x:Class="flare_app.Views.Templates.InfoMessageTemplate">
+    <Grid
+          Margin="15,10,15,15"
+          ColumnDefinitions="*,Auto,*">
+        <Grid Grid.Column="0"
+              Margin="0,0,8,0" >
+            <Border Margin="0,0,0,0"
+                    HeightRequest="4"
+                    VerticalOptions="Center"
+                    Background="#928B9C" >
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="3" />
+                </Border.StrokeShape>
+            </Border>
+        </Grid>
+        <Grid Grid.Column="2"
+              Margin="8,0,0,0" >
+            <Border Margin="0,0,0,0"
+                    HeightRequest="4"
+                    VerticalOptions="Center"
+                    Background="#928B9C" >
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="3" />
+                </Border.StrokeShape>
+            </Border>
+        </Grid>
+        <Label Grid.Column="1" 
+               Text="{Binding Content}"
+               FontFamily="IBMPlexMono"
+               TextColor="#928B9C"
+               HorizontalOptions="Center"/>
+    </Grid>
+</ContentView>
