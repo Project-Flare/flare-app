@@ -5,6 +5,7 @@ using flare_app.Models;
 using flare_app.Services;
 using Grpc.Net.Client;
 using flare_csharp;
+using Org.BouncyCastle.Crypto.Parameters;
 
 namespace flare_app.ViewModels;
 
@@ -130,6 +131,19 @@ public partial class MainViewModel : ObservableObject
             return;
 
         Flare.V1.User? foundUser = await _userService.GetUser(username);
+        Identity identity = new Identity();
+        identity.Username = foundUser.Username;
+        try
+        {
+            identity.PublicKey = (ECPublicKeyParameters)Crypto.GetPublicKeyFromDer(foundUser.IdPubKey);
+        }
+        catch (FormatException)
+        {
+            //[DEV_NOTES]: user not found display popup message
+            return;
+		}
+
+		MessagingService.Instance.MessageSendingService!.IdentityStore.Contacts.Add(foundUser.Username, identity);
 
         if (foundUser is null)
         {

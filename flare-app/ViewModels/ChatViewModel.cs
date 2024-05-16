@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Maui.Core.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Flare.V1;
 using flare_app.Models;
 using flare_app.Services;
 using flare_csharp;
@@ -119,14 +120,19 @@ namespace flare_app.ViewModels
         /// </summary>
         private async Task SendMessage(string? mesg)
         {
+            if (mesg is null)
+                return;
+
 			while (Username is null)
 			{
 				await Task.Yield();
 			}
 
-            string userName = Username.Split(' ')[0];
+            MessageSendingService.OutboundMessage outboundMessage = new MessageSendingService.OutboundMessage(recipientUsername: Username, messageText: mesg);
+            MessagingService.Instance.MessageSendingService!.SendMessage(outboundMessage);
 
-			await MessagesDBService.InsertMessage(new Message { KeyPair = $"{LocalUsername}_{userName}", Content = mesg, Sender = null, Time = DateTime.UtcNow});
+            // TODO: confirm that the message was sent successfully?
+			await MessagesDBService.InsertMessage(new Message { KeyPair = $"{LocalUsername}_{Username}", Content = mesg, Sender = null, Time = DateTime.UtcNow});
             Messages?.Add(new Message { Sender = null, Content = mesg, Time = DateTime.UtcNow });
         }
     }
