@@ -104,6 +104,9 @@ namespace flare_app.ViewModels
                 Messages.Add(receivedMessage);
 			}
 
+            var messageList = Messages.ToList();
+            messageList.Sort();
+            Messages = new ObservableCollection<Message>(messageList);
 		}
 
         /// <summary>
