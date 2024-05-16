@@ -57,13 +57,23 @@ public class LocalUserDBService
     }
 
     /// <summary>
-    /// Inserts new 'LocalUser' into database.
+    /// Inserts new 'LocalUser' into database. 'LocalUser' is updated if such exits with specific primary key.
     /// </summary>
     public static async Task InsertLocalUser(LocalUser? user)
     {
 		await Init();
-		if(_localUserConnection is not null)
-            await _localUserConnection.InsertAsync(user);
+        if (_localUserConnection is not null)
+        {
+            try
+            {
+                await _localUserConnection.InsertAsync(user);
+            }
+            // Such primary key already exits.
+            catch
+            {
+                await _localUserConnection.UpdateAsync(user);
+            }
+        }
     }
 
 	/// <summary>
