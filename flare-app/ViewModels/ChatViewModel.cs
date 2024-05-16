@@ -24,11 +24,13 @@ namespace flare_app.ViewModels
     {
         [ObservableProperty]
         string? username;
+        string LocalUsername = MessagingService.Instance.MessageReceivingService!.Credentials.Username;
 
         LocalUser? _user;
         ObservableCollection<Message>? _messages;
 
-		public RelayCommand<string> SendMesg { get; }
+		public AsyncRelayCommand LoadMesg { get; }
+		public AsyncRelayCommand<string> SendMesg { get; }
 
 		public LocalUser? User
         {
@@ -52,8 +54,11 @@ namespace flare_app.ViewModels
 
         public ChatViewModel()
         {
-            // The user we're chatting with.
-            User = new LocalUser { LocalUserName = Username };
+			LoadMesg = new AsyncRelayCommand(LoadMessagesFromDB);
+			SendMesg = new AsyncRelayCommand<string>(SendMessage);
+
+			// The user we're chatting with.
+			User = new LocalUser { LocalUserName = Username };
 
             //[TODO]: bind backend API with DB
 			// This loads all the messages with user.
@@ -79,10 +84,9 @@ namespace flare_app.ViewModels
 
 			//Messages.Add(new Message { Content = "Your chat begins here", Sender = "ChatViewModel", Time = DateTime.UtcNow });
 
-			Task.Run(LoadMessagesFromDB);
+			//Task.Run(LoadMessagesFromDB);
 
-			// Relay command for sending message.
-			SendMesg = new RelayCommand<string>(SendMessage);
+			// Relay command for sending message
 		}
 
         /// <summary>
@@ -95,8 +99,8 @@ namespace flare_app.ViewModels
                 await Task.Yield();
             }
 
-            string userName = Username.Split(' ')[0];
-            var list = await MessagesDBService.GetMessages($"TempUser1_{userName}");
+            string userName = Username.Split(' ').First();
+            var list = await MessagesDBService.GetMessages($"{LocalUsername}_{userName}");
 
 
             if (list!.Count() != 0)
@@ -113,7 +117,7 @@ namespace flare_app.ViewModels
         /// <summary>
         /// Sends message to collection list and should send to server.
         /// </summary>
-        private async void SendMessage(string? mesg)
+        private async Task SendMessage(string? mesg)
         {
 			while (Username is null)
 			{
@@ -122,7 +126,7 @@ namespace flare_app.ViewModels
 
             string userName = Username.Split(' ')[0];
 
-			await MessagesDBService.InsertMessage(new Message { KeyPair = $"TempUser1_{userName}", Content = mesg, Sender = null, Time = DateTime.UtcNow});
+			await MessagesDBService.InsertMessage(new Message { KeyPair = $"{LocalUsername}_{userName}", Content = mesg, Sender = null, Time = DateTime.UtcNow});
             Messages?.Add(new Message { Sender = null, Content = mesg, Time = DateTime.UtcNow });
         }
     }

@@ -56,7 +56,8 @@ public partial class ChatPage : ContentPage
     /// </summary>
 	private async void chatCollection_Loaded(object sender, EventArgs e)
     {
-        await Task.Delay(10);
+        //await Task.Delay(10);
+        await _chatViewModel.LoadMesg.ExecuteAsync(e);
         ScrollToBottom();
     }
 
@@ -65,7 +66,8 @@ public partial class ChatPage : ContentPage
     /// </summary>
     private void ScrollToBottom()
     {
-		Message message = _chatViewModel.Messages.Last();
+        // At this point 'Messages' shouldn't be null.
+		Message message = _chatViewModel.Messages!.Last();
         chatCollection.ScrollTo(message, position: ScrollToPosition.End, animate: true);
 	}
 }

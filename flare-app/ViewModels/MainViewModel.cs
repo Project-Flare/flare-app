@@ -18,10 +18,10 @@ public partial class MainViewModel : ObservableObject
     public AsyncRelayCommand<string> AddUserOnPopCommand { get; }
     public AsyncRelayCommand<string> ChatDetailCommand { get; }
 
-    private List<User>? initDiscoveryList;
     bool isRefreshing;
     bool refreshFirstTime = false;
     private UserService _userService;
+    private string LocalUsername = MessagingService.Instance.MessageSendingService!.Credentials.Username;
 
     [ObservableProperty]
     string? text;
@@ -47,8 +47,6 @@ public partial class MainViewModel : ObservableObject
         AddUserOnPopCommand = new AsyncRelayCommand<string>(AddUserOnPop);
         ChatDetailCommand = new AsyncRelayCommand<string>(ChatDetail);
 
-        DiscoveryList = new ObservableCollection<User>();
-
         MyUsers = new ObservableCollection<MyContact>();
 
         if (!refreshFirstTime)
@@ -64,26 +62,6 @@ public partial class MainViewModel : ObservableObject
     ObservableCollection<MyContact> myUsers; 
 
 
-    [ObservableProperty]
-    ObservableCollection<User> discoveryList;
-
-
-
-    /// <summary>
-    /// Adds user into local database and into 'MyUsers' list.
-    /// </summary>
-    /*async Task AddUser(string? s)
-    {
-        // 'ContactOwner' should be the logged in user.
-        var addThis = new MyContact { ContactUserName = s, ContactOwner = "TempUser1" };
-        try
-        {
-            await LocalUserDBService.InsertContact(addThis);
-            MyUsers.Add(addThis);
-        }
-        catch { }
-    }*/
-
     /// <summary>
     /// Removes my contact from 'MyUsers' list and deletes from local database.
     /// </summary>
@@ -92,12 +70,12 @@ public partial class MainViewModel : ObservableObject
         if (s is null)
             return;
 
-		MyContact? removeThis = MyUsers.FirstOrDefault(u => u.ContactUserName == s && u.ContactOwner == "TempUser1");
+		MyContact? removeThis = MyUsers.FirstOrDefault(u => u.ContactUserName == s && u.ContactOwner == $"{LocalUsername}");
         if (removeThis is not null)
         {
             try
             {
-                await MessagesDBService.DeleteUserMessages(removeThis.ContactUserName!.Split(' ')[0]);
+                await MessagesDBService.DeleteUserMessages($"{LocalUsername}_{removeThis.ContactUserName!.Split(' ').First()}");
                 await LocalUserDBService.DeleteContact(removeThis);
                 MyUsers.Remove(removeThis);
             }
@@ -112,7 +90,7 @@ public partial class MainViewModel : ObservableObject
     async Task PerformMyUserSearch(string? query)
     {
         MyUsers.Clear();
-        var list = await LocalUserDBService.SearchMyContact(query, "TempUser1");
+        var list = await LocalUserDBService.SearchMyContact(query, LocalUsername);
 
         if (list is null)
             return;
@@ -131,9 +109,10 @@ public partial class MainViewModel : ObservableObject
         //[TODO]: implement user discovery page
         IsRefreshing = true;
         MyUsers.Clear();
-        var list = await LocalUserDBService.GetAllMyContacts("TempUser1");
+        var list = await LocalUserDBService.GetAllMyContacts(LocalUsername);
         foreach (var itm in list)
         {
+            itm.ContactUserName = itm.ContactUserName!.Split(' ').First();
             if (MyUsers.Contains(itm))
                 continue;
             MyUsers.Add(itm);
@@ -159,11 +138,12 @@ public partial class MainViewModel : ObservableObject
         }
 
 		// [DEV_NOTES] TempUser1 should be changed to the user that is signed in
-		var newContact = new MyContact { ContactUserName = foundUser.Username + " " + foundUser.IdPubKey, ContactOwner = "TempUser1" };
+		var newContact = new MyContact { ContactUserName = foundUser.Username + " " + foundUser.IdPubKey, ContactOwner = LocalUsername };
         try
         {
             // [DEV_NOTES]: check if the user is added
             await LocalUserDBService.InsertContact(newContact);
+            newContact.ContactUserName = newContact.ContactUserName.Split(' ').First();
             MyUsers.Add(newContact);
         }
         catch 
@@ -180,6 +160,6 @@ public partial class MainViewModel : ObservableObject
     /// </summary>
     async Task ChatDetail(string? s)
     {
-        await Shell.Current.GoToAsync($"//MainPage//ChatPage?Username={s}", animate: true);
+        await Shell.Current.GoToAsync($"//MainPage//ChatPage?Username={s!.Split(' ').First()}", animate: true);
     }
 }
