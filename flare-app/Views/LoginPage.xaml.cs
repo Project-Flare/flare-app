@@ -81,7 +81,7 @@ public partial class LoginPage : ContentPage
 				{
 					LocalUserName = credentials.Username,
 					AuthToken = credentials.AuthToken,
-					PublicKey = Crypto.GetDerEncodedPublicKey(identityStore.Identity.Public),
+					PublicKey = Crypto.GetDerEncodedPublicKey(identityStore.Identity!.Public),
 					PrivateKey = Crypto.GetDerEncodedPrivateKey(identityStore.Identity.Private)
 				});
 			}

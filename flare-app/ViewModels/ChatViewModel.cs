@@ -63,23 +63,7 @@ namespace flare_app.ViewModels
 
             //[TODO]: bind backend API with DB
 			// This loads all the messages with user.
-			//Messages = new ObservableCollection<Message>(MessageService.Instance.GetMessages(User.LocalUserName!)); // [DEV_NOTE]: idk if this a good practice, just trying to bind with the local DB API
-
-            Messages = new ObservableCollection<Message>();
-            List<MessageReceivingService.InboundMessage> receivedMessages = MessagingService.Instance.MessageReceivingService!.FetchReceivedMessages();
-            foreach (var receivedMessage in receivedMessages)
-            {
-                if (receivedMessage.InboundUserMessage.SenderUsername == Username)
-                {
-					Messages.Add(new Message
-					{
-						Content = Encoding.Default.GetString(receivedMessage.InboundUserMessage.EncryptedMessage.Ciphertext.ToArray()),
-						KeyPair = "",
-						Sender = receivedMessage.InboundUserMessage.SenderUsername,
-						Time = DateTime.UtcNow
-					});
-				}
-            }
+			//Messages = new ObservableCollection<Message>(MessageService.Instance.GetMessages(User.LocalUserName!)); // [DEV_NOTE]: idk if this a good practice, just trying to bind with the local DB AP
 
 			Messages = new ObservableCollection<Message>();
 
@@ -112,7 +96,15 @@ namespace flare_app.ViewModels
 				Messages!.Add(new Message { Content = "Your chat begins here", Sender = "ChatViewModel", Time = DateTime.UtcNow });
 			}
 
-        }
+            List<Message> receivedMessages = MessagingService.Instance.FetchReceivedUserMessages(Username);
+
+			foreach (var receivedMessage in receivedMessages)
+			{
+                //Messages.Contains(); [LAIMONAS]: Implement IEquatable interface to Message model
+                Messages.Add(receivedMessage);
+			}
+
+		}
 
         /// <summary>
         /// Sends message to collection list and should send to server.

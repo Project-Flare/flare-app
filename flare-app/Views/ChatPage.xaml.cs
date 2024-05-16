@@ -35,7 +35,6 @@ public partial class ChatPage : ContentPage
 
         // HERE
         MessageSendingService.OutboundMessage message = new(_chatViewModel.Username!, messageEntry.Text);
-        MessagingService.Instance.MessageSendingService!.SendMessage(message);
 
         _chatViewModel.SendMesg.Execute(messageEntry.Text);
 

@@ -1,5 +1,6 @@
 ﻿using flare_csharp;
 using Grpc.Net.Client;
+using flare_app.Models;
 
 namespace flare_app.Services;
 
@@ -19,7 +20,7 @@ internal class MessagingService
 			_messageSendingServiceTask = new Task(value.RunServiceAsync);
 		}
 	}
-	public MessageReceivingService? MessageReceivingService 
+	public MessageReceivingService? MessageReceivingService
 	{
 		get => _messageReceivingService;
 		private set
@@ -53,5 +54,31 @@ internal class MessagingService
 		_messageReceivingServiceTask!.Start();
 		_messageSendingServiceTask!.Start();
 		IsRunning = true;
+	}
+
+	public List<Message> FetchReceivedUserMessages(string senderUsername)
+	{
+		List<Message> messages = new List<Message>();
+		if (_messageReceivingService is null)
+			return messages;
+
+		List<MessageReceivingService.InboundMessage> encryptedMessages = _messageReceivingService.FetchReceivedMessages(senderUsername);
+		foreach (var encryptedMessage in encryptedMessages)
+		{
+			Message message = new Message();
+			try
+			{
+				message.Content = encryptedMessage.Decrypt(_messageSendingService.IdentityStore).TextMessage.Content;
+			}
+			catch (Exception ex)
+			{
+				continue;
+			}
+			message.KeyPair = $"{_messageReceivingService.Credentials.Username}_{senderUsername}";
+			message.Sender = senderUsername;
+			message.Time = DateTime.UnixEpoch.AddMilliseconds((double)encryptedMessage.InboundUserMessage.ServerTime);
+			messages.Add(message);
+		}
+		return messages;
 	}
 }
