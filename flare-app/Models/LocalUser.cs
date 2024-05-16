@@ -22,6 +22,7 @@ public class MyContact
     public string? ContactOwner { get; set; }
     public string? ContactUserName { get; set; }
     [Unique]
-    public string? OwnerContactPair { get; set; }
+    public string? OwnerContactPair { get; set; } 
+    public string? PublicKey { get; set; }
 }
 

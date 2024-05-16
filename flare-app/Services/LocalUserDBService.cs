@@ -163,7 +163,7 @@ public class LocalUserDBService
     public static async Task InsertContact(MyContact contact)
     {
         await Init();
-        contact.OwnerContactPair = $"{contact.ContactUserName}_{contact.ContactOwner}";
+        contact.OwnerContactPair = $"{contact.ContactUserName!.Split(' ').First()}_{contact.ContactOwner}";
         if (_localUserConnection is not null)
             await _localUserConnection.InsertAsync(contact);
     }

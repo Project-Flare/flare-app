@@ -110,14 +110,29 @@ public partial class MainViewModel : ObservableObject
         //[TODO]: implement user discovery page
         IsRefreshing = true;
         MyUsers.Clear();
+        MessagingService.Instance.MessageSendingService!.IdentityStore.Contacts.Clear();
         var list = await LocalUserDBService.GetAllMyContacts(LocalUsername);
         foreach (var itm in list)
         {
             itm.ContactUserName = itm.ContactUserName!.Split(' ').First();
             if (MyUsers.Contains(itm))
                 continue;
-            MyUsers.Add(itm);
+			MyUsers.Add(itm);
+            string username = itm.ContactUserName;
+            string publicKey = itm.PublicKey!;
+            Identity identity = new Identity();
+            identity.Username = username;
+            try
+            {
+                identity.PublicKey = (ECPublicKeyParameters)Crypto.GetPublicKeyFromDer(publicKey);
+                MessagingService.Instance.MessageSendingService!.IdentityStore.Contacts.Add(username, identity);
+			}
+            catch (Exception ex)
+            {
+                // TODO: 
+            }
         }
+
         IsRefreshing = false;
     }
 
@@ -152,12 +167,12 @@ public partial class MainViewModel : ObservableObject
         }
 
 		// [DEV_NOTES] TempUser1 should be changed to the user that is signed in
-		var newContact = new MyContact { ContactUserName = foundUser.Username + " " + foundUser.IdPubKey, ContactOwner = LocalUsername };
+		var newContact = new MyContact { ContactUserName = foundUser.Username, ContactOwner = LocalUsername, PublicKey = foundUser.IdPubKey };
         try
         {
             // [DEV_NOTES]: check if the user is added
             await LocalUserDBService.InsertContact(newContact);
-            newContact.ContactUserName = newContact.ContactUserName.Split(' ').First();
+            newContact.ContactUserName = newContact.ContactUserName;
             MyUsers.Add(newContact);
         }
         catch 
