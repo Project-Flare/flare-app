@@ -178,12 +178,19 @@ public class LocalUserDBService
     /// <summary>
     /// Performs my contact search in database by name.
     /// </summary>
-    public static async Task<IEnumerable<MyContact>> SearchMyContact(string query, string owner)
+    public static async Task<IEnumerable<MyContact>?> SearchMyContact(string? query, string owner)
     {
         await Init();
-        return await _localUserConnection.Table<MyContact>()
-														 .Where(c => c.ContactUserName.ToLower().Contains(query.ToLower()) && c.ContactOwner == owner)
+        if (_localUserConnection is not null)
+        {
+            if (query is not null)
+                return await _localUserConnection.Table<MyContact>()
+                                                         .Where(c => c.ContactUserName!.ToLower().Contains(query.ToLower()) && c.ContactOwner == owner)
                                                          .ToListAsync();
+            else
+                return await _localUserConnection.Table<MyContact>().Where(c => c.ContactOwner == owner).ToListAsync();
+        }
+        return null;
     }
 
 }

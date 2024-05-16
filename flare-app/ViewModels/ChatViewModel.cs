@@ -84,6 +84,9 @@ namespace flare_app.ViewModels
 			SendMesg = new RelayCommand<string>(SendMessage);
 		}
 
+        /// <summary>
+        /// Loads messages form DB into Observable 'Messages'.
+        /// </summary>
         private async Task LoadMessagesFromDB()
         {
             while (Username is null)
@@ -91,16 +94,17 @@ namespace flare_app.ViewModels
                 await Task.Yield();
             }
 
-            var list = await MessagesDBService.GetMessages($"TempUser1_{Username}");
+            string userName = Username.Split(' ')[0];
+            var list = await MessagesDBService.GetMessages($"TempUser1_{userName}");
 
 
-            if (list.Count() != 0)
+            if (list!.Count() != 0)
             {
-                Messages = new ObservableCollection<Message>(list);
+                Messages = new ObservableCollection<Message>(list!);
             }
             else
             {
-				Messages.Add(new Message { Content = "Your chat begins here", Sender = "ChatViewModel", Time = DateTime.UtcNow });
+				Messages!.Add(new Message { Content = "Your chat begins here", Sender = "ChatViewModel", Time = DateTime.UtcNow });
 			}
 
         }
@@ -115,12 +119,9 @@ namespace flare_app.ViewModels
 				await Task.Yield();
 			}
 
-			//while (Username is null)
-			//{
-			//    await Task.Yield();
-			//}
+            string userName = Username.Split(' ')[0];
 
-			await MessagesDBService.InsertMessage(new Message { KeyPair = $"TempUser1_{Username}", Content = mesg, Sender = null, Time = DateTime.UtcNow});
+			await MessagesDBService.InsertMessage(new Message { KeyPair = $"TempUser1_{userName}", Content = mesg, Sender = null, Time = DateTime.UtcNow});
             Messages?.Add(new Message { Sender = null, Content = mesg, Time = DateTime.UtcNow });
         }
     }

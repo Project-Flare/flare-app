@@ -11,7 +11,7 @@ namespace flare_app.ViewModels;
 public partial class MainViewModel : ObservableObject
 {
 	readonly string _serverUrl = "https://rpc.f2.project-flare.net";
-	public AsyncRelayCommand<string> AddUserCommand { get; }
+	//public AsyncRelayCommand<string> AddUserCommand { get; }
     public AsyncRelayCommand<string> RemoveUserCommand { get; }
     public AsyncRelayCommand<string> PerformMyUserSearchCommand { get; }
     public AsyncRelayCommand RefreshCommand { get; }
@@ -40,7 +40,7 @@ public partial class MainViewModel : ObservableObject
     public MainViewModel()
     {
         // Relay commands that can be called from XAML or page's class.
-        AddUserCommand = new AsyncRelayCommand<string>(AddUser);
+        //AddUserCommand = new AsyncRelayCommand<string>(AddUser);
         RemoveUserCommand = new AsyncRelayCommand<string>(RemoveUser);
         PerformMyUserSearchCommand = new AsyncRelayCommand<string>(PerformMyUserSearch);
         RefreshCommand = new AsyncRelayCommand(Refresh);
@@ -72,7 +72,7 @@ public partial class MainViewModel : ObservableObject
     /// <summary>
     /// Adds user into local database and into 'MyUsers' list.
     /// </summary>
-    async Task AddUser(string? s)
+    /*async Task AddUser(string? s)
     {
         // 'ContactOwner' should be the logged in user.
         var addThis = new MyContact { ContactUserName = s, ContactOwner = "TempUser1" };
@@ -82,7 +82,7 @@ public partial class MainViewModel : ObservableObject
             MyUsers.Add(addThis);
         }
         catch { }
-    }
+    }*/
 
     /// <summary>
     /// Removes my contact from 'MyUsers' list and deletes from local database.
@@ -91,11 +91,13 @@ public partial class MainViewModel : ObservableObject
     {
         if (s is null)
             return;
-        MyContact? removeThis = MyUsers.FirstOrDefault(u => u.ContactUserName == s && u.ContactOwner == "TempUser1");
+
+		MyContact? removeThis = MyUsers.FirstOrDefault(u => u.ContactUserName == s && u.ContactOwner == "TempUser1");
         if (removeThis is not null)
         {
             try
             {
+                await MessagesDBService.DeleteUserMessages(removeThis.ContactUserName!.Split(' ')[0]);
                 await LocalUserDBService.DeleteContact(removeThis);
                 MyUsers.Remove(removeThis);
             }
@@ -110,7 +112,12 @@ public partial class MainViewModel : ObservableObject
     async Task PerformMyUserSearch(string? query)
     {
         MyUsers.Clear();
-        foreach (var itm in await LocalUserDBService.SearchMyContact(query, "TempUser1"))
+        var list = await LocalUserDBService.SearchMyContact(query, "TempUser1");
+
+        if (list is null)
+            return;
+
+		foreach (var itm in list)
         {
             MyUsers.Add(itm);
         }

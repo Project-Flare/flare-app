@@ -11,6 +11,7 @@ namespace flare_app.Services
 
         public MessagesDBService()
         {
+            //
         }
 
         /// <summary>
@@ -25,13 +26,14 @@ namespace flare_app.Services
             await _messagesConnection.CreateTableAsync<Message>();
         }
 
-        public static async Task<IEnumerable<Message>> GetMessages(string keypair)
+        public static async Task<IEnumerable<Message>?> GetMessages(string keypair)
         {
             await Init();
-            //if (_messagesConnection is not null)
-            return await _messagesConnection.Table<Message>()
+            if (_messagesConnection is not null)
+                return await _messagesConnection.Table<Message>()
                                              .Where(c => c.KeyPair == keypair)
                                              .ToListAsync();
+            return null;
 
             //return Enumerable.Empty<Message>();
         }
@@ -39,13 +41,24 @@ namespace flare_app.Services
         public static async Task InsertMessage(Message message)
         {
             await Init();
-            await _messagesConnection.InsertAsync(message);
+            if (_messagesConnection is not null)
+                await _messagesConnection.InsertAsync(message);
         }
 
-        /*public static async Task DeleteMessage(Message message)
+        /// <summary>
+        /// Deletes all messages related with specified contact;
+        /// </summary>
+        public static async Task DeleteUserMessages(string contact)
         {
             await Init();
-            await _localUserConnection.DeleteAsync(message);
-        }*/
+            if (_messagesConnection is not null)
+            {
+                foreach (var msg in await _messagesConnection.Table<Message>().ToListAsync())
+                {
+                    if (msg.KeyPair!.Contains($"_{contact}"))
+                        await _messagesConnection.DeleteAsync(msg);
+                }
+            }
+        }
     }
 }
