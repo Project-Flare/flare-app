@@ -94,8 +94,8 @@ namespace flare_app.ViewModels
                 await Task.Yield();
             }
 
-            string userName = Username.Split(' ')[0];
-            var list = await MessagesDBService.GetMessages($"TempUser1_{userName}");
+            string userName = Username.Split(' ').First();
+            var list = await MessagesDBService.GetMessages($"{MessagingService.Instance.MessageReceivingService!.Credentials.Username}_{userName}");
 
 
             if (list!.Count() != 0)

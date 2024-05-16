@@ -92,7 +92,7 @@ public partial class MainViewModel : ObservableObject
         if (s is null)
             return;
 
-		MyContact? removeThis = MyUsers.FirstOrDefault(u => u.ContactUserName == s && u.ContactOwner == "TempUser1");
+		MyContact? removeThis = MyUsers.FirstOrDefault(u => u.ContactUserName == s && u.ContactOwner == $"{MessagingService.Instance.MessageSendingService!.Credentials.Username}");
         if (removeThis is not null)
         {
             try
