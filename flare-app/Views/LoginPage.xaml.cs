@@ -119,6 +119,9 @@ public partial class LoginPage : ContentPage
 					// Simple error message, there is nothing we can say more about it.
 					message = "The oration couldn't be completed properly";
 					break;
+				case AuthorizationService.LoggedInEventArgs.FailureReason.AuthTokenExpired:
+					// Tried to login to server with expired auth token
+					return;
 				default:
 					// Also handle it, maybe simple error message. Act to your own accord.
 					message = "The oration couldn't be completed properly";
@@ -223,13 +226,12 @@ public partial class LoginPage : ContentPage
 		credentials.AuthToken = loaded.AuthToken!;
 		credentials.IdentityPublicKey = loaded.PublicKey;
 		credentials.IdentityPrivateKey = loaded.PrivateKey!.Split(' ').First();
-		credentials.Argon2Hash = loaded.PrivateKey.Split(' ').Last();
 
 
 		_service.StartService();
 		_service.LoadUserCredentials(credentials);
 
-		MainThread.BeginInvokeOnMainThread(_service.RunServiceAsync);
 		_service.LoggedInToServerEvent += On_LoggedInToServer;
+		MainThread.BeginInvokeOnMainThread(_service.RunServiceAsync);
 	}
 }
