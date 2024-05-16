@@ -8,8 +8,8 @@
              CanBeDismissedByTappingOutsideOfPopup="False"
              Color="Transparent">
     <Grid>
-        <Frame CornerRadius="10" Padding="2">
-            <Border StrokeShape="RoundRectangle 10,10,10,10" StrokeThickness="0" BackgroundColor="Grey">
+        <Frame CornerRadius="17" Padding="3">
+            <Border StrokeShape="RoundRectangle 15,15,15,15" StrokeThickness="0" BackgroundColor="Grey">
         <Grid WidthRequest="380"  HeightRequest="200">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
@@ -35,7 +35,7 @@
          />
                         
                     </Grid>
-                    <Rectangle  BackgroundColor="White" HeightRequest="3" WidthRequest="380" />
+                    <Rectangle  BackgroundColor="White" HeightRequest="4" WidthRequest="380" />
 
 
                     <Grid WidthRequest="300" HeightRequest="75" Grid.Row="1">
