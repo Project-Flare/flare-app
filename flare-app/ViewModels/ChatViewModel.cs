@@ -24,6 +24,7 @@ namespace flare_app.ViewModels
     {
         [ObservableProperty]
         string? username;
+        string LocalUsername = MessagingService.Instance.MessageReceivingService!.Credentials.Username;
 
         LocalUser? _user;
         ObservableCollection<Message>? _messages;
@@ -97,8 +98,8 @@ namespace flare_app.ViewModels
                 await Task.Yield();
             }
 
-            string userName = Username.Split(' ')[0];
-            var list = await MessagesDBService.GetMessages($"TempUser1_{userName}");
+            string userName = Username.Split(' ').First();
+            var list = await MessagesDBService.GetMessages($"{LocalUsername}_{userName}");
 
 
             if (list!.Count() != 0)
@@ -124,7 +125,7 @@ namespace flare_app.ViewModels
 
             string userName = Username.Split(' ')[0];
 
-			await MessagesDBService.InsertMessage(new Message { KeyPair = $"TempUser1_{userName}", Content = mesg, Sender = null, Time = DateTime.UtcNow});
+			await MessagesDBService.InsertMessage(new Message { KeyPair = $"{LocalUsername}_{userName}", Content = mesg, Sender = null, Time = DateTime.UtcNow});
             Messages?.Add(new Message { Sender = null, Content = mesg, Time = DateTime.UtcNow });
         }
     }

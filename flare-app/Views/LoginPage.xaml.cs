@@ -41,8 +41,11 @@ public partial class LoginPage : ContentPage
         credentials.Password = password.Text;
 
 #if DEBUG
-        credentials.Username = "test_user";
-        credentials.Password = "katinas-suo-zmogus";
+		if (username.Text == "test")
+		{
+			credentials.Username = "test_user";
+			credentials.Password = "katinas-suo-zmogus";
+		}
 #endif
 
 		initLoadingScreen(true);
