@@ -138,10 +138,13 @@ public partial class MainViewModel : ObservableObject
     async Task AddUserOnPop(string? username)
     {
         //HERE
-        if (username is null)
+        if (string.IsNullOrEmpty(username))
             return;
 
         Flare.V1.User? foundUser = await _userService.GetUser(username);
+        if (foundUser is null)
+            return;
+
         Identity identity = new Identity();
         identity.Username = foundUser.Username;
         try
