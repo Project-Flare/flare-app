@@ -10,24 +10,21 @@
         <SwipeView.LeftItems>
             <SwipeItemView Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MainViewModel}}, Path=RemoveUserCommand}"
                            CommandParameter="{Binding ContactUserName}" >
-                <Grid BackgroundColor="#9B1B1B"
-                      WidthRequest="100"
-                      RowDefinitions="*,*">
-                    <Grid Grid.Row="0">
-                        <Image Source="delete_icon.svg">
-                            <Image.Behaviors>
-                                <toolkit:IconTintColorBehavior TintColor="#FFFFFF" />
-                            </Image.Behaviors>
-                        </Image>
-                    </Grid>
-                    <Grid Grid.Row="1">
-                        <Label Text="Delete"
-                               TextColor="#FFFFFF"
-                               FontFamily="IBMPlexMono"
-                               HorizontalOptions="Center"/>
-                    </Grid>
-
-                </Grid>
+                <VerticalStackLayout BackgroundColor="#9B1B1B"
+                      WidthRequest="80"
+                      Spacing="4">
+                    <Image Source="delete_icon.svg"
+                           Margin="0,8,0,0">
+                        <Image.Behaviors>
+                            <toolkit:IconTintColorBehavior TintColor="#FFFFFF"/>
+                        </Image.Behaviors>
+                    </Image>
+                    <Label Text="Delete"
+                           FontSize="14"
+                           TextColor="#FFFFFF"
+                           FontFamily="IBMPlexMonoBold"
+                           HorizontalOptions="Center"/>
+                </VerticalStackLayout>
             </SwipeItemView>
         </SwipeView.LeftItems>
         <Grid
