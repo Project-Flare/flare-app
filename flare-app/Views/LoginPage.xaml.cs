@@ -235,7 +235,7 @@ public partial class LoginPage : ContentPage
 		IdentityStore identityStore = new();
 		identityStore.Identity = new AsymmetricCipherKeyPair(
 				Crypto.GetPublicKeyFromDer(loaded.PublicKey),
-				Crypto.GetPublicKeyFromDer(loaded.PrivateKey)
+				Crypto.GetPrivateKeyFromDer(loaded.PrivateKey)
 		);
 
 
