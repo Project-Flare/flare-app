@@ -17,6 +17,8 @@ public partial class LoginPage : ContentPage
     readonly string _serverWebSocketUrl = "wss://ws.f2.project-flare.net/";
 	GrpcChannel _channel;
     AuthorizationService _service;
+	IdentityStore _identityStore;
+	Task _serviceTask;
     public LoginPage()
     {
         InitializeComponent();
@@ -67,6 +69,8 @@ public partial class LoginPage : ContentPage
             // IMPORTANT! new acquired user credentials must be saved!
 			_service.EndService();
             var credentials = _service.GetAcquiredCredentials();
+			var identityStore = _service.GetAcquiredIdentityStore();
+            MessagingService.Instance.InitServices(_serverGrpcUrl, _serverWebSocketUrl, credentials, _channel, identityStore);
 			try
 			{
 				await LocalUserDBService.InsertLocalUser(new LocalUser

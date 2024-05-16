@@ -59,7 +59,8 @@ namespace flare_app.ViewModels
 			// This loads all the messages with user.
 			//Messages = new ObservableCollection<Message>(MessageService.Instance.GetMessages(User.LocalUserName!)); // [DEV_NOTE]: idk if this a good practice, just trying to bind with the local DB API
 
-			/*List<MessageReceivingService.Message> receivedMessages = MessagingService.Instance.MessageReceivingService!.FetchReceivedMessages();
+            Messages = new ObservableCollection<Message>();
+            List<MessageReceivingService.InboundMessage> receivedMessages = MessagingService.Instance.MessageReceivingService!.FetchReceivedMessages();
             foreach (var receivedMessage in receivedMessages)
             {
                 if (receivedMessage.InboundUserMessage.SenderUsername == Username)

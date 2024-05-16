@@ -151,6 +151,7 @@ public partial class RegistrationPage : ContentPage
 		{
 			_service.EndService();
 			Credentials credentials = _service.GetAcquiredCredentials();
+			IdentityStore identityStore = _service.GetAcquiredIdentityStore();
 			try
 			{
 				await LocalUserDBService.InsertLocalUser(new LocalUser
@@ -162,7 +163,7 @@ public partial class RegistrationPage : ContentPage
 				});
 			}
 			catch { }
-			MessagingService.Instance.InitServices(_serverGrpcUrl, _serverWebSocketUrl, credentials, _channel);
+			MessagingService.Instance.InitServices(_serverGrpcUrl, _serverWebSocketUrl, credentials, _channel, identityStore);
 			await Shell.Current.GoToAsync("//MainPage", true);
 		}
 		// [DEV_NOTE]: registration failed and the reasons are defined by the enum in registration form

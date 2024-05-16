@@ -1,10 +1,5 @@
 ﻿using flare_csharp;
 using Grpc.Net.Client;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace flare_app.Services;
 
@@ -40,10 +35,10 @@ internal class MessagingService
 	private Task? _messageSendingServiceTask;
 	private Task? _messageReceivingServiceTask;
 	public MessagingService() { }
-	public void InitServices(string serverGrpcUrl, string serverWSUrl, Credentials credentials, GrpcChannel grpcChannel)
+	public void InitServices(string serverGrpcUrl, string serverWSUrl, Credentials credentials, GrpcChannel grpcChannel, IdentityStore identityStore)
 	{
-		MessageSendingService = new MessageSendingService(new Process<MSSState, MSSCommand>(MSSState.Initialized), serverGrpcUrl, credentials, grpcChannel);
-		MessageReceivingService = new MessageReceivingService(new Process<MRSState, MRSCommand>(MRSState.Initialized), serverWSUrl, credentials);
+		MessageSendingService = new MessageSendingService(new Process<MSSState, MSSCommand>(MSSState.Initialized), serverGrpcUrl, credentials, grpcChannel, identityStore);
+		MessageReceivingService = new MessageReceivingService(new Process<MRSState, MRSCommand>(MRSState.Initialized), serverWSUrl, credentials, identityStore);
 		IsRunning = false;
 	}
 
