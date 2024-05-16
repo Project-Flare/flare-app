@@ -14,7 +14,7 @@
         
     </ContentPage.Resources>
     
-    <Grid>
+    <Grid Loaded="Grid_Loaded">
         <Grid RowDefinitions="143, *">
             <Grid RowDefinitions="60, 80, 3"
               RowSpacing="0"

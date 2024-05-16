@@ -20,9 +20,9 @@ public partial class MainViewModel : ObservableObject
     public AsyncRelayCommand<string> ChatDetailCommand { get; }
 
     bool isRefreshing;
-    bool refreshFirstTime = false;
     private UserService _userService;
-    private string LocalUsername = MessagingService.Instance.MessageSendingService!.Credentials.Username;
+    //private string LocalUsername = MessagingService.Instance.MessageSendingService!.Credentials.Username;
+    string? LocalUsername;
 
     [ObservableProperty]
     string? text;
@@ -50,13 +50,7 @@ public partial class MainViewModel : ObservableObject
 
         MyUsers = new ObservableCollection<MyContact>();
 
-        if (!refreshFirstTime)
-        {
-            refreshFirstTime = true;
-            Task.Run(Refresh);
-        }
-
-        _userService = new UserService(GrpcChannel.ForAddress(_serverUrl));
+		_userService = new UserService(GrpcChannel.ForAddress(_serverUrl));
     }
 
     [ObservableProperty]
@@ -76,7 +70,7 @@ public partial class MainViewModel : ObservableObject
         {
             try
             {
-                await MessagesDBService.DeleteUserMessages($"{LocalUsername}_{removeThis.ContactUserName!.Split(' ').First()}");
+                await MessagesDBService.DeleteUserMessages($"{LocalUsername}_{removeThis.ContactUserName}");
                 await LocalUserDBService.DeleteContact(removeThis);
                 MyUsers.Remove(removeThis);
             }
@@ -107,14 +101,16 @@ public partial class MainViewModel : ObservableObject
     /// </summary>
     async Task Refresh()
     {
-        //[TODO]: implement user discovery page
-        IsRefreshing = true;
+
+		LocalUsername = (await LocalUserDBService.GetAllLocalUsers()).First().LocalUserName!;
+		//[TODO]: implement user discovery page
+		IsRefreshing = true;
         MyUsers.Clear();
         MessagingService.Instance.MessageSendingService!.IdentityStore.Contacts.Clear();
         var list = await LocalUserDBService.GetAllMyContacts(LocalUsername);
         foreach (var itm in list)
         {
-            itm.ContactUserName = itm.ContactUserName!.Split(' ').First();
+            itm.ContactUserName = itm.ContactUserName!;
             if (MyUsers.Contains(itm))
                 continue;
 			MyUsers.Add(itm);
@@ -189,6 +185,6 @@ public partial class MainViewModel : ObservableObject
     /// </summary>
     async Task ChatDetail(string? s)
     {
-        await Shell.Current.GoToAsync($"//MainPage//ChatPage?Username={s!.Split(' ').First()}", animate: true);
+        await Shell.Current.GoToAsync($"//MainPage//ChatPage?Username={s!}", animate: true);
     }
 }

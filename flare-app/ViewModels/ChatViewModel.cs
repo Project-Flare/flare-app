@@ -100,8 +100,7 @@ namespace flare_app.ViewModels
                 await Task.Yield();
             }
 
-            string userName = Username.Split(' ').First();
-            var list = await MessagesDBService.GetMessages($"{LocalUsername}_{userName}");
+            var list = await MessagesDBService.GetMessages($"{LocalUsername}_{Username}");
 
 
             if (list!.Count() != 0)
