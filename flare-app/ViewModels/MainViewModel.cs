@@ -18,7 +18,6 @@ public partial class MainViewModel : ObservableObject
     public AsyncRelayCommand<string> AddUserOnPopCommand { get; }
     public AsyncRelayCommand<string> ChatDetailCommand { get; }
 
-    private List<User>? initDiscoveryList;
     bool isRefreshing;
     bool refreshFirstTime = false;
     private UserService _userService;
@@ -48,8 +47,6 @@ public partial class MainViewModel : ObservableObject
         AddUserOnPopCommand = new AsyncRelayCommand<string>(AddUserOnPop);
         ChatDetailCommand = new AsyncRelayCommand<string>(ChatDetail);
 
-        DiscoveryList = new ObservableCollection<User>();
-
         MyUsers = new ObservableCollection<MyContact>();
 
         if (!refreshFirstTime)
@@ -64,26 +61,6 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     ObservableCollection<MyContact> myUsers; 
 
-
-    [ObservableProperty]
-    ObservableCollection<User> discoveryList;
-
-
-
-    /// <summary>
-    /// Adds user into local database and into 'MyUsers' list.
-    /// </summary>
-    /*async Task AddUser(string? s)
-    {
-        // 'ContactOwner' should be the logged in user.
-        var addThis = new MyContact { ContactUserName = s, ContactOwner = "TempUser1" };
-        try
-        {
-            await LocalUserDBService.InsertContact(addThis);
-            MyUsers.Add(addThis);
-        }
-        catch { }
-    }*/
 
     /// <summary>
     /// Removes my contact from 'MyUsers' list and deletes from local database.
