@@ -28,7 +28,8 @@ namespace flare_app.ViewModels
         LocalUser? _user;
         ObservableCollection<Message>? _messages;
 
-		public RelayCommand<string> SendMesg { get; }
+		public AsyncRelayCommand LoadMesg { get; }
+		public AsyncRelayCommand<string> SendMesg { get; }
 
 		public LocalUser? User
         {
@@ -52,8 +53,11 @@ namespace flare_app.ViewModels
 
         public ChatViewModel()
         {
-            // The user we're chatting with.
-            User = new LocalUser { LocalUserName = Username };
+			LoadMesg = new AsyncRelayCommand(LoadMessagesFromDB);
+			SendMesg = new AsyncRelayCommand<string>(SendMessage);
+
+			// The user we're chatting with.
+			User = new LocalUser { LocalUserName = Username };
 
             //[TODO]: bind backend API with DB
 			// This loads all the messages with user.
@@ -78,10 +82,9 @@ namespace flare_app.ViewModels
 
 			//Messages.Add(new Message { Content = "Your chat begins here", Sender = "ChatViewModel", Time = DateTime.UtcNow });
 
-			Task.Run(LoadMessagesFromDB);
+			//Task.Run(LoadMessagesFromDB);
 
-			// Relay command for sending message.
-			SendMesg = new RelayCommand<string>(SendMessage);
+			// Relay command for sending message
 		}
 
         /// <summary>
@@ -112,7 +115,7 @@ namespace flare_app.ViewModels
         /// <summary>
         /// Sends message to collection list and should send to server.
         /// </summary>
-        private async void SendMessage(string? mesg)
+        private async Task SendMessage(string? mesg)
         {
 			while (Username is null)
 			{

@@ -56,7 +56,8 @@ public partial class ChatPage : ContentPage
     /// </summary>
 	private async void chatCollection_Loaded(object sender, EventArgs e)
     {
-        await Task.Delay(10);
+        //await Task.Delay(10);
+        await _chatViewModel.LoadMesg.ExecuteAsync(e);
         ScrollToBottom();
     }
 
