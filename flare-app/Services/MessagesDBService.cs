@@ -55,7 +55,7 @@ namespace flare_app.Services
             {
                 foreach (var msg in await _messagesConnection.Table<Message>().ToListAsync())
                 {
-                    if (msg.KeyPair!.Contains($"_{contact}"))
+                    if (msg.KeyPair! == contact)
                         await _messagesConnection.DeleteAsync(msg);
                 }
             }

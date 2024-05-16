@@ -24,6 +24,7 @@ namespace flare_app.ViewModels
     {
         [ObservableProperty]
         string? username;
+        string LocalUsername = MessagingService.Instance.MessageReceivingService!.Credentials.Username;
 
         LocalUser? _user;
         ObservableCollection<Message>? _messages;
@@ -53,7 +54,6 @@ namespace flare_app.ViewModels
         public ChatViewModel()
         {
             // The user we're chatting with.
-            User = new LocalUser { LocalUserName = Username };
 
             //[TODO]: bind backend API with DB
 			// This loads all the messages with user.
@@ -95,7 +95,7 @@ namespace flare_app.ViewModels
             }
 
             string userName = Username.Split(' ').First();
-            var list = await MessagesDBService.GetMessages($"{MessagingService.Instance.MessageReceivingService!.Credentials.Username}_{userName}");
+            var list = await MessagesDBService.GetMessages($"{LocalUsername}_{userName}");
 
 
             if (list!.Count() != 0)
@@ -121,7 +121,7 @@ namespace flare_app.ViewModels
 
             string userName = Username.Split(' ')[0];
 
-			await MessagesDBService.InsertMessage(new Message { KeyPair = $"TempUser1_{userName}", Content = mesg, Sender = null, Time = DateTime.UtcNow});
+			await MessagesDBService.InsertMessage(new Message { KeyPair = $"{LocalUsername}_{userName}", Content = mesg, Sender = null, Time = DateTime.UtcNow});
             Messages?.Add(new Message { Sender = null, Content = mesg, Time = DateTime.UtcNow });
         }
     }

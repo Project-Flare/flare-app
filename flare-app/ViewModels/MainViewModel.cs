@@ -22,6 +22,7 @@ public partial class MainViewModel : ObservableObject
     bool isRefreshing;
     bool refreshFirstTime = false;
     private UserService _userService;
+    private string LocalUsername = MessagingService.Instance.MessageSendingService!.Credentials.Username;
 
     [ObservableProperty]
     string? text;
@@ -92,12 +93,12 @@ public partial class MainViewModel : ObservableObject
         if (s is null)
             return;
 
-		MyContact? removeThis = MyUsers.FirstOrDefault(u => u.ContactUserName == s && u.ContactOwner == $"{MessagingService.Instance.MessageSendingService!.Credentials.Username}");
+		MyContact? removeThis = MyUsers.FirstOrDefault(u => u.ContactUserName == s && u.ContactOwner == $"{LocalUsername}");
         if (removeThis is not null)
         {
             try
             {
-                await MessagesDBService.DeleteUserMessages(removeThis.ContactUserName!.Split(' ')[0]);
+                await MessagesDBService.DeleteUserMessages($"{LocalUsername}_{removeThis.ContactUserName!.Split(' ').First()}");
                 await LocalUserDBService.DeleteContact(removeThis);
                 MyUsers.Remove(removeThis);
             }
@@ -112,7 +113,7 @@ public partial class MainViewModel : ObservableObject
     async Task PerformMyUserSearch(string? query)
     {
         MyUsers.Clear();
-        var list = await LocalUserDBService.SearchMyContact(query, "TempUser1");
+        var list = await LocalUserDBService.SearchMyContact(query, LocalUsername);
 
         if (list is null)
             return;
@@ -131,7 +132,7 @@ public partial class MainViewModel : ObservableObject
         //[TODO]: implement user discovery page
         IsRefreshing = true;
         MyUsers.Clear();
-        var list = await LocalUserDBService.GetAllMyContacts("TempUser1");
+        var list = await LocalUserDBService.GetAllMyContacts(LocalUsername);
         foreach (var itm in list)
         {
             if (MyUsers.Contains(itm))
@@ -159,7 +160,7 @@ public partial class MainViewModel : ObservableObject
         }
 
 		// [DEV_NOTES] TempUser1 should be changed to the user that is signed in
-		var newContact = new MyContact { ContactUserName = foundUser.Username + " " + foundUser.IdPubKey, ContactOwner = "TempUser1" };
+		var newContact = new MyContact { ContactUserName = foundUser.Username + " " + foundUser.IdPubKey, ContactOwner = LocalUsername };
         try
         {
             // [DEV_NOTES]: check if the user is added
