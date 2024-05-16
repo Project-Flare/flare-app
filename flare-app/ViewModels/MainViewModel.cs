@@ -135,6 +135,7 @@ public partial class MainViewModel : ObservableObject
         var list = await LocalUserDBService.GetAllMyContacts(LocalUsername);
         foreach (var itm in list)
         {
+            itm.ContactUserName = itm.ContactUserName!.Split(' ').First();
             if (MyUsers.Contains(itm))
                 continue;
             MyUsers.Add(itm);
@@ -165,6 +166,7 @@ public partial class MainViewModel : ObservableObject
         {
             // [DEV_NOTES]: check if the user is added
             await LocalUserDBService.InsertContact(newContact);
+            newContact.ContactUserName = newContact.ContactUserName.Split(' ').First();
             MyUsers.Add(newContact);
         }
         catch 
@@ -181,6 +183,6 @@ public partial class MainViewModel : ObservableObject
     /// </summary>
     async Task ChatDetail(string? s)
     {
-        await Shell.Current.GoToAsync($"//MainPage//ChatPage?Username={s}", animate: true);
+        await Shell.Current.GoToAsync($"//MainPage//ChatPage?Username={s!.Split(' ').First()}", animate: true);
     }
 }
