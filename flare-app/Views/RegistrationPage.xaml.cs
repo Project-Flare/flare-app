@@ -162,7 +162,7 @@ public partial class RegistrationPage : ContentPage
                     PrivateKey = Crypto.GetDerEncodedPrivateKey(identityStore.Identity.Private)
                 });
 			}
-			catch { }
+			catch (Exception ex) { }
 			MessagingService.Instance.InitServices(_serverGrpcUrl, _serverWebSocketUrl, credentials, _channel, identityStore);
 			await Shell.Current.GoToAsync("//MainPage", true);
 		}

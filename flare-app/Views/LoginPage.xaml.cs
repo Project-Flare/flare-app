@@ -234,12 +234,15 @@ public partial class LoginPage : ContentPage
 		credentials.AuthToken = loaded.AuthToken!;
 		IdentityStore identityStore = new();
 		identityStore.Identity = new AsymmetricCipherKeyPair(
-				Crypto.GetPublicKeyFromDer(loaded.PublicKey),
-				Crypto.GetPrivateKeyFromDer(loaded.PrivateKey)
+				Crypto.GetPublicKeyFromDer(loaded.PublicKey!),
+				Crypto.GetPrivateKeyFromDer(loaded.PrivateKey!)
 		);
 
-
-        _service.StartService();
+		_service.identityStore = identityStore;
+		initLoadingScreen(false);
+		if (string.IsNullOrEmpty(credentials.AuthToken))
+			return;
+		_service.StartService();
 		_service.LoadUserCredentials(credentials);
 
 		_service.LoggedInToServerEvent += On_LoggedInToServer;
