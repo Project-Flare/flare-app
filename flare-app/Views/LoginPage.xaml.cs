@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Formats.Asn1;
 using CommunityToolkit.Maui.Core.Platform;
 using Grpc.Net.Client;
+using Org.BouncyCastle.Crypto;
 
 
 namespace flare_app.Views;
@@ -17,13 +18,13 @@ public partial class LoginPage : ContentPage
     readonly string _serverWebSocketUrl = "wss://ws.f2.project-flare.net/";
 	GrpcChannel _channel;
     AuthorizationService _service;
-	IdentityStore _identityStore;
+	IdentityStore _identityStore = new();
 	Task _serviceTask;
     public LoginPage()
     {
         InitializeComponent();
         _channel = GrpcChannel.ForAddress(_serverGrpcUrl);
-        _service = new AuthorizationService(_serverGrpcUrl, _channel, credentials: null);
+        _service = new AuthorizationService(_serverGrpcUrl, _channel, credentials: null, _identityStore);
 	}
 
     private async void LoginButton_Clicked(object sender, EventArgs e)
@@ -77,12 +78,12 @@ public partial class LoginPage : ContentPage
 				{
 					LocalUserName = credentials.Username,
 					AuthToken = credentials.AuthToken,
-					PublicKey = credentials.IdentityPublicKey,
-					PrivateKey = credentials.IdentityPrivateKey + " " + credentials.Argon2Hash // [WARNING_TODO]: this is just a quick fix, this MUST be changed
+					PublicKey = Crypto.GetDerEncodedPublicKey(identityStore.Identity.Public),
+					PrivateKey = Crypto.GetDerEncodedPrivateKey(identityStore.Identity.Private)
 				});
 			}
 			catch { /*TODO POP UP OR SOMETHING...*/ }
-			MessagingService.Instance.InitServices(_serverGrpcUrl, _serverWebSocketUrl, credentials, _channel);
+			MessagingService.Instance.InitServices(_serverGrpcUrl, _serverWebSocketUrl, credentials, _channel, identityStore);
 			await Shell.Current.GoToAsync("//MainPage", true);
 		}
 		else
@@ -228,11 +229,14 @@ public partial class LoginPage : ContentPage
 		Credentials credentials = new Credentials();
 		credentials.Username = loaded.LocalUserName!;
 		credentials.AuthToken = loaded.AuthToken!;
-		credentials.IdentityPublicKey = loaded.PublicKey;
-		credentials.IdentityPrivateKey = loaded.PrivateKey!.Split(' ').First();
+		IdentityStore identityStore = new();
+		identityStore.Identity = new AsymmetricCipherKeyPair(
+				Crypto.GetPublicKeyFromDer(loaded.PublicKey),
+				Crypto.GetPublicKeyFromDer(loaded.PrivateKey)
+		);
 
 
-		_service.StartService();
+        _service.StartService();
 		_service.LoadUserCredentials(credentials);
 
 		_service.LoggedInToServerEvent += On_LoggedInToServer;

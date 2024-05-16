@@ -73,7 +73,7 @@ namespace flare_app.ViewModels
 						Time = DateTime.UtcNow
 					});
 				}
-            }*/
+            }
 
 			Messages = new ObservableCollection<Message>();
 

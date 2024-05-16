@@ -20,7 +20,7 @@ public partial class RegistrationPage : ContentPage
 	{
 		InitializeComponent();
 		_channel = GrpcChannel.ForAddress(_serverGrpcUrl);
-		_service = new AuthorizationService(_serverGrpcUrl, _channel, credentials: null);
+		_service = new AuthorizationService(_serverGrpcUrl, _channel, credentials: null, new IdentityStore());
 		_service.RegistrationToServerEvent += On_RegistrationToServerResponseReceived;
 		_service.StartService();
 		_serviceTask = new Task(_service.RunServiceAsync);
@@ -158,9 +158,9 @@ public partial class RegistrationPage : ContentPage
 				{
 					LocalUserName = credentials.Username,
 					AuthToken = credentials.AuthToken,
-					PublicKey = credentials.IdentityPublicKey,
-					PrivateKey = credentials.IdentityPrivateKey + " " + credentials.Argon2Hash // [WARNING_TODO]: this is just a quick fix, this MUST be changed
-				});
+                    PublicKey = Crypto.GetDerEncodedPublicKey(identityStore.Identity.Public),
+                    PrivateKey = Crypto.GetDerEncodedPrivateKey(identityStore.Identity.Private)
+                });
 			}
 			catch { }
 			MessagingService.Instance.InitServices(_serverGrpcUrl, _serverWebSocketUrl, credentials, _channel, identityStore);
