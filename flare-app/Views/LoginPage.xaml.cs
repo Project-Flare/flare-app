@@ -85,7 +85,7 @@ public partial class LoginPage : ContentPage
 					PrivateKey = Crypto.GetDerEncodedPrivateKey(identityStore.Identity.Private)
 				});
 			}
-			catch { /*TODO POP UP OR SOMETHING...*/ }
+			catch (Exception ex) { /*TODO POP UP OR SOMETHING...*/ }
 			MessagingService.Instance.InitServices(_serverGrpcUrl, _serverWebSocketUrl, credentials, _channel, identityStore);
 			await Shell.Current.GoToAsync("//MainPage", true);
 		}
