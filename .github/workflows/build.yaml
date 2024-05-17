@@ -47,3 +47,39 @@ jobs:
           path: |
             ./**/*.aab
             ./**/*.apk
+
+  build-ios:
+    runs-on: macos-13
+    name: iOS Build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Install MAUI Workload
+        run: |
+          dotnet workload install ios --ignore-failed-sources
+          dotnet workload install maui --ignore-failed-sources
+      - name: Set XCode Version
+        shell: bash
+        run: |
+          sudo xcode-select -s /Applications/Xcode_15.1.app
+          
+      - name: Initialize submodules
+        run: |
+          git submodule update --init --recursive
+      - name: Restore Dependencies
+        run: dotnet restore
+
+      - name: Build MAUI iOS
+        run: dotnet build flare-app/flare-app.csproj -c Release -f net8.0-ios --no-restore
+
+      - name: Upload iOS Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-ci-build
+          path: flare-app/bin/Release/net8.0-ios/**/*.app/
