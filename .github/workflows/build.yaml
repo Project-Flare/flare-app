@@ -48,6 +48,46 @@ jobs:
             ./**/*.aab
             ./**/*.apk
 
+  build-android:
+    runs-on: windows-2022
+    name: Android Build (Debug)
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - uses: actions/setup-java@v2
+        with:
+          distribution: 'microsoft'
+          java-version: '11'
+
+      - name: Install MAUI Workloads
+        run: |
+          dotnet workload install android --ignore-failed-sources
+          dotnet workload install maui --ignore-failed-sources
+          
+      - name: Initialize submodules
+        run: |
+          git submodule update --init --recursive
+
+      - name: Restore Dependencies
+        run: dotnet restore
+
+      - name: Build MAUI Android
+        run: dotnet build flare-app/flare-app.csproj -c Debug -f net8.0-android34.0 --no-restore
+
+      - name: Upload Android Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-ci-build
+          path: |
+            ./**/*.aab
+            ./**/*.apk
+
   build-ios:
     runs-on: macos-13
     name: iOS Build
