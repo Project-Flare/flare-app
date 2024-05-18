@@ -34,7 +34,7 @@ public partial class MainPage : ContentPage
     /// </summary>
     private void Button_Clicked(object sender, TappedEventArgs e)
     {
-        this.ShowPopup(new UserAddPopupPage());
+        this.ShowPopup(new UserAddPopupPage(_mainViewModel));
     }
 
     /// <summary>
@@ -44,4 +44,9 @@ public partial class MainPage : ContentPage
     {
         await Shell.Current.GoToAsync(nameof(SettingsPage));
     }
+
+	private async void Grid_Loaded(object sender, EventArgs e)
+	{
+        await _mainViewModel.RefreshCommand.ExecuteAsync(e);
+	}
 }

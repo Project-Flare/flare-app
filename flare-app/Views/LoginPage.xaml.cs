@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Formats.Asn1;
 using CommunityToolkit.Maui.Core.Platform;
 using Grpc.Net.Client;
+using Org.BouncyCastle.Crypto;
 
 
 namespace flare_app.Views;
@@ -17,12 +18,15 @@ public partial class LoginPage : ContentPage
     readonly string _serverWebSocketUrl = "wss://ws.f2.project-flare.net/";
 	GrpcChannel _channel;
     AuthorizationService _service;
+	IdentityStore _identityStore = new();
+	Task _serviceTask;
     public LoginPage()
     {
         InitializeComponent();
         _channel = GrpcChannel.ForAddress(_serverGrpcUrl);
-        _service = new AuthorizationService(_serverGrpcUrl, _channel, credentials: null);
+        _service = new AuthorizationService(_serverGrpcUrl, _channel, credentials: null, _identityStore);
 	}
+
     private async void LoginButton_Clicked(object sender, EventArgs e)
     {
         Credentials credentials = new();
@@ -40,23 +44,18 @@ public partial class LoginPage : ContentPage
         credentials.Password = password.Text;
 
 #if DEBUG
-        credentials.Username = "test_user_0";
-        credentials.Password = "katinas-suo-zmogus-0";
+		if (username.Text == "test")
+		{
+			credentials.Username = "test_user";
+			credentials.Password = "katinas-suo-zmogus";
+		}
 #endif
-
-        try
-        {
-            // Wtf is this
-            await LocalUserDBService.InsertLocalUser(new LocalUser { LocalUserName = username.Text, AuthToken = credentials.AuthToken });
-        }
-        catch { }
 
 		initLoadingScreen(true);
 		_service.LoadUserCredentials(credentials);
 		_service.StartService();
-
-		MainThread.BeginInvokeOnMainThread(_service.RunServiceAsync);
         _service.LoggedInToServerEvent += On_LoggedInToServer;
+		MainThread.BeginInvokeOnMainThread(_service.RunServiceAsync);
     }
 
 	/// <summary>
@@ -72,8 +71,22 @@ public partial class LoginPage : ContentPage
 		if (eventArgs.LoggedInSuccessfully)
 		{
             // IMPORTANT! new acquired user credentials must be saved!
+			_service.EndService();
             var credentials = _service.GetAcquiredCredentials();
-            MessagingService.Instance.InitServices(_serverGrpcUrl, _serverWebSocketUrl, credentials, _channel);
+			var identityStore = _service.GetAcquiredIdentityStore();
+            MessagingService.Instance.InitServices(_serverGrpcUrl, _serverWebSocketUrl, credentials, _channel, identityStore);
+			try
+			{
+				await LocalUserDBService.InsertLocalUser(new LocalUser
+				{
+					LocalUserName = credentials.Username,
+					AuthToken = credentials.AuthToken,
+					PublicKey = Crypto.GetDerEncodedPublicKey(identityStore.Identity!.Public),
+					PrivateKey = Crypto.GetDerEncodedPrivateKey(identityStore.Identity.Private)
+				});
+			}
+			catch (Exception ex) { /*TODO POP UP OR SOMETHING...*/ }
+			MessagingService.Instance.InitServices(_serverGrpcUrl, _serverWebSocketUrl, credentials, _channel, identityStore);
 			await Shell.Current.GoToAsync("//MainPage", true);
 		}
 		else
@@ -114,6 +127,9 @@ public partial class LoginPage : ContentPage
 					// Simple error message, there is nothing we can say more about it.
 					message = "The oration couldn't be completed properly";
 					break;
+				case AuthorizationService.LoggedInEventArgs.FailureReason.AuthTokenExpired:
+					// Tried to login to server with expired auth token
+					return;
 				default:
 					// Also handle it, maybe simple error message. Act to your own accord.
 					message = "The oration couldn't be completed properly";
@@ -191,5 +207,45 @@ public partial class LoginPage : ContentPage
 			await KeyboardExtensions.HideKeyboardAsync(password);
 			return;
 		}
+	}
+
+	private async void Grid_Loaded(object sender, EventArgs e)
+	{
+		IEnumerable<LocalUser> users;
+		try
+		{
+			users = await LocalUserDBService.GetAllLocalUsers();
+		}
+		catch
+		{
+			return;
+		}
+
+		if (users.Count() == 0)
+		{
+			return;
+		}
+
+		LocalUser loaded = users.First();
+
+		initLoadingScreen(true);
+		Credentials credentials = new Credentials();
+		credentials.Username = loaded.LocalUserName!;
+		credentials.AuthToken = loaded.AuthToken!;
+		IdentityStore identityStore = new();
+		identityStore.Identity = new AsymmetricCipherKeyPair(
+				Crypto.GetPublicKeyFromDer(loaded.PublicKey!),
+				Crypto.GetPrivateKeyFromDer(loaded.PrivateKey!)
+		);
+
+		_service.identityStore = identityStore;
+		initLoadingScreen(false);
+		if (string.IsNullOrEmpty(credentials.AuthToken))
+			return;
+		_service.StartService();
+		_service.LoadUserCredentials(credentials);
+
+		_service.LoggedInToServerEvent += On_LoggedInToServer;
+		MainThread.BeginInvokeOnMainThread(_service.RunServiceAsync);
 	}
 }

@@ -20,7 +20,7 @@ public partial class RegistrationPage : ContentPage
 	{
 		InitializeComponent();
 		_channel = GrpcChannel.ForAddress(_serverGrpcUrl);
-		_service = new AuthorizationService(_serverGrpcUrl, _channel, credentials: null);
+		_service = new AuthorizationService(_serverGrpcUrl, _channel, credentials: null, new IdentityStore());
 		_service.RegistrationToServerEvent += On_RegistrationToServerResponseReceived;
 		_service.StartService();
 		_serviceTask = new Task(_service.RunServiceAsync);
@@ -147,18 +147,23 @@ public partial class RegistrationPage : ContentPage
 
 	private async void On_RegistrationToServerResponseReceived(AuthorizationService.RegistrationToServerEventArgs eventArgs)
 	{
-
-		// [DEV_NOTE]: this is where you save the credentials and the user is redirected to the home page
 		if (eventArgs.RegistrationForm.UserRegisteredSuccessfully)
 		{
+			_service.EndService();
 			Credentials credentials = _service.GetAcquiredCredentials();
+			IdentityStore identityStore = _service.GetAcquiredIdentityStore();
 			try
 			{
-				// [DEV_NOTE]: fix this shit
-				await LocalUserDBService.InsertLocalUser(new LocalUser { LocalUserName = credentials.Username, AuthToken = credentials.AuthToken });
+				await LocalUserDBService.InsertLocalUser(new LocalUser
+				{
+					LocalUserName = credentials.Username,
+					AuthToken = credentials.AuthToken,
+                    PublicKey = Crypto.GetDerEncodedPublicKey(identityStore.Identity.Public),
+                    PrivateKey = Crypto.GetDerEncodedPrivateKey(identityStore.Identity.Private)
+                });
 			}
-			catch { }
-			MessagingService.Instance.InitServices(_serverGrpcUrl, _serverWebSocketUrl, credentials, _channel);
+			catch (Exception ex) { }
+			MessagingService.Instance.InitServices(_serverGrpcUrl, _serverWebSocketUrl, credentials, _channel, identityStore);
 			await Shell.Current.GoToAsync("//MainPage", true);
 		}
 		// [DEV_NOTE]: registration failed and the reasons are defined by the enum in registration form

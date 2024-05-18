@@ -6,10 +6,11 @@
              xmlns:viewmodels="clr-namespace:flare_app.ViewModels"
              x:DataType="viewmodels:MainViewModel"
              CanBeDismissedByTappingOutsideOfPopup="False"
-             Color="Transparent" >
-
-    <Border StrokeShape="RoundRectangle 10,10,10,10" StrokeThickness="0" BackgroundColor="Grey">
-        <Grid WidthRequest="300"  HeightRequest="150">
+             Color="Transparent">
+    <Grid>
+        <Frame CornerRadius="17" Padding="3">
+            <Border StrokeShape="RoundRectangle 15,15,15,15" StrokeThickness="0" BackgroundColor="Grey">
+        <Grid WidthRequest="380"  HeightRequest="200">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
@@ -19,28 +20,35 @@
             <Grid.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="0, 1">
                     <GradientStop Color="#2F2C4B" Offset="0"/>
-                    <GradientStop Color="Grey" Offset="1"/>
+                    <GradientStop Color="Black" Offset="1"/>
                 </LinearGradientBrush>
             </Grid.Background>
 
-                
 
-            <Grid WidthRequest="300" HeightRequest="50" Padding="10">
-                <Label
+
+                    <Grid WidthRequest="260" HeightRequest="80" Padding="10" HorizontalOptions="Center" VerticalOptions="Center">
+                        <Label
          Text="Enter contact's username"
          FontSize="16"
          FontFamily="IBMPlexMonoBold"
          TextColor="White"
          />
-            </Grid>
-            <Grid WidthRequest="300" HeightRequest="50" Grid.Row="1">
+                        
+                    </Grid>
+                    <Rectangle  BackgroundColor="White" HeightRequest="4" WidthRequest="380" />
+
+
+                    <Grid WidthRequest="300" HeightRequest="75" Grid.Row="1">
+                            
                 <Grid HeightRequest="60"
                         WidthRequest="280"
-                        VerticalOptions="Center"
+                        VerticalOptions="End"
                         HorizontalOptions="Center"
                         Padding="10">
+                    
                     <Border StrokeShape="RoundRectangle 30,30,30,30" StrokeThickness="0" BackgroundColor="#382C4B">
                         <Entry
+                            x:Name="userToAddEntry"
                         Placeholder="Enter username"
                         TextColor="#FFFFFF"
                         PlaceholderColor="#928B9C"
@@ -54,7 +62,7 @@
                 </Grid>
             </Grid>
             <Grid
-     WidthRequest="300" HeightRequest="50" Padding="20,10" Grid.Row="20">
+     WidthRequest="300" HeightRequest="75" Padding="20,10" Grid.Row="20">
                 <Button
          Text="Add"
          FontFamily="IBMPlexMonoBold"           
@@ -66,13 +74,14 @@
          Padding="0"
          Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MainViewModel}}, Path=AddUserOnPopCommand}"
          CommandParameter="{Binding Text}"
+                    Pressed="Add_Pressed"
          CornerRadius="20"
                     />
                 <Button
          Text="Close"
          FontFamily="IBMPlexMonoBold"
          Background="#5000A4"
-         Pressed="Button_Pressed"
+         Pressed="Close_Pressed"
          WidthRequest="100"
          HeightRequest="30"
          VerticalOptions="Center"
@@ -82,5 +91,6 @@
             </Grid>
         </Grid>
     </Border>
-
+        </Frame>
+    </Grid>
 </toolkit:Popup>

@@ -91,6 +91,7 @@
 	  <None Remove="Resources\Fonts\IBMPlexMono-Regular.ttf" />
 	  <None Remove="Resources\Images\arrow_back.svg" />
 	  <None Remove="Resources\Images\button_aura.svg" />
+	  <None Remove="Resources\Images\delete_icon.svg" />
 	  <None Remove="Resources\Images\flarenoeff.svg" />
 	  <None Remove="Resources\Images\send_icon.svg" />
 	</ItemGroup>
@@ -111,6 +112,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Views\Templates\InfoMessageTemplate.xaml.cs">
+	    <DependentUpon>InfoMessageTemplate.xaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
 	  <MauiXaml Update="Views\ChatPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
@@ -124,6 +131,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\SettingsPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\Templates\InfoMessageTemplate.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\Templates\ReceiverMessageTemplate.xaml">

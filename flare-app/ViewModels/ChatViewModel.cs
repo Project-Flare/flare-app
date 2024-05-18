@@ -3,14 +3,8 @@ using CommunityToolkit.Mvvm.Input;
 using flare_app.Models;
 using flare_app.Services;
 using flare_csharp;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Formats.Asn1;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
+using static flare_csharp.MessageReceivingService;
 
 namespace flare_app.ViewModels
 {
@@ -19,11 +13,13 @@ namespace flare_app.ViewModels
     {
         [ObservableProperty]
         string? username;
+        string LocalUsername = MessagingService.Instance.MessageReceivingService!.Credentials.Username;
 
         LocalUser? _user;
-        ObservableCollection<Message>? _messages;
+        ObservableCollection<Message> _messages = new();
 
-		public RelayCommand<string> SendMesg { get; }
+		public AsyncRelayCommand LoadMesg { get; }
+		public AsyncRelayCommand<string> SendMesg { get; }
 
 		public LocalUser? User
         {
@@ -35,7 +31,7 @@ namespace flare_app.ViewModels
             }
         }
 
-        public ObservableCollection<Message>? Messages
+        public ObservableCollection<Message> Messages
         {
             get { return _messages; }
             set
@@ -47,40 +43,79 @@ namespace flare_app.ViewModels
 
         public ChatViewModel()
         {
-            // The user we're chatting with.
-            User = new LocalUser { LocalUserName = Username };
+			LoadMesg = new AsyncRelayCommand(LoadMessagesFromDB);
+			SendMesg = new AsyncRelayCommand<string>(SendMessage);
 
-            // This loads all the messages with user.
-            //Messages = new ObservableCollection<Message>(MessageService.Instance.GetMessages(User.LocalUserName!)); // [DEV_NOTE]: idk if this a good practice, just trying to bind with the local DB API
-            //Messages = await LocalUserDBService.GetMessages($"{}_{Username}");
+			// The user we're chatting with.
+			User = new LocalUser { LocalUserName = Username };
 
-            Messages = new ObservableCollection<Message>();
-            List<MessageReceivingService.Message> receivedMessages = MessagingService.Instance.MessageReceivingService!.FetchReceivedMessages();
-            foreach (var receivedMessage in receivedMessages)
+            //[TODO]: bind backend API with DB
+			// This loads all the messages with user.
+			//Messages = new ObservableCollection<Message>(MessageService.Instance.GetMessages(User.LocalUserName!)); // [DEV_NOTE]: idk if this a good practice, just trying to bind with the local DB AP
+
+			Messages = new ObservableCollection<Message>();
+
+            //Messages.Add(new Message { Content = "Your chat begins here", Sender = "ChatViewModel", Time = DateTime.UtcNow });
+
+            //Task.Run(LoadMessagesFromDB);
+
+            // Relay command for sending message
+
+            MessagingService.Instance.MessageReceivingService.ReceivedMessageEvent += AddMessage;
+
+        }
+
+        private void AddMessage(InboundMessage _)
+        {
+            foreach (var m in MessagingService.Instance.FetchReceivedUserMessages(Username!))
+                if (!Messages!.Contains(m))
+                    Messages.Add(m);
+        }
+
+        /// <summary>
+        /// Loads messages form the DB into Observable 'Messages'.
+        /// </summary>
+        private async Task LoadMessagesFromDB()
+        {
+            while (Username is null)
             {
-                if (receivedMessage.InboundUserMessage.SenderUsername == Username)
-                {
-					Messages.Add(new Message
-					{
-						Content = Encoding.Default.GetString(receivedMessage.InboundUserMessage.EncryptedMessage.Ciphertext.ToArray()),
-						KeyPair = "",
-						Sender = receivedMessage.InboundUserMessage.SenderUsername,
-						Time = DateTime.UtcNow
-					});
-				}
+                await Task.Yield();
             }
 
-            // Relay command for sending message.
-			SendMesg = new RelayCommand<string>(SendMessage);
-		}
+            var sentMessages = await MessagesDBService.GetMessages($"{LocalUsername}_{Username}");
+            var receivedMessages = MessagingService.Instance.FetchReceivedUserMessages(Username);
+
+            var messages = sentMessages.Union(receivedMessages).ToList();
+            messages.Sort();
+
+            foreach (Message message in messages)
+                Messages!.Add(message);
+
+            if (!Messages!.Any())
+                Messages!.Add(new Message { Content = "Your chat begins here", Sender = "ChatViewModel", Time = DateTime.UtcNow });
+        }
 
         /// <summary>
         /// Sends message to collection list and should send to server.
         /// </summary>
-        void SendMessage(string? mesg)
+        private async Task SendMessage(string? mesg)
         {
-           // await LocalUserDBService.InsertMessage(new Message { KeyPair = $"{cia reikia}_{Username}"});
-            Messages?.Add(new Message { Sender = User!.LocalUserName!, Content = mesg, Time = DateTime.Now });
+            if (mesg is null)
+                return;
+
+			while (Username is null)
+			{
+				await Task.Yield();
+			}
+
+            MessageSendingService.OutboundMessage outboundMessage = new MessageSendingService.OutboundMessage(recipientUsername: Username, messageText: mesg);
+            MessagingService.Instance.MessageSendingService!.SendMessage(outboundMessage);
+
+            // TODO: confirm that the message was sent successfully?
+            var msg = new Message { KeyPair = $"{LocalUsername}_{Username}", Content = mesg, Sender = null, Time = DateTime.UtcNow };
+
+            await MessagesDBService.InsertMessage(msg);
+            Messages?.Add(msg);
         }
     }
 }

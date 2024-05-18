@@ -13,8 +13,6 @@ public partial class ChatPage : ContentPage
 		InitializeComponent();
         _chatViewModel = (ChatViewModel)BindingContext;
         _chatViewModel ??= new ChatViewModel();
-        _chatViewModel.Messages ??= new System.Collections.ObjectModel.ObservableCollection<Message>();
-        _chatViewModel.Messages.Add(new Message());
 	}
 
     /// <summary>
@@ -34,8 +32,7 @@ public partial class ChatPage : ContentPage
             return;
 
         // HERE
-        MessageSendingService.Message message = new(_chatViewModel.Username!.Split(' ').First(), messageEntry.Text);
-        MessagingService.Instance.MessageSendingService!.SendMessage(message);
+        MessageSendingService.OutboundMessage message = new(_chatViewModel.Username!, messageEntry.Text);
 
         _chatViewModel.SendMesg.Execute(messageEntry.Text);
 
@@ -51,12 +48,9 @@ public partial class ChatPage : ContentPage
 
 	}
 
-    /// <summary>
-    /// Called when whole chat is loaded. If there's no awaitable delay, this doesn't work.
-    /// </summary>
 	private async void chatCollection_Loaded(object sender, EventArgs e)
     {
-        await Task.Delay(10);
+        await _chatViewModel.LoadMesg.ExecuteAsync(e);
         ScrollToBottom();
     }
 
@@ -65,7 +59,8 @@ public partial class ChatPage : ContentPage
     /// </summary>
     private void ScrollToBottom()
     {
-		Message message = _chatViewModel.Messages.Last();
+        // At this point 'Messages' shouldn't be null.
+		Message message = _chatViewModel.Messages!.Last();
         chatCollection.ScrollTo(message, position: ScrollToPosition.End, animate: true);
 	}
 }

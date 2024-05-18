@@ -5,23 +5,24 @@ using flare_app.Models;
 using flare_app.Services;
 using Grpc.Net.Client;
 using flare_csharp;
+using Org.BouncyCastle.Crypto.Parameters;
 
 namespace flare_app.ViewModels;
 
 public partial class MainViewModel : ObservableObject
 {
 	readonly string _serverUrl = "https://rpc.f2.project-flare.net";
-	public AsyncRelayCommand<string> AddUserCommand { get; }
+	//public AsyncRelayCommand<string> AddUserCommand { get; }
     public AsyncRelayCommand<string> RemoveUserCommand { get; }
     public AsyncRelayCommand<string> PerformMyUserSearchCommand { get; }
     public AsyncRelayCommand RefreshCommand { get; }
     public AsyncRelayCommand<string> AddUserOnPopCommand { get; }
     public AsyncRelayCommand<string> ChatDetailCommand { get; }
 
-    private List<User>? initDiscoveryList;
     bool isRefreshing;
-    bool refreshFirstTime = false;
     private UserService _userService;
+    //private string LocalUsername = MessagingService.Instance.MessageSendingService!.Credentials.Username;
+    string? LocalUsername;
 
     [ObservableProperty]
     string? text;
@@ -40,49 +41,21 @@ public partial class MainViewModel : ObservableObject
     public MainViewModel()
     {
         // Relay commands that can be called from XAML or page's class.
-        AddUserCommand = new AsyncRelayCommand<string>(AddUser);
+        //AddUserCommand = new AsyncRelayCommand<string>(AddUser);
         RemoveUserCommand = new AsyncRelayCommand<string>(RemoveUser);
         PerformMyUserSearchCommand = new AsyncRelayCommand<string>(PerformMyUserSearch);
         RefreshCommand = new AsyncRelayCommand(Refresh);
         AddUserOnPopCommand = new AsyncRelayCommand<string>(AddUserOnPop);
         ChatDetailCommand = new AsyncRelayCommand<string>(ChatDetail);
 
-        DiscoveryList = new ObservableCollection<User>();
-
         MyUsers = new ObservableCollection<MyContact>();
 
-        if (!refreshFirstTime)
-        {
-            refreshFirstTime = true;
-            Task.Run(Refresh);
-        }
-
-        _userService = new UserService(GrpcChannel.ForAddress(_serverUrl));
+		_userService = new UserService(GrpcChannel.ForAddress(_serverUrl));
     }
 
     [ObservableProperty]
     ObservableCollection<MyContact> myUsers; 
 
-
-    [ObservableProperty]
-    ObservableCollection<User> discoveryList;
-
-
-
-    /// <summary>
-    /// Adds user into local database and into 'MyUsers' list.
-    /// </summary>
-    async Task AddUser(string? s)
-    {
-        // 'ContactOwner' should be the logged in user.
-        var addThis = new MyContact { ContactUserName = s, ContactOwner = "TempUser1" };
-        try
-        {
-            await LocalUserDBService.InsertContact(addThis);
-            MyUsers.Add(addThis);
-        }
-        catch { }
-    }
 
     /// <summary>
     /// Removes my contact from 'MyUsers' list and deletes from local database.
@@ -91,11 +64,13 @@ public partial class MainViewModel : ObservableObject
     {
         if (s is null)
             return;
-        MyContact? removeThis = MyUsers.FirstOrDefault(u => u.ContactUserName == s && u.ContactOwner == "TempUser1");
+
+		MyContact? removeThis = MyUsers.FirstOrDefault(u => u.ContactUserName == s && u.ContactOwner == $"{LocalUsername}");
         if (removeThis is not null)
         {
             try
             {
+                await MessagesDBService.DeleteUserMessages($"{LocalUsername}_{removeThis.ContactUserName}");
                 await LocalUserDBService.DeleteContact(removeThis);
                 MyUsers.Remove(removeThis);
             }
@@ -110,7 +85,12 @@ public partial class MainViewModel : ObservableObject
     async Task PerformMyUserSearch(string? query)
     {
         MyUsers.Clear();
-        foreach (var itm in await LocalUserDBService.SearchMyContact(query, "TempUser1"))
+        var list = await LocalUserDBService.SearchMyContact(query, LocalUsername);
+
+        if (list is null)
+            return;
+
+		foreach (var itm in list)
         {
             MyUsers.Add(itm);
         }
@@ -121,16 +101,34 @@ public partial class MainViewModel : ObservableObject
     /// </summary>
     async Task Refresh()
     {
-        //[TODO]: implement user discovery page
-        IsRefreshing = true;
+
+		LocalUsername = (await LocalUserDBService.GetAllLocalUsers()).First().LocalUserName!;
+		//[TODO]: implement user discovery page
+		IsRefreshing = true;
         MyUsers.Clear();
-        var list = await LocalUserDBService.GetAllMyContacts("TempUser1");
+        MessagingService.Instance.MessageSendingService!.IdentityStore.Contacts.Clear();
+        var list = await LocalUserDBService.GetAllMyContacts(LocalUsername);
         foreach (var itm in list)
         {
+            itm.ContactUserName = itm.ContactUserName!;
             if (MyUsers.Contains(itm))
                 continue;
-            MyUsers.Add(itm);
+			MyUsers.Add(itm);
+            string username = itm.ContactUserName;
+            string publicKey = itm.PublicKey!;
+            Identity identity = new Identity();
+            identity.Username = username;
+            try
+            {
+                identity.PublicKey = (ECPublicKeyParameters)Crypto.GetPublicKeyFromDer(publicKey);
+                MessagingService.Instance.MessageSendingService!.IdentityStore.Contacts.Add(username, identity);
+			}
+            catch (Exception ex)
+            {
+                // TODO: 
+            }
         }
+
         IsRefreshing = false;
     }
 
@@ -140,10 +138,26 @@ public partial class MainViewModel : ObservableObject
     async Task AddUserOnPop(string? username)
     {
         //HERE
-        if (username is null)
+        if (string.IsNullOrEmpty(username))
             return;
 
         Flare.V1.User? foundUser = await _userService.GetUser(username);
+        if (foundUser is null)
+            return;
+
+        Identity identity = new Identity();
+        identity.Username = foundUser.Username;
+        try
+        {
+            identity.PublicKey = (ECPublicKeyParameters)Crypto.GetPublicKeyFromDer(foundUser.IdPubKey);
+        }
+        catch (FormatException)
+        {
+            //[DEV_NOTES]: user not found display popup message
+            return;
+		}
+
+		MessagingService.Instance.MessageSendingService!.IdentityStore.Contacts.Add(foundUser.Username, identity);
 
         if (foundUser is null)
         {
@@ -152,11 +166,12 @@ public partial class MainViewModel : ObservableObject
         }
 
 		// [DEV_NOTES] TempUser1 should be changed to the user that is signed in
-		var newContact = new MyContact { ContactUserName = foundUser.Username + " " + foundUser.IdPubKey, ContactOwner = "TempUser1" };
+		var newContact = new MyContact { ContactUserName = foundUser.Username, ContactOwner = LocalUsername, PublicKey = foundUser.IdPubKey };
         try
         {
             // [DEV_NOTES]: check if the user is added
             await LocalUserDBService.InsertContact(newContact);
+            newContact.ContactUserName = newContact.ContactUserName;
             MyUsers.Add(newContact);
         }
         catch 
@@ -173,6 +188,6 @@ public partial class MainViewModel : ObservableObject
     /// </summary>
     async Task ChatDetail(string? s)
     {
-        await Shell.Current.GoToAsync($"//MainPage//ChatPage?Username={s}", animate: true);
+        await Shell.Current.GoToAsync($"//MainPage//ChatPage?Username={s!}", animate: true);
     }
 }

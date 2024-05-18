@@ -1,4 +1,6 @@
 namespace flare_app.Views;
+
+using flare_app.Services;
 using flare_csharp;
 
 public partial class SettingsPage : ContentPage
@@ -22,6 +24,7 @@ public partial class SettingsPage : ContentPage
     private async void SingOut_Tapped(object sender, TappedEventArgs e)
     {
         //await Client.DisconnectFromServer();
+        await LocalUserDBService.DeleteAllLocalUsers();
         await Shell.Current.GoToAsync("//LoginPage", true);
     }
 }

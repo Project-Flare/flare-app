@@ -1,10 +1,6 @@
 ﻿using flare_csharp;
 using Grpc.Net.Client;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using flare_app.Models;
 
 namespace flare_app.Services;
 
@@ -24,7 +20,7 @@ internal class MessagingService
 			_messageSendingServiceTask = new Task(value.RunServiceAsync);
 		}
 	}
-	public MessageReceivingService? MessageReceivingService 
+	public MessageReceivingService? MessageReceivingService
 	{
 		get => _messageReceivingService;
 		private set
@@ -40,10 +36,10 @@ internal class MessagingService
 	private Task? _messageSendingServiceTask;
 	private Task? _messageReceivingServiceTask;
 	public MessagingService() { }
-	public void InitServices(string serverGrpcUrl, string serverWSUrl, Credentials credentials, GrpcChannel grpcChannel)
+	public void InitServices(string serverGrpcUrl, string serverWSUrl, Credentials credentials, GrpcChannel grpcChannel, IdentityStore identityStore)
 	{
-		MessageSendingService = new MessageSendingService(new Process<MSSState, MSSCommand>(MSSState.Initialized), serverGrpcUrl, credentials, grpcChannel);
-		MessageReceivingService = new MessageReceivingService(new Process<MRSState, MRSCommand>(MRSState.Initialized), serverWSUrl, credentials);
+		MessageSendingService = new MessageSendingService(new Process<MSSState, MSSCommand>(MSSState.Initialized), serverGrpcUrl, credentials, grpcChannel, identityStore);
+		MessageReceivingService = new MessageReceivingService(new Process<MRSState, MRSCommand>(MRSState.Initialized), serverWSUrl, credentials, identityStore);
 		IsRunning = false;
 	}
 
@@ -58,5 +54,38 @@ internal class MessagingService
 		_messageReceivingServiceTask!.Start();
 		_messageSendingServiceTask!.Start();
 		IsRunning = true;
+	}
+
+	public List<Message> FetchReceivedUserMessages(string senderUsername)
+	{
+		List<Message> messages = new List<Message>();
+		if (_messageReceivingService is null)
+			return messages;
+
+		List<MessageReceivingService.InboundMessage> encryptedMessages = _messageReceivingService.FetchReceivedMessages(senderUsername);
+		foreach (var encryptedMessage in encryptedMessages)
+		{
+			try
+			{
+                Message message = new Message();
+
+                var envelope = encryptedMessage.Decrypt(_messageSendingService.IdentityStore)!;
+
+				message.Content = envelope.TextMessage.Content;
+				message.Time = DateTime.UnixEpoch.AddMilliseconds(envelope.SenderTime);
+                message.KeyPair = $"{_messageReceivingService.Credentials.Username}_{senderUsername}"; // wtf is this?
+                message.Sender = senderUsername;
+
+				if (message.Sender != envelope.SenderUsername)
+					throw new InvalidDataException();
+
+                messages.Add(message);
+            }
+            catch (Exception ex)
+			{
+				continue;
+			}
+		}
+		return messages;
 	}
 }

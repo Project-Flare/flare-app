@@ -1,8 +1,5 @@
 ﻿using SQLite;
 using flare_app.Models;
-using System.Reflection.Emit;
-using System.Reflection.Metadata;
-using System.Collections.ObjectModel;
 
 namespace flare_app.Services;
 
@@ -26,7 +23,6 @@ public class LocalUserDBService
         _localUserConnection = new SQLiteAsyncConnection(Path.Combine(FileSystem.AppDataDirectory, LOCAL_USERS));
         await _localUserConnection.CreateTableAsync<LocalUser>();
         await _localUserConnection.CreateTableAsync<MyContact>();
-        await _localUserConnection.CreateTableAsync<Message>();
     }
 
     /// <summary>
@@ -34,10 +30,12 @@ public class LocalUserDBService
     /// </summary>
     public static async Task<IEnumerable<LocalUser>> GetAllLocalUsers()
     {
-        if (_localUserConnection is null)
-            await Init();
-        return await _localUserConnection!.Table<LocalUser>().ToListAsync();
-    }
+        await Init();
+        if(_localUserConnection is not null)
+            return await _localUserConnection.Table<LocalUser>().ToListAsync();
+
+        return Enumerable.Empty<LocalUser>();
+	}
 
     /// <summary>
     /// Returns a local user from database.
@@ -46,32 +44,78 @@ public class LocalUserDBService
     public static async Task<LocalUser?> GetLocalUserByName(string UserName)
     {
         await Init();
-        foreach (LocalUser usr in await GetAllLocalUsers())
+        if (_localUserConnection is not null)
         {
-            if(usr.LocalUserName == UserName)
-                return usr;
+            foreach (LocalUser usr in await _localUserConnection.Table<LocalUser>().ToListAsync())
+            {
+                if (usr.LocalUserName == UserName)
+                    return usr;
+            }
         }
 
         return null;
     }
 
     /// <summary>
-    /// Inserts new 'LocalUser' into database.
+    /// Inserts new 'LocalUser' into database. 'LocalUser' is updated if such exits with specific primary key.
     /// </summary>
     public static async Task InsertLocalUser(LocalUser? user)
     {
-        await Init();
-        await _localUserConnection.InsertAsync(user);
+		await Init();
+        if (_localUserConnection is not null)
+        {
+            try
+            {
+                await _localUserConnection.InsertAsync(user);
+            }
+            // Such primary key already exits.
+            catch
+            {
+                await _localUserConnection.UpdateAsync(user);
+            }
+        }
     }
 
-    /// <summary>
-    /// Deletes 'LocalUser' from database.
-    /// </summary>
-    public static async Task DeleteLocalUser(LocalUser? user)
+	/// <summary>
+	/// Updates 'LocalUser' (his AuthToken).
+	/// </summary>
+    // Can be redesigned to be updated by only using user's primary key (LocalUserName).
+	public static async Task UpdateLocalUserAuthToken(LocalUser user, string newAuthToken)
+	{
+		await Init();
+
+        LocalUser updated = new LocalUser
+        {
+            LocalUserName = user.LocalUserName,
+            AuthToken = newAuthToken,
+            PublicKey = user.PublicKey,
+            PrivateKey = user.PrivateKey
+        };
+
+        if (_localUserConnection is not null)
+            await _localUserConnection.UpdateAsync(updated);
+	}
+
+	/// <summary>
+	/// Deletes 'LocalUser' from database.
+	/// </summary>
+	public static async Task DeleteLocalUser(LocalUser? user)
     {
         await Init();
-        await _localUserConnection.DeleteAsync(user);
+		if(_localUserConnection is not null)
+            await _localUserConnection.DeleteAsync(user);
     }
+
+	/// <summary>
+	/// Deletes ALL 'LocalUser' from database.
+	/// </summary>
+	public static async Task DeleteAllLocalUsers()
+	{
+		await Init();
+		//await _localUserConnection.DeleteAllAsync(new LocalUser { });
+        if (_localUserConnection is not null)
+            await _localUserConnection.ExecuteAsync("DELETE FROM LocalUser");
+	}
 
     /// <summary>
     /// Deletes 'LocalUser' from database by name parameter.
@@ -79,14 +123,18 @@ public class LocalUserDBService
     public static async Task DeleteLocalUserByName(string UserName)
     {
         await Init();
-        foreach (LocalUser usr in await GetAllLocalUsers())
+        if (_localUserConnection is not null)
         {
-            if (usr.LocalUserName == UserName)
+            foreach (LocalUser usr in await _localUserConnection.Table<LocalUser>().ToListAsync())
             {
-                await _localUserConnection.DeleteAsync(usr);
-                return;
+                if (usr.LocalUserName == UserName)
+                {
+                    await _localUserConnection.DeleteAsync(usr);
+                    return;
+                }
             }
         }
+    
     }
 
     // Contacts part...
@@ -95,10 +143,13 @@ public class LocalUserDBService
     /// Returns ALL contacts from database.
     /// </summary>
     /// <returns>Absolutely every contact</returns>
-    public static async Task<IEnumerable<MyContact>> GetAllContacts()
+    public static async Task<IEnumerable<MyContact>?> GetAllContacts()
     {
         await Init();
-        return await _localUserConnection.Table<MyContact>().ToListAsync();
+        if (_localUserConnection is not null)
+            return await _localUserConnection.Table<MyContact>().ToListAsync();
+
+        return null;
     }
 
     /// <summary>
@@ -108,9 +159,12 @@ public class LocalUserDBService
     public static async Task<IEnumerable<MyContact>> GetAllMyContacts(string ownerName)
     {
         await Init();
-        return await _localUserConnection.Table<MyContact>()
+        if (_localUserConnection is not null)
+            return await _localUserConnection.Table<MyContact>()
                                  .Where(c => c.ContactOwner == ownerName)
                                  .ToListAsync();
+
+        return Enumerable.Empty<MyContact>();
     }
 
     /// <summary>
@@ -119,8 +173,9 @@ public class LocalUserDBService
     public static async Task InsertContact(MyContact contact)
     {
         await Init();
-        contact.OwnerContactPair = $"{contact.ContactUserName}_{contact.ContactOwner}";
-        await _localUserConnection.InsertAsync(contact);
+        contact.OwnerContactPair = $"{contact.ContactOwner}_{contact.ContactUserName!}";
+        if (_localUserConnection is not null)
+            await _localUserConnection.InsertAsync(contact);
     }
 
     /// <summary>
@@ -129,7 +184,8 @@ public class LocalUserDBService
     public static async Task DeleteContact(MyContact? contact)
     {
         await Init();
-        await _localUserConnection.DeleteAsync(contact);
+        if (_localUserConnection is not null)
+            await _localUserConnection.DeleteAsync(contact);
     }
 
     /// <summary>
@@ -138,12 +194,15 @@ public class LocalUserDBService
     public static async Task DeleteContactByName(string UserName, string ownerName)
     {
         await Init();
-        foreach (var itm in await GetAllContacts())
+        if (_localUserConnection is not null)
         {
-            if (itm.ContactUserName == UserName && itm.ContactOwner == ownerName)
+            foreach (var itm in await _localUserConnection.Table<MyContact>().ToListAsync())
             {
-                await DeleteContact(itm);
-                return;
+                if (itm.ContactUserName == UserName && itm.ContactOwner == ownerName)
+                {
+                    await DeleteContact(itm);
+                    return;
+                }
             }
         }
     }
@@ -151,33 +210,19 @@ public class LocalUserDBService
     /// <summary>
     /// Performs my contact search in database by name.
     /// </summary>
-    public static async Task<IEnumerable<MyContact>> SearchMyContact(string query, string owner)
+    public static async Task<IEnumerable<MyContact>?> SearchMyContact(string? query, string owner)
     {
         await Init();
-        return await _localUserConnection.Table<MyContact>()
-														 .Where(c => c.ContactUserName.Contains(query) && c.ContactOwner == owner)
+        if (_localUserConnection is not null)
+        {
+            if (query is not null)
+                return await _localUserConnection.Table<MyContact>()
+                                                         .Where(c => c.ContactUserName!.ToLower().Contains(query.ToLower()) && c.ContactOwner == owner)
                                                          .ToListAsync();
+            else
+                return await _localUserConnection.Table<MyContact>().Where(c => c.ContactOwner == owner).ToListAsync();
+        }
+        return null;
     }
 
-	// Messages part...
-
-	public static async Task<IEnumerable<Message>> GetMessages(string user, string contact)
-	{
-		await Init();
-		return await _localUserConnection.Table<Message>()
-								 .Where(c => c.KeyPair == $"{user}_{contact}")
-								 .ToListAsync();
-	}
-
-	public static async Task InsertMessage(Message message)
-	{
-		await Init();
-		await _localUserConnection.InsertAsync(message);
-	}
-
-	public static async Task DeleteMessage(Message message)
-	{
-		await Init();
-		await _localUserConnection.DeleteAsync(message);
-	}
 }
