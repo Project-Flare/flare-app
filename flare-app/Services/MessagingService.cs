@@ -1,7 +1,6 @@
 ﻿using flare_csharp;
 using Grpc.Net.Client;
 using flare_app.Models;
-using CoreNFC;
 
 namespace flare_app.Services;
 
