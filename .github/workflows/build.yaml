@@ -45,7 +45,6 @@ jobs:
         with:
           name: android-ci-build
           path: |
-            ./**/*.aab
             ./**/*.apk
 
   build-android-debug:
@@ -83,9 +82,8 @@ jobs:
       - name: Upload Android Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: android-ci-build
+          name: android-ci-build-debug
           path: |
-            ./**/*.aab
             ./**/*.apk
 
   build-ios:
