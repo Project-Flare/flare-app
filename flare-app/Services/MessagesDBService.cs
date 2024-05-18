@@ -31,11 +31,9 @@ namespace flare_app.Services
             await Init();
             if (_messagesConnection is not null)
                 return await _messagesConnection.Table<Message>()
-                                             .Where(c => c.KeyPair == keypair)
-                                             .ToListAsync();
+                                            .Where(c => c.KeyPair == keypair)
+                                            .ToListAsync();
             return null;
-
-            //return Enumerable.Empty<Message>();
         }
 
         public static async Task InsertMessage(Message message)

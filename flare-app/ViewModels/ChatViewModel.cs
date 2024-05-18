@@ -1,22 +1,10 @@
-﻿using CommunityToolkit.Maui.Core.Extensions;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Flare.V1;
 using flare_app.Models;
 using flare_app.Services;
 using flare_csharp;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Formats.Asn1;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
-//using UIKit;
+using static flare_csharp.MessageReceivingService;
 
 namespace flare_app.ViewModels
 {
@@ -28,7 +16,7 @@ namespace flare_app.ViewModels
         string LocalUsername = MessagingService.Instance.MessageReceivingService!.Credentials.Username;
 
         LocalUser? _user;
-        ObservableCollection<Message>? _messages;
+        ObservableCollection<Message> _messages = new();
 
 		public AsyncRelayCommand LoadMesg { get; }
 		public AsyncRelayCommand<string> SendMesg { get; }
@@ -43,7 +31,7 @@ namespace flare_app.ViewModels
             }
         }
 
-        public ObservableCollection<Message>? Messages
+        public ObservableCollection<Message> Messages
         {
             get { return _messages; }
             set
@@ -67,15 +55,25 @@ namespace flare_app.ViewModels
 
 			Messages = new ObservableCollection<Message>();
 
-			//Messages.Add(new Message { Content = "Your chat begins here", Sender = "ChatViewModel", Time = DateTime.UtcNow });
+            //Messages.Add(new Message { Content = "Your chat begins here", Sender = "ChatViewModel", Time = DateTime.UtcNow });
 
-			//Task.Run(LoadMessagesFromDB);
+            //Task.Run(LoadMessagesFromDB);
 
-			// Relay command for sending message
-		}
+            // Relay command for sending message
+
+            MessagingService.Instance.MessageReceivingService.ReceivedMessageEvent += AddMessage;
+
+        }
+
+        private void AddMessage(InboundMessage _)
+        {
+            foreach (var m in MessagingService.Instance.FetchReceivedUserMessages(Username!))
+                if (!Messages!.Contains(m))
+                    Messages.Add(m);
+        }
 
         /// <summary>
-        /// Loads messages form DB into Observable 'Messages'.
+        /// Loads messages form the DB into Observable 'Messages'.
         /// </summary>
         private async Task LoadMessagesFromDB()
         {
@@ -84,27 +82,18 @@ namespace flare_app.ViewModels
                 await Task.Yield();
             }
 
-            var list = await MessagesDBService.GetMessages($"{LocalUsername}_{Username}");
+            var sentMessages = await MessagesDBService.GetMessages($"{LocalUsername}_{Username}");
+            var receivedMessages = MessagingService.Instance.FetchReceivedUserMessages(Username);
 
+            var messages = sentMessages.Union(receivedMessages).ToList();
+            messages.Sort();
 
-            if (list!.Count() != 0)
-            {
-                Messages = new ObservableCollection<Message>(list!);
-            }
-            else
-            {
-				Messages!.Add(new Message { Content = "Your chat begins here", Sender = "ChatViewModel", Time = DateTime.UtcNow });
-			}
+            foreach (Message message in messages)
+                Messages!.Add(message);
 
-            List<Message> receivedMessages = MessagingService.Instance.FetchReceivedUserMessages(Username);
-
-			foreach (var receivedMessage in receivedMessages)
-			{
-                //Messages.Contains(); [LAIMONAS]: Implement IEquatable interface to Message model
-                Messages.Add(receivedMessage);
-			}
-
-		}
+            if (!Messages!.Any())
+                Messages!.Add(new Message { Content = "Your chat begins here", Sender = "ChatViewModel", Time = DateTime.UtcNow });
+        }
 
         /// <summary>
         /// Sends message to collection list and should send to server.
@@ -123,8 +112,10 @@ namespace flare_app.ViewModels
             MessagingService.Instance.MessageSendingService!.SendMessage(outboundMessage);
 
             // TODO: confirm that the message was sent successfully?
-			await MessagesDBService.InsertMessage(new Message { KeyPair = $"{LocalUsername}_{Username}", Content = mesg, Sender = null, Time = DateTime.UtcNow});
-            Messages?.Add(new Message { Sender = null, Content = mesg, Time = DateTime.UtcNow });
+            var msg = new Message { KeyPair = $"{LocalUsername}_{Username}", Content = mesg, Sender = null, Time = DateTime.UtcNow };
+
+            await MessagesDBService.InsertMessage(msg);
+            Messages?.Add(msg);
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace flare_app.Models;
-public class Message : IEquatable<Message>
+public class Message : IEquatable<Message>, IComparable<Message>
 {
     // This is a pair between me (logged on user) and my contact. This pair should look like: {LocalUserName}_{ContactUserName}.
     [PrimaryKey, AutoIncrement]
@@ -16,8 +16,17 @@ public class Message : IEquatable<Message>
     public string? Content { get; set; }
     public DateTime Time { get; set; }
 
-	public bool Equals(Message? other)
+    public int CompareTo(Message? other)
+    {
+        if (other == null) return -1;
+
+        return Time.CompareTo(other.Time);
+    }
+
+    public bool Equals(Message? other)
 	{
-		throw new NotImplementedException();
+		if (other ==  null) return false;
+
+        return Time == other.Time && Content == other.Content;
 	}
 }

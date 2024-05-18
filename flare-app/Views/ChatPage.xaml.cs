@@ -13,8 +13,6 @@ public partial class ChatPage : ContentPage
 		InitializeComponent();
         _chatViewModel = (ChatViewModel)BindingContext;
         _chatViewModel ??= new ChatViewModel();
-        //_chatViewModel.Messages ??= new System.Collections.ObjectModel.ObservableCollection<Message>();
-        //_chatViewModel.Messages.Add(new Message());
 	}
 
     /// <summary>
@@ -50,12 +48,8 @@ public partial class ChatPage : ContentPage
 
 	}
 
-    /// <summary>
-    /// Called when whole chat is loaded. If there's no awaitable delay, this doesn't work.
-    /// </summary>
 	private async void chatCollection_Loaded(object sender, EventArgs e)
     {
-        //await Task.Delay(10);
         await _chatViewModel.LoadMesg.ExecuteAsync(e);
         ScrollToBottom();
     }
