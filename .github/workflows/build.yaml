@@ -48,7 +48,7 @@ jobs:
             ./**/*.aab
             ./**/*.apk
 
-  build-android:
+  build-android-debug:
     runs-on: windows-2022
     name: Android Build (Debug)
     steps:
