@@ -16,17 +16,20 @@ public class Message : IEquatable<Message>, IComparable<Message>
     public string? Content { get; set; }
     public DateTime Time { get; set; }
 
-    public int CompareTo(Message? other)
-    {
-        if (other == null) return -1;
+	public int CompareTo(Message? other)
+	{
+		if (other is null)
+			return -1;
 
-        return Time.CompareTo(other.Time);
-    }
+		return Time.CompareTo(other.Time);
+	}
 
-    public bool Equals(Message? other)
+	public bool Equals(Message? other)
 	{
 		if (other ==  null) return false;
 
         return Time == other.Time && Content == other.Content;
 	}
+
+
 }
