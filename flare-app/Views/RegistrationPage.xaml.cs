@@ -17,6 +17,7 @@ public partial class RegistrationPage : ContentPage
 	readonly string _serverWebSocketUrl = "wss://ws.f2.project-flare.net/";
 	GrpcChannel _channel;
 	AuthorizationService _service;
+	Task _serviceTask;
 	public RegistrationPage()
 	{
 		InitializeComponent();
@@ -24,7 +25,9 @@ public partial class RegistrationPage : ContentPage
 		_service = new AuthorizationService(_serverGrpcUrl, _channel, credentials: null, new IdentityStore());
 		_service.RegistrationToServerEvent += On_RegistrationToServerResponseReceived;
 		_service.StartService();
-		MainThread.BeginInvokeOnMainThread(_service.RunServiceAsync);
+		//MainThread.BeginInvokeOnMainThread(_service.RunServiceAsync);
+		_serviceTask = new Task(_service.RunServiceAsync);
+		_serviceTask.Start();
 	}
 
 	private async void RegisterButton_Clicked(object sender, EventArgs e)
@@ -161,12 +164,10 @@ public partial class RegistrationPage : ContentPage
 		}
 	}
 
-
 	private async void On_RegistrationToServerResponseReceived(AuthorizationService.RegistrationToServerEventArgs eventArgs)
 	{
 		try
 		{
-			SetLoadingScreen(false, null);
 			_service.EndService();
 			if (eventArgs.RegistrationForm.UserRegisteredSuccessfully)
 			{
@@ -230,10 +231,11 @@ public partial class RegistrationPage : ContentPage
 			double fontSize = 14;
 
 			var toast = Toast.Make(text, duration, fontSize);
-
+			
 			await toast.Show(cancellationTokenSource.Token);
 		}
 	}
+
 	private async void SetLoadingScreen(bool turnOn, string? message)
 	{
 		if (turnOn)
