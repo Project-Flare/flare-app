@@ -6,6 +6,7 @@ using flare_app.Services;
 using Grpc.Net.Client;
 using flare_csharp;
 using Org.BouncyCastle.Crypto.Parameters;
+using System.Text;
 
 namespace flare_app.ViewModels;
 
@@ -86,7 +87,7 @@ public partial class MainViewModel : ObservableObject
     async Task PerformMyUserSearch(string? query)
     {
         MyUsers.Clear();
-        var list = await LocalUserDBService.SearchMyContact(query, LocalUsername);
+        var list = await LocalUserDBService.SearchMyContact(query, LocalUsername!);
 
         if (list is null)
             return;
@@ -115,17 +116,23 @@ public partial class MainViewModel : ObservableObject
             if (MyUsers.Contains(itm))
                 continue;
 			MyUsers.Add(itm);
-            string username = itm.ContactUserName;
+            string username = itm.ContactUserName!;
             string publicKey = itm.PublicKey!;
             Identity identity = new Identity();
-            identity.Username = username;
-            try
-            {
+            identity.Username = username!;
+			try
+			{
                 identity.PublicKey = (ECPublicKeyParameters)Crypto.GetPublicKeyFromDer(publicKey);
+                identity.SharedSecret = Crypto.DeriveBlake3(
+                    Crypto.PartyBasicAgreement(
+                         (ECPrivateKeyParameters)MessagingService.Instance.MessageSendingService!.IdentityStore.Identity!.Private,
+                         (ECPublicKeyParameters)identity.PublicKey
+                        ).ToByteArray()
+                    );
                 MessagingService.Instance.MessageSendingService!.IdentityStore.Contacts.Add(username, identity);
 			}
             catch (Exception ex)
-            {
+			{
                 // TODO: 
             }
         }
@@ -151,7 +158,13 @@ public partial class MainViewModel : ObservableObject
         try
         {
             identity.PublicKey = (ECPublicKeyParameters)Crypto.GetPublicKeyFromDer(foundUser.IdPubKey);
-        }
+			identity.SharedSecret = Crypto.DeriveBlake3(
+					Crypto.PartyBasicAgreement(
+						 (ECPrivateKeyParameters)MessagingService.Instance.MessageSendingService!.IdentityStore.Identity!.Private,
+						 (ECPublicKeyParameters)identity.PublicKey
+						).ToByteArray()
+					);
+		}
         catch (FormatException)
         {
             //[DEV_NOTES]: user not found display popup message
@@ -167,7 +180,15 @@ public partial class MainViewModel : ObservableObject
         }
 
 		// [DEV_NOTES] TempUser1 should be changed to the user that is signed in
-		var newContact = new MyContact { ContactUserName = foundUser.Username, ContactOwner = LocalUsername, PublicKey = foundUser.IdPubKey };
+		var newContact = new MyContact 
+        { 
+            ContactUserName = foundUser.Username,
+            ContactOwner = LocalUsername, 
+            PublicKey = foundUser.IdPubKey,
+            FingerPrint = Encoding.ASCII.GetString(identity.SharedSecret),
+            IncomingCounter = 0,
+            OutgoingCounter = 0
+        };
         try
         {
             // [DEV_NOTES]: check if the user is added
