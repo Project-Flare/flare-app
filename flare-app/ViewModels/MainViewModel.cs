@@ -6,6 +6,7 @@ using flare_app.Services;
 using Grpc.Net.Client;
 using flare_csharp;
 using Org.BouncyCastle.Crypto.Parameters;
+using System.Text;
 
 namespace flare_app.ViewModels;
 
@@ -85,7 +86,7 @@ public partial class MainViewModel : ObservableObject
     async Task PerformMyUserSearch(string? query)
     {
         MyUsers.Clear();
-        var list = await LocalUserDBService.SearchMyContact(query, LocalUsername);
+        var list = await LocalUserDBService.SearchMyContact(query, LocalUsername!);
 
         if (list is null)
             return;
@@ -178,7 +179,15 @@ public partial class MainViewModel : ObservableObject
         }
 
 		// [DEV_NOTES] TempUser1 should be changed to the user that is signed in
-		var newContact = new MyContact { ContactUserName = foundUser.Username, ContactOwner = LocalUsername, PublicKey = foundUser.IdPubKey };
+		var newContact = new MyContact 
+        { 
+            ContactUserName = foundUser.Username,
+            ContactOwner = LocalUsername, 
+            PublicKey = foundUser.IdPubKey,
+            FingerPrint = Encoding.ASCII.GetString(identity.SharedSecret),
+            IncomingCounter = 0,
+            OutgoingCounter = 0
+        };
         try
         {
             // [DEV_NOTES]: check if the user is added

@@ -24,5 +24,8 @@ public class MyContact
     [Unique]
     public string? OwnerContactPair { get; set; } 
     public string? PublicKey { get; set; }
+    public string? FingerPrint { get; set; }
+    public ulong? IncomingCounter { get; set; }
+    public ulong? OutgoingCounter { get; set; }
 }
 
