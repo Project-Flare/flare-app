@@ -93,7 +93,7 @@ public partial class LoginPage : ContentPage
         {
             string title = "Login failed";
 			string cancel = "OK";
-			string message;
+			string message = string.Empty;
 			// [DEV_NOTES]: Something went wrong when trying to log in, need to handle all possible failure reasons and inform the user about it
 			switch (eventArgs.LoginFailureReason)
 			{
@@ -129,13 +129,20 @@ public partial class LoginPage : ContentPage
 					break;
 				case AuthorizationService.LoggedInEventArgs.FailureReason.AuthTokenExpired:
 					// Tried to login to server with expired auth token
-					return;
+					break;
+				case AuthorizationService.LoggedInEventArgs.FailureReason.ConnectionFailure:
+					message = "Connection to the server failed";
+					break;
 				default:
 					// Also handle it, maybe simple error message. Act to your own accord.
-					message = "The oration couldn't be completed properly";
+					message = "The operation couldn't be completed properly";
 					break;
 			}
-			await DisplayAlert(title, message, cancel);
+			if (message != string.Empty)
+			{
+				await DisplayAlert(title, message, cancel);
+			}
+			_service.EndService();
 		}
 	}
 
