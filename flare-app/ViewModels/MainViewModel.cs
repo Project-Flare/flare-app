@@ -28,6 +28,7 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     string? text;
 
+
     [ObservableProperty]
     User? user;
 
