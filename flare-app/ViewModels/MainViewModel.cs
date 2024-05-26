@@ -28,6 +28,9 @@ public partial class MainViewModel : ObservableObject
     string? text;
 
     [ObservableProperty]
+    string _errorMessage;
+
+    [ObservableProperty]
     User? user;
 
 

@@ -8,6 +8,7 @@ using System.Formats.Asn1;
 using CommunityToolkit.Maui.Core.Platform;
 using Grpc.Net.Client;
 using Org.BouncyCastle.Crypto;
+using CommunityToolkit.Maui.Views;
 
 
 namespace flare_app.Views;
@@ -35,6 +36,7 @@ public partial class LoginPage : ContentPage
         if (username.Text == "" || password.Text == "")
         {
             ButtonShake();
+            this.ShowPopup(new ErrorPopUp("sik sik sik", "swswsw", "OK"));
             return;
         }
 
