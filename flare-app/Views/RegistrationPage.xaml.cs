@@ -17,6 +17,7 @@ public partial class RegistrationPage : ContentPage
 	readonly string _serverWebSocketUrl = "wss://ws.f2.project-flare.net/";
 	GrpcChannel _channel;
 	AuthorizationService _service;
+	Task _serviceTask;
 	public RegistrationPage()
 	{
 		InitializeComponent();
@@ -24,7 +25,8 @@ public partial class RegistrationPage : ContentPage
 		_service = new AuthorizationService(_serverGrpcUrl, _channel, credentials: null, new IdentityStore());
 		_service.RegistrationToServerEvent += On_RegistrationToServerResponseReceived;
 		_service.StartService();
-		MainThread.BeginInvokeOnMainThread(_service.RunServiceAsync);
+		_serviceTask = new(_service.RunServiceAsync);
+		_serviceTask.Start();
 	}
 
 	private async void RegisterButton_Clicked(object sender, EventArgs e)
@@ -84,6 +86,10 @@ public partial class RegistrationPage : ContentPage
 					UsernameErrorInfo.TextColor = Color.FromRgb(204, 0, 0);
 					UsernameErrorInfo.Text = $"Username is taken";
 					break;
+				case AuthorizationService.UsernameState.NotAlphanumeric:
+					UsernameErrorInfo.TextColor = Color.FromRgb(204, 0, 0);
+					UsernameErrorInfo.Text = $"Not alphanumerical";
+					break;
 				default:
 					break;
 			}
@@ -98,7 +104,6 @@ public partial class RegistrationPage : ContentPage
 	{
 		try
 		{
-			SetLoadingScreen(false, null);
 
 			//[DEV_NOTE] the password strength checking and username validation must be reapplied
 			var pwd_1 = password.Text;
@@ -166,7 +171,6 @@ public partial class RegistrationPage : ContentPage
 	{
 		try
 		{
-			SetLoadingScreen(false, null);
 			_service.EndService();
 			if (eventArgs.RegistrationForm.UserRegisteredSuccessfully)
 			{
