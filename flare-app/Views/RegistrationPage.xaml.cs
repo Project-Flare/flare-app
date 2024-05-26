@@ -144,7 +144,6 @@ public partial class RegistrationPage : ContentPage
 
 	}
 
-
 	private async void On_RegistrationToServerResponseReceived(AuthorizationService.RegistrationToServerEventArgs eventArgs)
 	{
 		if (eventArgs.RegistrationForm.UserRegisteredSuccessfully)
@@ -190,6 +189,7 @@ public partial class RegistrationPage : ContentPage
 			}
 		}
 	}
+
 	private async void SetLoadingScreen(bool turnOn, string? message)
 	{
 		if (turnOn)
