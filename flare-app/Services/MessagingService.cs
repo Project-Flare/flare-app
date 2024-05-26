@@ -69,7 +69,7 @@ internal class MessagingService
 			{
                 Message message = new Message();
 
-                var envelope = encryptedMessage.Decrypt(_messageSendingService.IdentityStore)!;
+                var envelope = encryptedMessage.Decrypt(_messageSendingService!.IdentityStore)!;
 
 				message.Content = envelope.TextMessage.Content;
 				message.Time = DateTime.UnixEpoch.AddMilliseconds(envelope.SenderTime);

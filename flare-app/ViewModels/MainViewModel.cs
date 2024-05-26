@@ -114,17 +114,23 @@ public partial class MainViewModel : ObservableObject
             if (MyUsers.Contains(itm))
                 continue;
 			MyUsers.Add(itm);
-            string username = itm.ContactUserName;
+            string username = itm.ContactUserName!;
             string publicKey = itm.PublicKey!;
             Identity identity = new Identity();
-            identity.Username = username;
-            try
-            {
+            identity.Username = username!;
+			try
+			{
                 identity.PublicKey = (ECPublicKeyParameters)Crypto.GetPublicKeyFromDer(publicKey);
+                identity.SharedSecret = Crypto.DeriveBlake3(
+                    Crypto.PartyBasicAgreement(
+                         (ECPrivateKeyParameters)MessagingService.Instance.MessageSendingService!.IdentityStore.Identity!.Private,
+                         (ECPublicKeyParameters)identity.PublicKey
+                        ).ToByteArray()
+                    );
                 MessagingService.Instance.MessageSendingService!.IdentityStore.Contacts.Add(username, identity);
 			}
             catch (Exception ex)
-            {
+			{
                 // TODO: 
             }
         }
@@ -150,7 +156,13 @@ public partial class MainViewModel : ObservableObject
         try
         {
             identity.PublicKey = (ECPublicKeyParameters)Crypto.GetPublicKeyFromDer(foundUser.IdPubKey);
-        }
+			identity.SharedSecret = Crypto.DeriveBlake3(
+					Crypto.PartyBasicAgreement(
+						 (ECPrivateKeyParameters)MessagingService.Instance.MessageSendingService!.IdentityStore.Identity!.Private,
+						 (ECPublicKeyParameters)identity.PublicKey
+						).ToByteArray()
+					);
+		}
         catch (FormatException)
         {
             //[DEV_NOTES]: user not found display popup message
