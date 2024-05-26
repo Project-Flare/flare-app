@@ -4,6 +4,7 @@ using flare_app.Models;
 using flare_app.Services;
 using flare_csharp;
 using System.Collections.ObjectModel;
+using System.Diagnostics.Metrics;
 using static flare_csharp.MessageReceivingService;
 
 namespace flare_app.ViewModels
@@ -21,6 +22,8 @@ namespace flare_app.ViewModels
 		public AsyncRelayCommand LoadMesg { get; }
 		public AsyncRelayCommand<string> SendMesg { get; }
 
+        //HERE
+        private ulong _counter;
 		public LocalUser? User
         {
             get { return _user; }
@@ -65,11 +68,18 @@ namespace flare_app.ViewModels
 
         }
 
-        private void AddMessage(InboundMessage _)
+        private async void AddMessage(InboundMessage _)
         {
-            foreach (var m in MessagingService.Instance.FetchReceivedUserMessages(Username!))
-                if (!Messages!.Contains(m))
-                    Messages.Add(m);
+            foreach (Message message in MessagingService.Instance.FetchReceivedUserMessages(Username!))
+            {
+                if (!Messages!.Contains(message))
+                {
+                    message.Counter = _counter;
+                    Messages.Add(message);
+                    await MessagesDBService.InsertMessage(message);
+                    _counter++;
+                }
+            }
         }
 
         /// <summary>
@@ -82,17 +92,47 @@ namespace flare_app.ViewModels
                 await Task.Yield();
             }
 
-            var sentMessages = await MessagesDBService.GetMessages($"{LocalUsername}_{Username}");
-            var receivedMessages = MessagingService.Instance.FetchReceivedUserMessages(Username);
+            IEnumerable<Message>? chatMessagesEnum = await MessagesDBService.GetMessages($"{LocalUsername}_{Username}");
+            List<Message> chatMessages;
+            if (chatMessagesEnum is null || chatMessagesEnum.Count() == 0)
+            {
+                chatMessages = new List<Message>();
+            }
+            else
+            {
+                chatMessages = chatMessagesEnum.ToList();
+            }    
 
-            var messages = sentMessages.Union(receivedMessages).ToList();
-            messages.Sort();
+            _counter = (ulong)chatMessages.Count;
+			
+            List<Message> receivedMessages = MessagingService.Instance.FetchReceivedUserMessages(Username);
+            
+            if (chatMessages is not null)
+            {
+                foreach(Message receivedNewMessage in receivedMessages)
+                {
+                    if (!chatMessages.Contains(receivedNewMessage))
+                    {
+                        receivedNewMessage.Counter = _counter;
+                        chatMessages.Add(receivedNewMessage);
+                        await MessagesDBService.InsertMessage(receivedNewMessage);
+                        _counter++;
+                    }
+                }
+            }
 
-            foreach (Message message in messages)
-                Messages!.Add(message);
+            if (Messages is null)
+                Messages = new();
 
-            if (!Messages!.Any())
+            if (!Messages!.Any() || chatMessages is null)
+            {
                 Messages!.Add(new Message { Content = "Your chat begins here", Sender = "ChatViewModel", Time = DateTime.UtcNow });
+            }
+
+            foreach (var chatMessage in chatMessages)
+            {
+                Messages!.Add(chatMessage);
+            }
         }
 
         /// <summary>
@@ -112,7 +152,15 @@ namespace flare_app.ViewModels
             MessagingService.Instance.MessageSendingService!.SendMessage(outboundMessage);
 
             // TODO: confirm that the message was sent successfully?
-            var msg = new Message { KeyPair = $"{LocalUsername}_{Username}", Content = mesg, Sender = null, Time = DateTime.UtcNow };
+            var msg = new Message
+            {
+                KeyPair = $"{LocalUsername}_{Username}",
+                Content = mesg,
+                Sender = null,
+                Time = DateTime.UtcNow,
+                Counter = _counter
+            };
+            _counter++;
 
             await MessagesDBService.InsertMessage(msg);
             Messages?.Add(msg);
