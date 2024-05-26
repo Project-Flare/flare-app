@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="flare_app.Views.ErrorPopUp"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:viewmodels="clr-namespace:flare_app.ViewModels"
+             x:DataType="viewmodels:MainViewModel"
+             CanBeDismissedByTappingOutsideOfPopup="False"
+             Color="Transparent"
+               >
+
+    <Grid>
+        <Frame CornerRadius="17" Padding="3">
+            <Border StrokeShape="RoundRectangle 15,15,15,15" StrokeThickness="0" BackgroundColor="Grey">
+        <Grid WidthRequest="300"  HeightRequest="150">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Grid.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0, 1">
+                    <GradientStop Color="#2F2C4B" Offset="0"/>
+                    <GradientStop Color="Black" Offset="1"/>
+                </LinearGradientBrush>
+            </Grid.Background>
+
+
+
+            <Grid WidthRequest="300" HeightRequest="50" Padding="10" HorizontalOptions="Center" VerticalOptions="Center">
+                <Label
+                    x:Name="Header"
+                    FontSize="16"
+                    FontFamily="IBMPlexMonoBold"
+                    TextColor="White"
+                    VerticalOptions="Start"
+                    HorizontalOptions="Center"
+         />
+                        <Rectangle  BackgroundColor="White" HeightRequest="4" WidthRequest="300" Margin="0,35,0,0" />
+                    </Grid>
+            <Grid WidthRequest="300" HeightRequest="50" Grid.Row="1">
+                <Grid HeightRequest="60"
+                        WidthRequest="280"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        Padding="10,15"
+>
+                    <Label
+                        x:Name="ErrorMessage"
+                        FontSize="13"
+                        FontFamily="IBMPlexMonoBold"
+                        TextColor="White"
+                        VerticalOptions="Start"
+                        HorizontalOptions="Start"
+                        />
+
+                </Grid>
+            </Grid>
+            <Grid WidthRequest="300" HeightRequest="50" Padding="20,10" Grid.Row="20">
+                <Button
+         x:Name="ResponseButton"
+         FontFamily="IBMPlexMonoBold"
+         Background="#5000A4"
+         Pressed="Button_Pressed"
+         WidthRequest="100"
+         HeightRequest="30"
+         VerticalOptions="Center"
+         HorizontalOptions="Center"
+         Padding="0"
+         CornerRadius="20"/>
+            </Grid>
+        </Grid>
+    </Border>
+        </Frame>
+    </Grid>
+</toolkit:Popup>
