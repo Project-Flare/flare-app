@@ -32,7 +32,7 @@ public partial class ChatPage : ContentPage
             return;
 
         // HERE
-        MessageSendingService.OutboundMessage message = new(_chatViewModel.Username!, messageEntry.Text);
+        MessageSendingService.OutboundMessage message = new(_chatViewModel.Username!, messageEntry.Text, ChatViewModel.Counter);
 
         _chatViewModel.SendMesg.Execute(messageEntry.Text);
 

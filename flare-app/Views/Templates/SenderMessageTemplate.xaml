@@ -4,7 +4,8 @@
              xmlns:models="clr-namespace:flare_app.Models"
              x:DataType="models:Message"
              x:Class="flare_app.Views.Templates.SenderMessageTemplate">
-    <Frame 
+    <Grid RowDefinitions="*,*">
+        <Frame Grid.Row="0" 
         Margin="15,5,15,5"
         Padding="6"
         CornerRadius="15"
@@ -21,4 +22,14 @@
             VerticalOptions="Center"
             HorizontalOptions="Center"/>
     </Frame>
+
+    <Label     Text="{Binding Time, StringFormat='{0:HH:mm}'}"
+               Grid.Row="1"
+               Margin="0,0,15,0"
+               FontFamily="IBMPlexMonoBold"
+               FontSize="12"
+               TextColor="#FFFFFF"
+               HorizontalOptions="End"
+               VerticalOptions="Center"/>
+    </Grid>
 </ContentView>
