@@ -73,11 +73,14 @@ namespace flare_app.ViewModels
         {
             foreach (Message message in MessagingService.Instance.FetchReceivedUserMessages(Username!))
             {
-                if (!Messages!.Contains(message))
+                var rv = await MessagesDBService.GetMessages($"{LocalUsername}_{Username}");
+                if (rv is not null && !rv.Contains(message))
                 {
                     message.Counter = Counter;
-                    Messages.Add(message);
                     await MessagesDBService.InsertMessage(message);
+                    message.Time = message.Time.ToLocalTime();
+                    Messages.Add(message);
+                    OnPropertyChanged();
                     Counter++;
                 }
             }
@@ -114,8 +117,6 @@ namespace flare_app.ViewModels
                 stringBuilder.Append(bytes[index]);
             }
 
-			Messages.Add(new Message { Content = stringBuilder.ToString(), Sender = "Fingerprint" });
-
             IEnumerable<Message>? chatMessagesEnum = await MessagesDBService.GetMessages($"{LocalUsername}_{Username}");
             List<Message> chatMessages;
             if (chatMessagesEnum is null || chatMessagesEnum.Count() == 0)
@@ -144,17 +145,19 @@ namespace flare_app.ViewModels
                     }
                 }
             }
-
-            if (Messages is null)
+            Messages.Clear();
+			Messages.Add(new Message { Content = stringBuilder.ToString(), Sender = "Fingerprint" });
+			if (Messages is null)
                 Messages = new();
 
             if (!Messages.Any() || chatMessages is null)
             {
                 Messages.Add(new Message { Content = "Your chat begins here", Sender = "ChatViewModel", Time = DateTime.Now });
             }
-
             foreach (var chatMessage in chatMessages!)
             {
+                if (Messages.Contains(chatMessage))
+                    continue;
                 chatMessage.Time = chatMessage.Time.ToLocalTime();
 				Messages!.Add(chatMessage);
             }
@@ -188,7 +191,8 @@ namespace flare_app.ViewModels
             Counter++;
 
             await MessagesDBService.InsertMessage(msg);
-            Messages?.Add(msg);
+            msg.Time = msg.Time.ToLocalTime();
+			Messages?.Add(msg);
         }
     }
 }
