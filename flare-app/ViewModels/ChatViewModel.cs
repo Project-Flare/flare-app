@@ -101,14 +101,14 @@ namespace flare_app.ViewModels
             StringBuilder stringBuilder = new StringBuilder();
             int counter = stringBuilder.Length;
             int index = 0;
-            while (counter <= 16)
+            while (counter <= 32)
             {
 				stringBuilder.Append(fingerprintBytes[index++].ToString("X"));
                 counter = stringBuilder.Length;
             }
             char[] bytes = stringBuilder.ToString().ToCharArray();
             stringBuilder.Clear();
-			for (index = 0; index < 16; index++)
+			for (index = 0; index < 32; index++)
             {
                 if (index != 0 && index % 4 == 0)
                 {
