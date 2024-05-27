@@ -7,8 +7,8 @@
     <ContentView.Resources>
 
     </ContentView.Resources>
-    <Grid>
-        <Frame 
+    <Grid RowDefinitions="*,*">
+        <Frame Grid.Row="0"
         Margin="15,5,15,5"
         Padding="6"
         CornerRadius="15"
@@ -25,11 +25,12 @@
                    HorizontalOptions="Center"/>
         </Frame>
         <Label Text="{Binding Time, StringFormat='{0:HH:mm}'}"
-               Margin="0,0,10,0"
+               Grid.Row="1"
+               Margin="15,0,0,5"
                FontFamily="IBMPlexMonoBold"
                FontSize="12"
                TextColor="#FFFFFF"
-               HorizontalOptions="End"
+               HorizontalOptions="Start"
                VerticalOptions="Center"/>
     </Grid>
 </ContentView>
