@@ -7,6 +7,10 @@ using Grpc.Net.Client;
 using flare_csharp;
 using Org.BouncyCastle.Crypto.Parameters;
 using System.Text;
+using flare_app.Views;
+using CommunityToolkit.Maui.Views;
+using System.ComponentModel;
+using Microsoft.Maui.Graphics.Text;
 
 namespace flare_app.ViewModels;
 
@@ -17,7 +21,7 @@ public partial class MainViewModel : ObservableObject
     public AsyncRelayCommand<string> RemoveUserCommand { get; }
     public AsyncRelayCommand<string> PerformMyUserSearchCommand { get; }
     public AsyncRelayCommand RefreshCommand { get; }
-    public AsyncRelayCommand<string> AddUserOnPopCommand { get; }
+    //public AsyncRelayCommand<string> AddUserOnPopCommand { get; }
     public AsyncRelayCommand<string> ChatDetailCommand { get; }
 
     bool isRefreshing;
@@ -47,7 +51,7 @@ public partial class MainViewModel : ObservableObject
         RemoveUserCommand = new AsyncRelayCommand<string>(RemoveUser);
         PerformMyUserSearchCommand = new AsyncRelayCommand<string>(PerformMyUserSearch);
         RefreshCommand = new AsyncRelayCommand(Refresh);
-        AddUserOnPopCommand = new AsyncRelayCommand<string>(AddUserOnPop);
+        //AddUserOnPopCommand = new AsyncRelayCommand<string>(AddUserOnPop);
         ChatDetailCommand = new AsyncRelayCommand<string>(ChatDetail);
 
         MyUsers = new ObservableCollection<MyContact>();
@@ -143,15 +147,16 @@ public partial class MainViewModel : ObservableObject
     /// <summary>
     /// Adds user to local database and to 'MyUsers' list.
     /// </summary>
-    async Task AddUserOnPop(string? username)
+    public async Task<bool> AddUserOnPop(string? username)
     {
+    
         //HERE
         if (string.IsNullOrEmpty(username))
-            return;
+            return false;
 
         Flare.V1.User? foundUser = await _userService.GetUser(username);
         if (foundUser is null)
-            return;
+            return false;
 
         Identity identity = new Identity();
         identity.Username = foundUser.Username;
@@ -168,15 +173,16 @@ public partial class MainViewModel : ObservableObject
         catch (FormatException)
         {
             //[DEV_NOTES]: user not found display popup message
-            return;
+            return false;
 		}
 
-		MessagingService.Instance.MessageSendingService!.IdentityStore.Contacts.Add(foundUser.Username, identity);
+
+        MessagingService.Instance.MessageSendingService!.IdentityStore.Contacts.Add(foundUser.Username, identity);
 
         if (foundUser is null)
         {
             //[DEV_NOTES]: user not found display popup message
-            return;
+            return false;
         }
 
 		// [DEV_NOTES] TempUser1 should be changed to the user that is signed in
@@ -199,9 +205,12 @@ public partial class MainViewModel : ObservableObject
         catch 
         {
             // [DEV_NOTES]: resolve fucking error god damn it
+            return false;
         }
 
+        
         await Refresh();
+        return true;
     }
 
     /// <summary>

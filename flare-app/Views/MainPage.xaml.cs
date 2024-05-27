@@ -34,7 +34,7 @@ public partial class MainPage : ContentPage
     /// </summary>
     private void Button_Clicked(object sender, TappedEventArgs e)
     {
-        this.ShowPopup(new UserAddPopupPage(_mainViewModel));
+         this.ShowPopup(new UserAddPopupPage(_mainViewModel));
     }
 
     /// <summary>
