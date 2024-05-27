@@ -75,6 +75,7 @@ internal class MessagingService
 				message.Time = DateTime.UnixEpoch.AddMilliseconds(envelope.SenderTime);
                 message.KeyPair = $"{_messageReceivingService.Credentials.Username}_{senderUsername}"; // wtf is this?
                 message.Sender = senderUsername;
+				message.Counter = envelope.MessageId;
 
 				if (message.Sender != envelope.SenderUsername)
 					throw new InvalidDataException();

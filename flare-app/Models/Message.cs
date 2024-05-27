@@ -15,13 +15,14 @@ public class Message : IEquatable<Message>, IComparable<Message>
     public string? Sender { get; set; }
     public string? Content { get; set; }
     public DateTime Time { get; set; }
+	public ulong Counter { get; set; }
 
 	public int CompareTo(Message? other)
 	{
 		if (other is null)
 			return -1;
 
-		return Time.CompareTo(other.Time);
+		return Counter.CompareTo(other.Counter);
 	}
 
 	public bool Equals(Message? other)

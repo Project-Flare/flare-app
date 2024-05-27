@@ -23,11 +23,16 @@
                 <template:InfoMessageTemplate />
             </DataTemplate>
 
+            <DataTemplate x:Key="FingerprintItmTemplate">
+                <template:FingerprintMessageTemplate />
+            </DataTemplate>
+
             <template:MessageTemplateSelector
                 x:Key="MessageTemplateSelector"
                 SenderTemplate="{StaticResource SenderMessageItmTemplate}"
                 ReceiverTemplate="{StaticResource ReceiverMessageItmTemplate}"
-                InfoTemplate="{StaticResource InfoMessageItmTemplate}" />
+                InfoTemplate="{StaticResource InfoMessageItmTemplate}"
+                FingerprintTemplate="{StaticResource FingerprintItmTemplate}" />
 
         </ResourceDictionary>
     </ContentPage.Resources>

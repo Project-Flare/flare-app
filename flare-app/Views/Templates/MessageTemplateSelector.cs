@@ -7,15 +7,21 @@ namespace flare_app.Views.Templates
         public DataTemplate? SenderTemplate { get; set; }
         public DataTemplate? ReceiverTemplate { get; set; }
         public DataTemplate? InfoTemplate { get; set; }
+		public DataTemplate? FingerprintTemplate { get; set; }
 
-        /// <summary>
-        /// Selects template for message blob depending on 'Sender' attribute.
-        /// </summary>
-        protected override DataTemplate? OnSelectTemplate(object item, BindableObject container)
+		/// <summary>
+		/// Selects template for message blob depending on 'Sender' attribute.
+		/// </summary>
+		protected override DataTemplate? OnSelectTemplate(object item, BindableObject container)
         {
             var msg = (Message)item;
 
-            if (msg.Sender == "ChatViewModel")
+			if (msg.Sender == "Fingerprint")
+			{
+				return FingerprintTemplate;
+			}
+
+			if (msg.Sender == "ChatViewModel")
             {
                 return InfoTemplate;
             }
