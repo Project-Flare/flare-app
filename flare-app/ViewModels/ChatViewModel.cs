@@ -23,7 +23,7 @@ namespace flare_app.ViewModels
 		public AsyncRelayCommand<string> SendMesg { get; }
 
         //HERE
-        private ulong _counter;
+        public static ulong Counter { get; set; }
 		public LocalUser? User
         {
             get { return _user; }
@@ -74,10 +74,10 @@ namespace flare_app.ViewModels
             {
                 if (!Messages!.Contains(message))
                 {
-                    message.Counter = _counter;
+                    message.Counter = Counter;
                     Messages.Add(message);
                     await MessagesDBService.InsertMessage(message);
-                    _counter++;
+                    Counter++;
                 }
             }
         }
@@ -103,7 +103,7 @@ namespace flare_app.ViewModels
                 chatMessages = chatMessagesEnum.ToList();
             }    
 
-            _counter = (ulong)chatMessages.Count;
+            Counter = (ulong)chatMessages.Count;
 			
             List<Message> receivedMessages = MessagingService.Instance.FetchReceivedUserMessages(Username);
             
@@ -113,10 +113,10 @@ namespace flare_app.ViewModels
                 {
                     if (!chatMessages.Contains(receivedNewMessage))
                     {
-                        receivedNewMessage.Counter = _counter;
+                        receivedNewMessage.Counter = Counter;
                         chatMessages.Add(receivedNewMessage);
                         await MessagesDBService.InsertMessage(receivedNewMessage);
-                        _counter++;
+                        Counter++;
                     }
                 }
             }
@@ -148,7 +148,7 @@ namespace flare_app.ViewModels
 				await Task.Yield();
 			}
 
-            MessageSendingService.OutboundMessage outboundMessage = new MessageSendingService.OutboundMessage(recipientUsername: Username, messageText: mesg);
+            MessageSendingService.OutboundMessage outboundMessage = new MessageSendingService.OutboundMessage(recipientUsername: Username, messageText: mesg, Counter);
             MessagingService.Instance.MessageSendingService!.SendMessage(outboundMessage);
 
             // TODO: confirm that the message was sent successfully?
@@ -158,9 +158,9 @@ namespace flare_app.ViewModels
                 Content = mesg,
                 Sender = null,
                 Time = DateTime.UtcNow,
-                Counter = _counter
+                Counter = Counter
             };
-            _counter++;
+            Counter++;
 
             await MessagesDBService.InsertMessage(msg);
             Messages?.Add(msg);
