@@ -5,6 +5,7 @@ using flare_app.Services;
 using flare_csharp;
 using System.Collections.ObjectModel;
 using System.Diagnostics.Metrics;
+using System.Text;
 using static flare_csharp.MessageReceivingService;
 
 namespace flare_app.ViewModels
@@ -87,10 +88,33 @@ namespace flare_app.ViewModels
         /// </summary>
         private async Task LoadMessagesFromDB()
         {
+
             while (Username is null)
             {
                 await Task.Yield();
             }
+
+            byte[] fingerprintBytes = Crypto.DeriveBlake3(MessagingService.Instance.MessageSendingService!.IdentityStore.Contacts[Username].SharedSecret!);
+            StringBuilder stringBuilder = new StringBuilder();
+            int counter = stringBuilder.Length;
+            int index = 0;
+            while (counter <= 16)
+            {
+				stringBuilder.Append(fingerprintBytes[index++].ToString("X"));
+                counter = stringBuilder.Length;
+            }
+            char[] bytes = stringBuilder.ToString().ToCharArray();
+            stringBuilder.Clear();
+			for (index = 0; index < 16; index++)
+            {
+                if (index != 0 && index % 4 == 0)
+                {
+                    stringBuilder.Append(" ");
+                }
+                stringBuilder.Append(bytes[index]);
+            }
+
+			Messages.Add(new Message { Content = stringBuilder.ToString(), Sender = "Fingerprint" });
 
             IEnumerable<Message>? chatMessagesEnum = await MessagesDBService.GetMessages($"{LocalUsername}_{Username}");
             List<Message> chatMessages;

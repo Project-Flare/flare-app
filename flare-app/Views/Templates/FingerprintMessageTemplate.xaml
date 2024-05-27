@@ -8,14 +8,14 @@
         <Border StrokeThickness="3" HeightRequest="50">
             <Grid>
                 <VerticalStackLayout>
-                    <Label Text="This is your fingerprint:"
+                    <Label Text="Compare this fingerprint with each other:"
                            FontFamily="IBMPlexMono"
-                           TextColor="#928B9C"
+                           TextColor="#FFF"
                            HorizontalOptions="Center"/>
                     <Label
                         Text="{Binding Content}"
-                        FontFamily="IBMPlexMono"
-                        TextColor="#928B9C"
+                        FontFamily="IBMPlexMonoBold"
+                        TextColor="#FFF" 
                         HorizontalOptions="Center"/>
                 </VerticalStackLayout>
             </Grid>
