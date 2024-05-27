@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:flare_app.Models"
+             x:DataType="models:Message"
+             x:Class="flare_app.Views.Templates.FingerprintMessageTemplate">
+    <Grid Margin="15,30,15,80" >
+        <Border StrokeThickness="3" HeightRequest="50">
+            <Grid>
+                <VerticalStackLayout>
+                    <Label Text="This is your fingerprint:"
+                           FontFamily="IBMPlexMono"
+                           TextColor="#928B9C"
+                           HorizontalOptions="Center"/>
+                    <Label
+                        Text="{Binding Content}"
+                        FontFamily="IBMPlexMono"
+                        TextColor="#928B9C"
+                        HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </Grid>
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="10" />
+            </Border.StrokeShape>
+        </Border>
+    </Grid>
+</ContentView>
