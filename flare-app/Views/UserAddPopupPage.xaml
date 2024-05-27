@@ -39,15 +39,15 @@
 
 
                     <Grid WidthRequest="300" HeightRequest="75" Grid.Row="1">
-                            
-                <Grid HeightRequest="60"
+
+                        <Grid HeightRequest="60"
                         WidthRequest="280"
                         VerticalOptions="End"
                         HorizontalOptions="Center"
                         Padding="10">
-                    
-                    <Border StrokeShape="RoundRectangle 30,30,30,30" StrokeThickness="0" BackgroundColor="#382C4B">
-                        <Entry
+
+                            <Border StrokeShape="RoundRectangle 30,30,30,30" StrokeThickness="0" BackgroundColor="#382C4B">
+                                <Entry
                             x:Name="userToAddEntry"
                         Placeholder="Enter username"
                         TextColor="#FFFFFF"
@@ -57,11 +57,14 @@
                         VerticalOptions="Center"
                         Margin="8,0,8,0"
                         Text="{Binding Text}"/>
-                    </Border>
+                            </Border>
 
-                </Grid>
-            </Grid>
-            <Grid
+
+                        </Grid>
+                    </Grid>
+
+
+                    <Grid
      WidthRequest="300" HeightRequest="75" Padding="20,10" Grid.Row="20">
                 <Button
          Text="Add"
