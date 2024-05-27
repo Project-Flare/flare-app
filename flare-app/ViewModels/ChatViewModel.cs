@@ -124,12 +124,12 @@ namespace flare_app.ViewModels
             if (Messages is null)
                 Messages = new();
 
-            if (!Messages!.Any() || chatMessages is null)
+            if (!Messages.Any() || chatMessages is null)
             {
-                Messages!.Add(new Message { Content = "Your chat begins here", Sender = "Fingerprint", Time = DateTime.UtcNow });
+                Messages.Add(new Message { Content = "Your chat begins here", Sender = "ChatViewModel", Time = DateTime.UtcNow });
             }
 
-            foreach (var chatMessage in chatMessages)
+            foreach (var chatMessage in chatMessages!)
             {
                 Messages!.Add(chatMessage);
             }
